@@ -50,7 +50,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Products - Jacksons Leisure</title>
+    <title>Products - Commercial Pool Equipment</title>
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -318,7 +318,7 @@
 
                 <!-- Load More Button -->
                 <div id="loadMoreContainer" class="hidden mt-8 text-center">
-                    <button id="loadMoreBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-md transition">
+                    <button id="loadMoreBtn" class="bg-[#022658] hover:bg-white hover:text-black text-white px-8 py-3 rounded-md transition">
                         Load More Products
                     </button>
                 </div>
@@ -773,9 +773,9 @@
                         <p class="text-sm text-gray-600 mb-3 line-clamp-2">${product.description || ''}</p>
                     </a>
                     <div class="flex justify-between items-center">
-                        <span class="text-xl font-bold text-[#CC4514]">£${parseFloat(product.price).toFixed(2)}</span>
+                        <span class="text-xl font-bold text-[#022658]">£${parseFloat(product.price).toFixed(2)}</span>
                         ${inStock ? `
-                            <button class="add-to-cart-btn bg-[#0e703a] hover:bg-[#CC4514] text-white px-6 py-2 rounded transition" data-product-id="${product.id}">
+                            <button class="add-to-cart-btn bg-[#022658] hover:bg-white hover:text-black text-white px-6 py-2 rounded transition" data-product-id="${product.id}">
                                 Add to Cart
                             </button>
                         ` : `
@@ -840,13 +840,13 @@
                         </a>
 
                         <div class="flex items-center justify-between mt-auto">
-                            <span class="text-2xl font-bold text-[#CC4514]">£${parseFloat(product.price).toFixed(2)}</span>
+                            <span class="text-2xl font-bold text-[#022658">£${parseFloat(product.price).toFixed(2)}</span>
                             ${inStock ? `
                                 <div class="flex gap-2">
                                     <button onclick="event.preventDefault(); event.stopPropagation(); window.location.href='product_detail.php?id=${product.id}'" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded transition">
                                         View Details
                                     </button>
-                                    <button class="add-to-cart-btn bg-[#0e703a] hover:bg-[#CC4514] text-white px-6 py-2 rounded transition" data-product-id="${product.id}">
+                                    <button class="add-to-cart-btn bg-[#022658] hover:bg-white hover:text-black text-white px-6 py-2 rounded transition" data-product-id="${product.id}">
                                         Add to Cart
                                     </button>
                                     
