@@ -1010,7 +1010,7 @@
         }
         
         document.getElementById('pageTitle').textContent = title;
-        document.title = title + ' - Jacksons Leisure';
+        document.title = title + ' - Commercial Pool Equipment';
     }
 
     function updateBreadcrumb() {

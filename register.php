@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Account | Jacksons Leisure and Supplies</title>
+    <title>Create Account | Commercial Pool Equipment</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
@@ -385,7 +385,7 @@
                                    class="h-4 w-4 text-green-700 focus:ring-green-500 border-gray-300 rounded mt-1">
                             <label for="marketing" class="ml-3 text-sm text-gray-700">
                                 I would like to receive marketing communications about products, services, 
-                                and special offers from Jacksons Leisure and Supplies.
+                                and special offers from Commercial Pool Equipment and Supplies.
                             </label>
                         </div>
                     </div>

@@ -7,7 +7,7 @@
                 <div>
                     <h3 class="text-white text-xl font-bold mb-6 flex items-center">
                         <span class="bg-orange-500 w-2 h-6 mr-2 rounded-full"></span>
-                        <img src="assets/img/logo.webp" alt="Jacksons Leisure and Supplies Limited" class="" onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=\'text-xl md:text-2xl font-bold text-gray-800\'>Jacksons Leisure</div>'">
+                        <img src="assets/img/logo.webp" alt="Commercial Pool Equipment and Supplies Limited" class="" onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=\'text-xl md:text-2xl font-bold text-gray-800\'>Commercial Pool Equipment</div>'">
                     </h3>
                     <div class="space-y-4">
                         <p class="text-white leading-relaxed">
@@ -152,7 +152,7 @@
                             <i class="fas fa-envelope text-white mt-1 mr-3 w-5"></i>
                             <div>
                                 <div class="text-white font-medium">Email Us</div>
-                                <a href="mailto:info@jacksonsleisureltd.com" class="text-white hover:text-orange-400 transition-colors">
+                                <a href="mailto:info@commercialpoolequipmentltd.com" class="text-white hover:text-orange-400 transition-colors">
                                     info@commercialpoolequipment.com
                                 </a>
                             </div>

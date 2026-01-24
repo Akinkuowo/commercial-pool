@@ -50,7 +50,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>New Products - Jacksons Leisure</title>
+    <title>New Products - Commercial Pool Equipment</title>
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1012,7 +1012,7 @@
         }
         
         document.getElementById('pageTitle').textContent = title;
-        document.title = title + ' - Jacksons Leisure';
+        document.title = title + ' - Commercial Pool Equipment';
     }
 
     function updateBreadcrumb() {

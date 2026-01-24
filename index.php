@@ -603,7 +603,7 @@
                             <input type="checkbox" id="consent" name="consent" class="custom-checkbox" required>
                             <span class="checkmark mt-1 flex-shrink-0"></span>
                             <span class="text-gray-700 text-sm leading-relaxed">
-                                I consent to receiving marketing emails from Welcome to Jacksons Leisure and Supplies Limited. I understand that I can unsubscribe at any time by clicking the link in the footer of our emails. For information about our privacy practices, please visit our 
+                                I consent to receiving marketing emails from Welcome to Commercial Pool Equipment and Supplies Limited. I understand that I can unsubscribe at any time by clicking the link in the footer of our emails. For information about our privacy practices, please visit our 
                                 <a href="/privacy-policy" class="text-orange-600 font-medium hover:text-orange-700 underline">Privacy Policy</a>.
                                 <span class="text-red-500"> *</span>
                             </span>
@@ -640,7 +640,7 @@
                             </svg>
                         </div>
                         <div>
-                            <h3 class="font-bold text-green-800">Welcome to Jacksons Leisure and Supplies Limited!</h3>
+                            <h3 class="font-bold text-green-800">Welcome to Commercial Pool Equipment and Supplies Limited!</h3>
                             <p class="text-green-700 text-sm">
                                 Thank you for subscribing! Check your email for a special welcome message and your 10% discount code.
                             </p>

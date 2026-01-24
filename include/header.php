@@ -71,9 +71,9 @@ if ($userId) {
                         <!-- Logo -->
                         <div class="md:flex-grow md:basis-0">
                             <figure class="m-0 flex p-2 justify-center md:justify-start">
-                                <a href="/jacksons" class="no-underline" aria-label="Jacksons Leisure and Supplies Limited">
+                                <a href="/jacksons" class="no-underline" aria-label="Commercial Pool Equipment and Supplies Limited">
                                     <picture class="mx-auto block">
-                                        <img src="assets/img/logo.webp" alt="Jacksons Leisure and Supplies Limited" class="w-[100px] md:w-[180px]" onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=\'text-xl md:text-2xl font-bold text-gray-800\'>Jacksons Leisure</div>'">
+                                        <img src="assets/img/logo.webp" alt="Commercial Pool Equipment and Supplies Limited" class="w-[100px] md:w-[180px]" onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=\'text-xl md:text-2xl font-bold text-gray-800\'>Commercial Pool Equipment</div>'">
                                     </picture>
                                 </a>
                             </figure>

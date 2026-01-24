@@ -31,7 +31,7 @@ if ($conn) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo $is_trader ? 'Trade Dashboard' : 'Customer Dashboard'; ?> - Jacksons Leisure</title>
+    <title><?php echo $is_trader ? 'Trade Dashboard' : 'Customer Dashboard'; ?> - Commercial Pool Equipment</title>
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1252,6 +1252,214 @@ if ($conn) {
             alert('Would add all items from this order to quick order form');
             showSection('quick-order');
         }
+
+        // Add this to the existing JavaScript in dashboard.php
+
+        async function loadPoolProfiles() {
+            try {
+                const response = await fetch('api/get_pool_profiles.php');
+                const result = await response.json();
+                const container = document.getElementById('poolProfilesContainer');
+                
+                if (result.success && result.profiles && result.profiles.length > 0) {
+                    // Update stat counter
+                    const statPools = document.getElementById('stat-pools');
+                    if (statPools) {
+                        statPools.textContent = result.profiles.length;
+                    }
+                    
+                    let html = '<div class="grid grid-cols-1 md:grid-cols-2 gap-6">';
+                    
+                    result.profiles.forEach(profile => {
+                        html += `
+                            <div class="border border-gray-200 rounded-lg p-5 hover:shadow-md transition">
+                                <div class="flex justify-between items-start mb-3">
+                                    <div>
+                                        <h3 class="font-semibold text-gray-900 text-lg">${escapeHtml(profile.name)}</h3>
+                                        <p class="text-sm text-gray-500">${escapeHtml(profile.type)} • ${escapeHtml(profile.size)}</p>
+                                    </div>
+                                    <span class="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-medium">
+                                        <i class="fas fa-cog mr-1"></i> ${profile.equipment_count} item${profile.equipment_count !== 1 ? 's' : ''}
+                                    </span>
+                                </div>
+                                
+                                <div class="space-y-2 text-sm mb-4">
+                                    <div class="flex justify-between py-1 border-b border-gray-100">
+                                        <span class="text-gray-600"><i class="fas fa-water w-4 text-center mr-1"></i>Volume:</span>
+                                        <span class="font-medium">${escapeHtml(profile.volume)}</span>
+                                    </div>
+                                    <div class="flex justify-between py-1 border-b border-gray-100">
+                                        <span class="text-gray-600"><i class="fas fa-users w-4 text-center mr-1"></i>Usage:</span>
+                                        <span class="font-medium">${escapeHtml(profile.usage)}</span>
+                                    </div>
+                                    <div class="flex justify-between py-1 border-b border-gray-100">
+                                        <span class="text-gray-600"><i class="fas fa-layer-group w-4 text-center mr-1"></i>Material:</span>
+                                        <span class="font-medium">${escapeHtml(profile.material)}</span>
+                                    </div>
+                                    ${profile.filter_type ? `
+                                    <div class="flex justify-between py-1 border-b border-gray-100">
+                                        <span class="text-gray-600"><i class="fas fa-filter w-4 text-center mr-1"></i>Filter:</span>
+                                        <span class="font-medium">${escapeHtml(profile.filter_type)}</span>
+                                    </div>
+                                    ` : ''}
+                                    <div class="flex justify-between py-1">
+                                        <span class="text-gray-600"><i class="fas fa-clock w-4 text-center mr-1"></i>Updated:</span>
+                                        <span class="text-gray-500 text-xs">${escapeHtml(profile.updated)}</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex gap-2">
+                                    <a href="pool-finder.php?profile=${profile.id}" 
+                                    class="flex-1 text-center px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm font-medium transition">
+                                        <i class="fas fa-edit mr-1"></i> Edit Profile
+                                    </a>
+                                    <a href="compatibility-finder.php?pool=${profile.id}" 
+                                    class="flex-1 text-center px-3 py-2 border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 text-sm font-medium transition">
+                                        <i class="fas fa-search mr-1"></i> Find Parts
+                                    </a>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    
+                    html += '</div>';
+                    container.innerHTML = html;
+                    
+                } else {
+                    // No profiles found - show empty state
+                    container.innerHTML = `
+                        <div class="text-center py-12">
+                            <div class="mb-4">
+                                <i class="fas fa-swimming-pool text-6xl text-gray-300"></i>
+                            </div>
+                            <h3 class="text-lg font-semibold text-gray-900 mb-2">No Pool Profiles Yet</h3>
+                            <p class="text-gray-500 mb-6">Create your first pool profile to get personalized equipment recommendations.</p>
+                            <a href="pool-finder.php" 
+                            class="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium transition shadow-sm">
+                                <i class="fas fa-plus"></i>
+                                Create Pool Profile
+                            </a>
+                        </div>
+                    `;
+                    
+                    // Update stat to 0
+                    const statPools = document.getElementById('stat-pools');
+                    if (statPools) {
+                        statPools.textContent = '0';
+                    }
+                }
+                
+            } catch (error) {
+                console.error('Error loading pool profiles:', error);
+                
+                const container = document.getElementById('poolProfilesContainer');
+                container.innerHTML = `
+                    <div class="text-center py-12">
+                        <div class="mb-4">
+                            <i class="fas fa-exclamation-triangle text-6xl text-red-300"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">Error Loading Profiles</h3>
+                        <p class="text-gray-500 mb-6">We couldn't load your pool profiles. Please try again.</p>
+                        <button onclick="loadPoolProfiles()" 
+                                class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium transition">
+                            <i class="fas fa-redo mr-2"></i> Retry
+                        </button>
+                    </div>
+                `;
+            }
+        }
+
+        // Helper function to escape HTML and prevent XSS
+        function escapeHtml(text) {
+            const map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            };
+            return String(text).replace(/[&<>"']/g, m => map[m]);
+        }
+
+        // Enhanced Navigation Logic with Hash Support
+        function showSection(sectionId) {
+            // Update URL hash without page reload
+            if (window.history.pushState) {
+                window.history.pushState(null, null, '#' + sectionId);
+            } else {
+                window.location.hash = sectionId;
+            }
+            
+            // Hide all sections
+            document.querySelectorAll('.section-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-link').forEach(el => el.classList.remove('active'));
+            
+            // Show target section
+            const target = document.getElementById('section-' + sectionId);
+            const nav = document.getElementById('nav-' + sectionId);
+            
+            if (target) {
+                target.classList.add('active');
+                if (nav) nav.classList.add('active');
+                
+                // Scroll to top of content area smoothly
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            } else {
+                // Default to overview if target doesn't exist
+                document.getElementById('section-overview').classList.add('active');
+                document.getElementById('nav-overview').classList.add('active');
+            }
+        }
+
+        // Handle hash changes (back/forward browser buttons)
+        window.addEventListener('hashchange', function() {
+            const hash = window.location.hash.substring(1);
+            if (hash) {
+                showSectionFromHash(hash);
+            }
+        });
+
+        // Helper function to show section without updating hash (prevents double hash update)
+        function showSectionFromHash(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.section-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-link').forEach(el => el.classList.remove('active'));
+            
+            // Show target section
+            const target = document.getElementById('section-' + sectionId);
+            const nav = document.getElementById('nav-' + sectionId);
+            
+            if (target) {
+                target.classList.add('active');
+                if (nav) nav.classList.add('active');
+                
+                // Scroll to top of content area
+                setTimeout(() => {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 100);
+            } else {
+                // Default to overview
+                document.getElementById('section-overview').classList.add('active');
+                document.getElementById('nav-overview').classList.add('active');
+            }
+        }
+
+        // Update the DOMContentLoaded event
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initial Load based on hash
+            const hash = window.location.hash.substring(1);
+            if (hash) {
+                showSectionFromHash(hash);
+            } else {
+                showSection('overview');
+            }
+
+            loadOrders();
+            <?php if ($is_trader): ?>
+            loadQuotes();
+            <?php endif; ?>
+            loadPoolProfiles();
+        });
         <?php endif; ?>
     </script>
 </body>

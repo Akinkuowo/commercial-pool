@@ -202,7 +202,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo htmlspecialchars($product['name']); ?> - Jacksons Leisure</title>
+    <title><?php echo htmlspecialchars($product['name']); ?> - Commercial Pool Equipment</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
@@ -903,19 +903,19 @@
                             </div>
                             <div style="space-y: 16px;">
                                 <div style="border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px; margin-bottom: 12px;">
-                                    <h4 style="font-weight: 600; margin-bottom: 8px;">Jacksons Leisure - Main Store</h4>
+                                    <h4 style="font-weight: 600; margin-bottom: 8px;">Commercial Pool Equipment - Main Store</h4>
                                     <p style="color: #666; font-size: 14px; margin-bottom: 4px;">123 High Street, Town Center</p>
                                     <p style="color: #666; font-size: 14px; margin-bottom: 8px;">Open: Mon-Sat 9am-6pm, Sun 10am-4pm</p>
                                     <span style="background: #10b981; color: white; padding: 4px 12px; border-radius: 4px; font-size: 12px; font-weight: 600;">Available</span>
                                 </div>
                                 <div style="border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px; margin-bottom: 12px;">
-                                    <h4 style="font-weight: 600; margin-bottom: 8px;">Jacksons Leisure - North Branch</h4>
+                                    <h4 style="font-weight: 600; margin-bottom: 8px;">Commercial Pool Equipment - North Branch</h4>
                                     <p style="color: #666; font-size: 14px; margin-bottom: 4px;">456 Park Avenue, Northside</p>
                                     <p style="color: #666; font-size: 14px; margin-bottom: 8px;">Open: Mon-Sat 9am-6pm, Sun 10am-4pm</p>
                                     <span style="background: #10b981; color: white; padding: 4px 12px; border-radius: 4px; font-size: 12px; font-weight: 600;">Available</span>
                                 </div>
                                 <div style="border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px; margin-bottom: 12px;">
-                                    <h4 style="font-weight: 600; margin-bottom: 8px;">Jacksons Leisure - South Location</h4>
+                                    <h4 style="font-weight: 600; margin-bottom: 8px;">Commercial Pool Equipment - South Location</h4>
                                     <p style="color: #666; font-size: 14px; margin-bottom: 4px;">789 Retail Park, Southgate</p>
                                     <p style="color: #666; font-size: 14px; margin-bottom: 8px;">Open: Mon-Sat 9am-6pm, Sun 10am-4pm</p>
                                     <span style="background: #ef4444; color: white; padding: 4px 12px; border-radius: 4px; font-size: 12px; font-weight: 600;">Out of Stock</span>

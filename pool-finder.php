@@ -69,7 +69,7 @@ if ($conn) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pool Finder - Jacksons Leisure</title>
+    <title>Pool Finder - Commercial Pool Equipment</title>
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -179,11 +179,36 @@ if ($conn) {
 
     <div class="min-h-screen container mx-auto px-4 py-8 max-w-7xl">
         
-        <!-- Header -->
-        <div class="mb-8">
+       <!-- Replace the existing header section in pool-finder.php (around line 169) -->
+
+<div class="min-h-screen container mx-auto px-4 py-8 max-w-7xl">
+    
+    <!-- Enhanced Header with Back Button and Breadcrumbs -->
+    <div class="mb-8">
+        <!-- Back Button & Breadcrumbs -->
+        <div class="flex flex-col sm:flex-row sm:items-center gap-4 mb-6">
+            <a href="dashboard.php#pool-profile" 
+               class="inline-flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition shadow-sm w-fit">
+                <i class="fas fa-arrow-left"></i>
+                <span>Back to Dashboard</span>
+            </a>
+            
+            <!-- Breadcrumb Navigation -->
+            <nav class="flex items-center gap-2 text-sm text-gray-600 overflow-x-auto">
+                <a href="dashboard.php" class="hover:text-blue-600 whitespace-nowrap">Dashboard</a>
+                <i class="fas fa-chevron-right text-xs text-gray-400"></i>
+                <a href="dashboard.php#pool-profile" class="hover:text-blue-600 whitespace-nowrap">Pool Profiles</a>
+                <i class="fas fa-chevron-right text-xs text-gray-400"></i>
+                <span class="text-gray-900 font-medium whitespace-nowrap">Pool Finder</span>
+            </nav>
+        </div>
+        
+        <!-- Page Title -->
+        <div>
             <h1 class="text-3xl md:text-4xl font-bold text-gray-900">Pool Finder & Compatibility Tool</h1>
             <p class="text-gray-600 mt-2">Find compatible equipment for your pool by entering specifications</p>
         </div>
+    </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             
@@ -270,6 +295,41 @@ if ($conn) {
                                 </a>
                             </div>
                         </div>
+
+                        <!-- Action Buttons -->
+                        <div class="mt-6 pt-6 border-t border-gray-200">
+                            <h4 class="font-semibold text-gray-900 mb-3">Actions</h4>
+                            <div class="space-y-2">
+                                <button onclick="window.location.href='dashboard.php#pool-profile'" 
+                                        class="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition font-medium">
+                                    <i class="fas fa-times"></i>
+                                    <span>Cancel & Return</span>
+                                </button>
+                                
+                                <button onclick="saveAsDraft()" 
+                                        class="w-full flex items-center justify-center gap-2 px-4 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-medium">
+                                    <i class="fas fa-save"></i>
+                                    <span>Save as Draft</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Help Section -->
+                        <div class="mt-6 pt-6 border-t border-gray-200">
+                            <div class="bg-blue-50 rounded-lg p-4">
+                                <div class="flex items-start gap-3">
+                                    <i class="fas fa-info-circle text-blue-600 mt-1"></i>
+                                    <div>
+                                        <p class="text-sm font-medium text-blue-900">Need Help?</p>
+                                        <p class="text-xs text-blue-700 mt-1">Contact our experts for personalized pool equipment recommendations.</p>
+                                        <a href="contact.php" class="text-xs text-blue-600 hover:text-blue-800 font-medium mt-2 inline-block">
+                                            Get Expert Advice →
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -1050,6 +1110,110 @@ if ($conn) {
                 nextStep(1);
             }
         });
+
+        // Handle successful save redirect with confirmation
+        document.getElementById('poolFinderForm').addEventListener('submit', function(e) {
+            if (!validateStep(1)) {
+                e.preventDefault();
+                alert('Please complete all required fields in Step 1');
+                nextStep(1);
+                return;
+            }
+            
+            // Show loading state
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Saving Profile...';
+            
+            // Note: Form will submit naturally, but we can add visual feedback
+            // The actual redirect happens via PHP header() after successful save
+        });
+
+        // Alternative: AJAX save with better UX
+        async function savePoolProfileAjax() {
+            const form = document.getElementById('poolFinderForm');
+            const formData = new FormData(form);
+            
+            try {
+                const response = await fetch('api/save_pool_profile.php', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    // Show success message
+                    showNotification('success', 'Pool profile saved successfully!');
+                    
+                    // Redirect to dashboard after short delay
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.php#pool-profile';
+                    }, 1500);
+                } else {
+                    showNotification('error', result.message || 'Failed to save pool profile');
+                }
+            } catch (error) {
+                console.error('Save error:', error);
+                showNotification('error', 'An error occurred while saving');
+            }
+        }
+
+        // Notification system
+        function showNotification(type, message) {
+            const notification = document.createElement('div');
+            notification.className = `fixed top-4 right-4 z-50 px-6 py-4 rounded-lg shadow-lg transition-all transform translate-x-0 ${
+                type === 'success' ? 'bg-green-600' : 'bg-red-600'
+            } text-white`;
+            
+            notification.innerHTML = `
+                <div class="flex items-center gap-3">
+                    <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'} text-xl"></i>
+                    <p class="font-medium">${message}</p>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Animate in
+            setTimeout(() => notification.classList.add('translate-x-0'), 10);
+            
+            // Remove after 3 seconds
+            setTimeout(() => {
+                notification.classList.add('translate-x-full');
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        // Add cancel/discard button handler
+        function cancelPoolProfile() {
+            if (confirm('Are you sure you want to cancel? Any unsaved changes will be lost.')) {
+                window.location.href = 'dashboard.php#pool-profile';
+            }
+        }
+        // Save as draft functionality
+        async function saveAsDraft() {
+            const poolName = document.querySelector('input[name="pool_name"]').value;
+            
+            if (!poolName.trim()) {
+                alert('Please enter a pool name before saving as draft');
+                return;
+            }
+            
+            if (confirm('Save this pool profile as draft? You can complete it later from your dashboard.')) {
+                // Add draft flag to form
+                const form = document.getElementById('poolFinderForm');
+                const draftInput = document.createElement('input');
+                draftInput.type = 'hidden';
+                draftInput.name = 'save_as_draft';
+                draftInput.value = '1';
+                form.appendChild(draftInput);
+                
+                // Submit form
+                form.submit();
+            }
+        }
     </script>
 </body>
 </html>

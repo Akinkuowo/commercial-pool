@@ -178,7 +178,7 @@ try {
 
 function sendNotifications($email, $phone, $order_id, $name, $code, $expires) {
     // 1. Send Email
-    $subject = "Order Confirmation #$order_id - Jacksons Leisure";
+    $subject = "Order Confirmation #$order_id - Commercial Pool Equipment";
     $message = "Dear $name,\n\nThank you for your order!\nOrder ID: $order_id\n\n";
     
     if ($code) {
@@ -189,8 +189,8 @@ function sendNotifications($email, $phone, $order_id, $name, $code, $expires) {
         $message .= "Show this code or the QR code on the success page to our staff.\n\n";
     }
     
-    $message .= "We will process your order shortly.\n\nRegards,\nJacksons Leisure Team";
-    $headers = "From: no-reply@jacksonsleisure.com";
+    $message .= "We will process your order shortly.\n\nRegards,\nCommercial Pool Equipment Team";
+    $headers = "From: no-reply@commercialpoolequipment.com";
     
     // Use PHP mail (this might not work on localhost without config, but it's the standard way)
     @mail($email, $subject, $message, $headers);
