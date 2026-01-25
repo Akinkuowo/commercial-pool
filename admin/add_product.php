@@ -101,13 +101,10 @@ $current_page = 'products';
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Category</label>
-                                <select name="category" 
+                                <select name="category" id="productCategory"
                                     class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                                     <option value="">Select Category</option>
-                                    <option value="Awnings">Awnings</option>
-                                    <option value="Camping">Camping</option>
-                                    <option value="Caravan">Caravan</option>
-                                    <option value="Motorhome">Motorhome</option>
+                                    <!-- Populated via JS -->
                                 </select>
                             </div>
                             <div>
@@ -262,6 +259,37 @@ $current_page = 'products';
                 toast.classList.add('translate-y-full', 'opacity-0');
             }, 3000);
         }
+
+        // Load Categories
+        function loadCategories() {
+            fetch('../api/categories.php')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const select = document.getElementById('productCategory');
+                        
+                        function addOption(category, level = 0) {
+                            const prefix = level > 0 ? '&nbsp;&nbsp;&nbsp;'.repeat(level) + '- ' : '';
+                            const option = document.createElement('option');
+                            // Use category name as value since products table stores category name currently
+                            // If it stored ID, we would use category.id
+                            option.value = category.name; 
+                            option.innerHTML = prefix + category.name;
+                            select.appendChild(option);
+
+                            if (category.children && category.children.length > 0) {
+                                category.children.forEach(child => addOption(child, level + 1));
+                            }
+                        }
+
+                        data.categories.forEach(cat => addOption(cat));
+                    }
+                })
+                .catch(error => console.error('Error loading categories:', error));
+        }
+
+        // Initial Load
+        loadCategories();
 
         // Form Submission
         document.getElementById('addProductForm').addEventListener('submit', function(e) {

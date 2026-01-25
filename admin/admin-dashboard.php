@@ -13,18 +13,18 @@ if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== tru
 $conn = getDbConnection();
 
 // Get pending orders count
-$pending_query = "SELECT COUNT(*) as pending_count FROM orders WHERE status = 'Pending'";
+$pending_query = "SELECT COUNT(*) as pending_count FROM orders WHERE status = 'pending'";
 $pending_result = $conn->query($pending_query);
 $pending_count = $pending_result ? $pending_result->fetch_assoc()['pending_count'] : 0;
 
 // Get dashboard statistics
 $stats_query = "SELECT 
     COUNT(*) as total_orders,
-    SUM(CASE WHEN status = 'Pending' THEN 1 ELSE 0 END) as pending_orders,
-    SUM(CASE WHEN status = 'Processing' THEN 1 ELSE 0 END) as processing_orders,
-    SUM(CASE WHEN status = 'Completed' THEN 1 ELSE 0 END) as completed_orders,
-    SUM(CASE WHEN status = 'Cancelled' THEN 1 ELSE 0 END) as cancelled_orders,
-    COALESCE(SUM(total_amount), 0) as total_revenue,
+    SUM(CASE WHEN status = 'pending' THEN 1 ELSE 0 END) as pending_orders,
+    SUM(CASE WHEN status = 'processing' THEN 1 ELSE 0 END) as processing_orders,
+    SUM(CASE WHEN status = 'completed' THEN 1 ELSE 0 END) as completed_orders,
+    SUM(CASE WHEN status = 'cancelled' THEN 1 ELSE 0 END) as cancelled_orders,
+    COALESCE(SUM(CASE WHEN status = 'completed' THEN total_amount ELSE 0 END), 0) as total_revenue,
     COUNT(DISTINCT customer_email) as total_customers
 FROM orders";
 $stats_result = $conn->query($stats_query);
@@ -74,7 +74,7 @@ $revenue_query = "SELECT
     MONTH(created_at) as month_num,
     COALESCE(SUM(total_amount), 0) as revenue
     FROM orders
-    WHERE created_at >= DATE_SUB(NOW(), INTERVAL 6 MONTH)
+    WHERE created_at >= DATE_SUB(NOW(), INTERVAL 6 MONTH) AND status = 'completed'
     GROUP BY YEAR(created_at), MONTH(created_at), DATE_FORMAT(created_at, '%b')
     ORDER BY year ASC, month_num ASC";
 $revenue_result = $conn->query($revenue_query);
@@ -97,7 +97,7 @@ if (empty($revenue_data)) {
 $admin_name = $_SESSION['admin_name'] ?? 'Admin User';
 $admin_role = $_SESSION['admin_role'] ?? 'admin';
 
-$conn->close();
+// $conn->close(); // Moved to end of file
 ?>
 
 <!DOCTYPE html>
@@ -463,5 +463,6 @@ new Chart(ordersCtx, {
             options: { responsive: true, maintainAspectRatio: false }
         });
     </script>
+<?php if(isset($conn)) $conn->close(); ?>
 </body>
 </html>

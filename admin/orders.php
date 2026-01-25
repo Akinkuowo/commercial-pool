@@ -102,7 +102,7 @@ $stats_query = "SELECT
     SUM(CASE WHEN status = 'processing' THEN 1 ELSE 0 END) as processing,
     SUM(CASE WHEN status = 'completed' THEN 1 ELSE 0 END) as completed,
     SUM(CASE WHEN status = 'cancelled' THEN 1 ELSE 0 END) as cancelled,
-    SUM(total_amount) as total_revenue
+    COALESCE(SUM(CASE WHEN status = 'completed' THEN total_amount ELSE 0 END), 0) as total_revenue
 FROM orders";
 $stats_result = $conn->query($stats_query);
 $stats = $stats_result->fetch_assoc();
@@ -346,9 +346,13 @@ $admin_role = $_SESSION['admin_role'] ?? 'admin';
                                         ];
                                         $payment_class = $payment_colors[$order['payment_status']] ?? 'bg-gray-100 text-gray-800';
                                         ?>
-                                        <span class="px-2 py-1 text-xs font-medium <?php echo $payment_class; ?> rounded-full">
-                                            <?php echo ucfirst($order['payment_status']); ?>
-                                        </span>
+                                        <select class="payment-select px-2 py-1 text-xs font-medium border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 <?php echo $payment_class; ?>" 
+                                                data-order-id="<?php echo $order['id']; ?>">
+                                            <option value="pending" <?php echo $order['payment_status'] === 'pending' ? 'selected' : ''; ?>>Pending</option>
+                                            <option value="paid" <?php echo $order['payment_status'] === 'paid' ? 'selected' : ''; ?>>Paid</option>
+                                            <option value="failed" <?php echo $order['payment_status'] === 'failed' ? 'selected' : ''; ?>>Failed</option>
+                                            <option value="refunded" <?php echo $order['payment_status'] === 'refunded' ? 'selected' : ''; ?>>Refunded</option>
+                                        </select>
                                     </td>
                                     <td class="px-6 py-4">
                                         <select class="status-select px-3 py-1 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" 
@@ -440,6 +444,14 @@ $admin_role = $_SESSION['admin_role'] ?? 'admin';
                 <?php endif; ?>
             </div>
         </main>
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-4 right-4 bg-gray-800 text-white px-6 py-3 rounded-lg shadow-lg transform translate-y-full opacity-0 transition-all duration-300 z-50">
+        <div class="flex items-center space-x-3">
+            <i id="toastIcon" class="fas fa-check-circle text-green-400"></i>
+            <span id="toastMessage">Action successful</span>
+        </div>
+    </div>
+    
     </div>
 
     <script>
@@ -460,40 +472,96 @@ $admin_role = $_SESSION['admin_role'] ?? 'admin';
             });
         });
 
+        // Show Toast Function
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const icon = document.getElementById('toastIcon');
+            const msg = document.getElementById('toastMessage');
+
+            msg.textContent = message;
+            if (type === 'success') {
+                icon.className = 'fas fa-check-circle text-green-400';
+            } else {
+                icon.className = 'fas fa-exclamation-circle text-red-400';
+            }
+
+            toast.classList.remove('translate-y-full', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-full', 'opacity-0');
+            }, 3000);
+        }
+
         // Status update
         document.querySelectorAll('.status-select').forEach(select => {
             select.addEventListener('change', async function() {
                 const orderId = this.dataset.orderId;
                 const newStatus = this.value;
                 
-                if (confirm('Are you sure you want to change the order status?')) {
-                    try {
-                        const response = await fetch('../api/admin/update_order_status.php', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify({
-                                order_id: orderId,
-                                status: newStatus
-                            })
-                        });
-                        
-                        const data = await response.json();
-                        
-                        if (data.success) {
-                            alert('Order status updated successfully');
-                            location.reload();
-                        } else {
-                            alert('Error: ' + data.message);
-                        }
-                    } catch (error) {
-                        console.error('Error:', error);
-                        alert('Failed to update order status');
+                // Optional: remove confirm or keep it. Let's keep it but maybe stylize later. For now standard confirm is fine for safety.
+                // Or better, just do it with toast confirmation? No, status change is significant.
+                
+                try {
+                    const response = await fetch('../api/admin/update_order_status.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            order_id: orderId,
+                            status: newStatus
+                        })
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        showToast('Order status updated successfully');
+                        // No reload needed if just status changed, but visual feedback is good.
+                        // Ideally we change color class too but for now this is fine.
+                    } else {
+                        showToast('Error: ' + data.message, 'error');
+                        // Revert?
+                        location.reload(); 
                     }
-                } else {
-                    // Revert to previous value
-                    location.reload();
+                } catch (error) {
+                    console.error('Error:', error);
+                    showToast('Failed to update order status', 'error');
+                }
+            });
+        });
+
+        // Payment Status update
+        document.querySelectorAll('.payment-select').forEach(select => {
+            select.addEventListener('change', async function() {
+                const orderId = this.dataset.orderId;
+                const newStatus = this.value;
+                
+                try {
+                    const response = await fetch('../api/admin/update_payment_status.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            order_id: orderId,
+                            status: newStatus
+                        })
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        showToast('Payment status updated successfully');
+                        // Optional: update class for color change
+                        // For now, reload to reflect correct color class
+                        setTimeout(() => location.reload(), 1000);
+                    } else {
+                        showToast('Error: ' + data.message, 'error');
+                        location.reload(); 
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    showToast('Failed to update payment status', 'error');
                 }
             });
         });
@@ -573,6 +641,7 @@ $admin_role = $_SESSION['admin_role'] ?? 'admin';
         }
 
         // Send email function
+        // Send email function
         async function sendEmail(orderId) {
             if (!confirm('Send order confirmation email to customer?')) return;
             
@@ -588,16 +657,17 @@ $admin_role = $_SESSION['admin_role'] ?? 'admin';
                 const data = await response.json();
                 
                 if (data.success) {
-                    alert('Email sent successfully');
+                    showToast('Email sent successfully');
                 } else {
-                    alert('Error: ' + data.message);
+                    showToast('Error: ' + data.message, 'error');
                 }
             } catch (error) {
                 console.error('Error:', error);
-                alert('Failed to send email');
+                showToast('Failed to send email', 'error');
             }
         }
 
+        // Delete order function
         // Delete order function
         async function deleteOrder(orderId) {
             if (!confirm('Are you sure you want to delete this order? This action cannot be undone.')) return;
@@ -614,14 +684,14 @@ $admin_role = $_SESSION['admin_role'] ?? 'admin';
                 const data = await response.json();
                 
                 if (data.success) {
-                    alert('Order deleted successfully');
-                    location.reload();
+                    showToast('Order deleted successfully');
+                    setTimeout(() => location.reload(), 1000);
                 } else {
-                    alert('Error: ' + data.message);
+                    showToast('Error: ' + data.message, 'error');
                 }
             } catch (error) {
                 console.error('Error:', error);
-                alert('Failed to delete order');
+                showToast('Failed to delete order', 'error');
             }
         }
 
