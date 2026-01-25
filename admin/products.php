@@ -97,7 +97,7 @@ $products = $result->fetch_all(MYSQLI_ASSOC);
 $stmt->close();
 
 // Initialize default stats FIRST
-$stats = [
+$product_stats = [
     'total_products' => 0,
     'published' => 0,
     'draft' => 0,
@@ -122,13 +122,18 @@ $stats_result = $conn->query($stats_query);
 if ($stats_result && $stats_result->num_rows > 0) {
     $fetched_stats = $stats_result->fetch_assoc();
     if ($fetched_stats && is_array($fetched_stats)) {
-        $stats = $fetched_stats;
+        // Explicitly map keys to ensure we don't lose the default structure or introduce case sensitivity issues
+        foreach ($product_stats as $key => $default_val) {
+            if (isset($fetched_stats[$key])) {
+                $product_stats[$key] = $fetched_stats[$key];
+            }
+        }
     }
 }
 
 // Ensure all stats are integers
-foreach ($stats as $key => $value) {
-    $stats[$key] = (int)$value;
+foreach ($product_stats as $key => $value) {
+    $product_stats[$key] = (int)$value;
 }
 
 $admin_name = $_SESSION['admin_name'] ?? 'Admin User';
@@ -207,7 +212,7 @@ $current_page = 'products';
                     <div class="flex items-center justify-between">
                         <div>
                             <p class="text-xs text-gray-500 uppercase">Total Products</p>
-                            <h3 class="text-2xl font-bold text-gray-800"><?php echo number_format($stats['total_products']); ?></h3>
+                            <h3 class="text-2xl font-bold text-gray-800"><?php echo number_format($product_stats['total_products']); ?></h3>
                         </div>
                         <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
                             <i class="fas fa-box text-blue-600"></i>
@@ -218,7 +223,7 @@ $current_page = 'products';
                     <div class="flex items-center justify-between">
                         <div>
                             <p class="text-xs text-gray-500 uppercase">Published</p>
-                            <h3 class="text-2xl font-bold text-green-600"><?php echo number_format($stats['published']); ?></h3>
+                            <h3 class="text-2xl font-bold text-green-600"><?php echo number_format($product_stats['published']); ?></h3>
                         </div>
                         <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
                             <i class="fas fa-check-circle text-green-600"></i>
@@ -229,7 +234,7 @@ $current_page = 'products';
                     <div class="flex items-center justify-between">
                         <div>
                             <p class="text-xs text-gray-500 uppercase">Draft</p>
-                            <h3 class="text-2xl font-bold text-yellow-600"><?php echo number_format($stats['draft']); ?></h3>
+                            <h3 class="text-2xl font-bold text-yellow-600"><?php echo number_format($product_stats['draft']); ?></h3>
                         </div>
                         <div class="w-10 h-10 bg-yellow-100 rounded-lg flex items-center justify-center">
                             <i class="fas fa-file-alt text-yellow-600"></i>
@@ -240,7 +245,7 @@ $current_page = 'products';
                     <div class="flex items-center justify-between">
                         <div>
                             <p class="text-xs text-gray-500 uppercase">Low Stock</p>
-                            <h3 class="text-2xl font-bold text-orange-600"><?php echo number_format($stats['low_stock']); ?></h3>
+                            <h3 class="text-2xl font-bold text-orange-600"><?php echo number_format($product_stats['low_stock']); ?></h3>
                         </div>
                         <div class="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
                             <i class="fas fa-exclamation-triangle text-orange-600"></i>
@@ -251,7 +256,7 @@ $current_page = 'products';
                     <div class="flex items-center justify-between">
                         <div>
                             <p class="text-xs text-gray-500 uppercase">Out of Stock</p>
-                            <h3 class="text-2xl font-bold text-red-600"><?php echo number_format($stats['out_of_stock']); ?></h3>
+                            <h3 class="text-2xl font-bold text-red-600"><?php echo number_format($product_stats['out_of_stock']); ?></h3>
                         </div>
                         <div class="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
                             <i class="fas fa-times-circle text-red-600"></i>
@@ -262,7 +267,7 @@ $current_page = 'products';
                     <div class="flex items-center justify-between">
                         <div>
                             <p class="text-xs text-gray-500 uppercase">Total Stock</p>
-                            <h3 class="text-2xl font-bold text-gray-800"><?php echo number_format($stats['total_stock']); ?></h3>
+                            <h3 class="text-2xl font-bold text-gray-800"><?php echo number_format($product_stats['total_stock']); ?></h3>
                         </div>
                         <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
                             <i class="fas fa-layer-group text-purple-600"></i>

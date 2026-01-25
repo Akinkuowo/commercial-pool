@@ -1,9 +1,5 @@
-
-
-// ============================================
-// FILE: api/admin/delete_product.php
-// ============================================
 <?php
+// api/admin/delete_product.php
 session_start();
 require_once '../../config.php';
 
@@ -20,11 +16,14 @@ $conn = getDbConnection();
 
 // Get product ID
 $product_id = 0;
-if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
+// Check if ID is in the query string (works for DELETE method too)
+if (isset($_GET['id'])) {
+    $product_id = intval($_GET['id']);
+} 
+// Fallback to checking input stream if not in URL
+elseif ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
     parse_str(file_get_contents("php://input"), $delete_vars);
     $product_id = intval($delete_vars['id'] ?? 0);
-} else {
-    $product_id = intval($_GET['id'] ?? 0);
 }
 
 if ($product_id <= 0) {

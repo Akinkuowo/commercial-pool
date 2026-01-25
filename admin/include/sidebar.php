@@ -183,7 +183,7 @@ $admin_role = $_SESSION['admin_role'] ?? 'admin';
                 <div class="text-xs text-gray-500 uppercase mb-2 px-3 sidebar-text">Administration</div>
                 <a href="users.php" class="flex items-center px-3 py-2.5 text-gray-300 hover:bg-gray-800 rounded-lg mb-1">
                     <i class="fas fa-user-shield w-5"></i>
-                    <span class="sidebar-text ml-3">Admin Users</span>
+                    <span class="sidebar-text ml-3">Users</span>
                 </a>
                 <a href="settings.php" class="flex items-center px-3 py-2.5 text-gray-300 hover:bg-gray-800 rounded-lg mb-1">
                     <i class="fas fa-cog w-5"></i>
