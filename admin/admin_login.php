@@ -69,7 +69,7 @@
                 <?php endif; ?>
                 
                 <!-- Login Form -->
-                <form id="adminLoginForm" action="api/admin/process_login.php" method="POST" class="space-y-6">
+                <form id="adminLoginForm" action="../api/admin/process_login.php" method="POST" class="space-y-6">
                     <div>
                         <label for="username" class="block text-sm font-medium text-gray-700 mb-2">
                             Username or Email

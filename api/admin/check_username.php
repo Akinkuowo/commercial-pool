@@ -12,15 +12,20 @@ if (!isset($_GET['username'])) {
 $username = trim($_GET['username']);
 
 try {
-    $stmt = $pdo->prepare("SELECT id FROM admin_users WHERE username = :username");
-    $stmt->execute(['username' => $username]);
-    $exists = $stmt->fetch() !== false;
+    $conn = getDbConnection();
+    $stmt = $conn->prepare("SELECT id FROM admin_users WHERE username = ?");
+    $stmt->bind_param("s", $username);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $exists = $result->fetch_assoc() !== null;
+    $stmt->close();
+    closeDbConnection($conn);
     
     echo json_encode([
         'exists' => $exists,
         'available' => !$exists
     ]);
-} catch (PDOException $e) {
+} catch (Exception $e) {
     error_log("Error checking username: " . $e->getMessage());
     echo json_encode(['error' => 'Database error']);
 }
@@ -42,15 +47,20 @@ if (!isset($_GET['email'])) {
 $email = trim($_GET['email']);
 
 try {
-    $stmt = $pdo->prepare("SELECT id FROM admin_users WHERE email = :email");
-    $stmt->execute(['email' => $email]);
-    $exists = $stmt->fetch() !== false;
+    $conn = getDbConnection();
+    $stmt = $conn->prepare("SELECT id FROM admin_users WHERE email = ?");
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $exists = $result->fetch_assoc() !== null;
+    $stmt->close();
+    closeDbConnection($conn);
     
     echo json_encode([
         'exists' => $exists,
         'available' => !$exists
     ]);
-} catch (PDOException $e) {
+} catch (Exception $e) {
     error_log("Error checking email: " . $e->getMessage());
     echo json_encode(['error' => 'Database error']);
 }

@@ -131,7 +131,7 @@ if ($require_invitation && !isset($_GET['token'])) {
                     <?php endif; ?>
 
                     <!-- Registration Form -->
-                    <form id="adminRegisterForm" action="api/admin/process_register.php" method="POST" class="space-y-6">
+                    <form id="adminRegisterForm" action="../api/admin/process_register.php" method="POST" class="space-y-6">
                         <?php if ($require_invitation && isset($_GET['token'])): ?>
                             <input type="hidden" name="invitation_token" value="<?php echo htmlspecialchars($_GET['token']); ?>">
                         <?php endif; ?>
@@ -510,6 +510,6 @@ if ($require_invitation && !isset($_GET['token'])) {
         </div>
     </div>
 
-    <script src="assets/js/admin_register.js"></script>
+    <script src="../assets/js/admin_register.js"></script>
 </body>
 </html>

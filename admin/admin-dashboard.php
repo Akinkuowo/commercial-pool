@@ -1,3 +1,105 @@
+<?php
+// admin/dashboard.php (or admin-dashboard.php)
+session_start();
+require_once '../config.php';
+
+// Check if user is logged in
+if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
+    header('Location: admin_login.php?session=expired');
+    exit;
+}
+
+// Get database connection
+$conn = getDbConnection();
+
+// Get pending orders count
+$pending_query = "SELECT COUNT(*) as pending_count FROM orders WHERE status = 'Pending'";
+$pending_result = $conn->query($pending_query);
+$pending_count = $pending_result ? $pending_result->fetch_assoc()['pending_count'] : 0;
+
+// Get dashboard statistics
+$stats_query = "SELECT 
+    COUNT(*) as total_orders,
+    SUM(CASE WHEN status = 'Pending' THEN 1 ELSE 0 END) as pending_orders,
+    SUM(CASE WHEN status = 'Processing' THEN 1 ELSE 0 END) as processing_orders,
+    SUM(CASE WHEN status = 'Completed' THEN 1 ELSE 0 END) as completed_orders,
+    SUM(CASE WHEN status = 'Cancelled' THEN 1 ELSE 0 END) as cancelled_orders,
+    COALESCE(SUM(total_amount), 0) as total_revenue,
+    COUNT(DISTINCT customer_email) as total_customers
+FROM orders";
+$stats_result = $conn->query($stats_query);
+$stats = $stats_result ? $stats_result->fetch_assoc() : [
+    'total_orders' => 0,
+    'pending_orders' => 0,
+    'processing_orders' => 0,
+    'completed_orders' => 0,
+    'cancelled_orders' => 0,
+    'total_revenue' => 0,
+    'total_customers' => 0
+];
+
+// Get products count
+$products_query = "SELECT COUNT(*) as total_products FROM products";
+$products_result = $conn->query($products_query);
+$total_products = $products_result ? $products_result->fetch_assoc()['total_products'] : 0;
+
+// Get recent orders
+$recent_orders_query = "SELECT id, user_id, total_amount, status, created_at, customer_name, customer_email
+                        FROM orders 
+                        ORDER BY created_at DESC 
+                        LIMIT 5";
+$recent_orders_result = $conn->query($recent_orders_query);
+$recent_orders = $recent_orders_result ? $recent_orders_result->fetch_all(MYSQLI_ASSOC) : [];
+
+// Get top products (from order_items)
+$top_products_query = "SELECT 
+                       p.product_name as name, 
+                    --    p.sku, 
+                       p.price, 
+                       COUNT(oi.id) as times_sold,
+                       COALESCE(SUM(oi.quantity), 0) as total_quantity
+                       FROM products p
+                       LEFT JOIN order_items oi ON p.id = oi.product_id
+                       GROUP BY p.id, p.product_name, p.price
+                       HAVING total_quantity > 0
+                       ORDER BY total_quantity DESC
+                       LIMIT 5";
+$top_products_result = $conn->query($top_products_query);
+$top_products = $top_products_result ? $top_products_result->fetch_all(MYSQLI_ASSOC) : [];
+
+// Get monthly revenue data for chart (last 6 months)
+$revenue_query = "SELECT 
+    DATE_FORMAT(created_at, '%b') as month,
+    YEAR(created_at) as year,
+    MONTH(created_at) as month_num,
+    COALESCE(SUM(total_amount), 0) as revenue
+    FROM orders
+    WHERE created_at >= DATE_SUB(NOW(), INTERVAL 6 MONTH)
+    GROUP BY YEAR(created_at), MONTH(created_at), DATE_FORMAT(created_at, '%b')
+    ORDER BY year ASC, month_num ASC";
+$revenue_result = $conn->query($revenue_query);
+$revenue_data = $revenue_result ? $revenue_result->fetch_all(MYSQLI_ASSOC) : [];
+
+// If no revenue data, create empty array for display
+if (empty($revenue_data)) {
+    $current_month = date('n');
+    $months_names = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    $revenue_data = [];
+    for ($i = 5; $i >= 0; $i--) {
+        $month_index = ($current_month - $i - 1 + 12) % 12;
+        $revenue_data[] = [
+            'month' => $months_names[$month_index],
+            'revenue' => 0
+        ];
+    }
+}
+
+$admin_name = $_SESSION['admin_name'] ?? 'Admin User';
+$admin_role = $_SESSION['admin_role'] ?? 'admin';
+
+$conn->close();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -27,82 +129,7 @@
 </head>
 <body class="bg-gray-50">
     <!-- Sidebar -->
-    <aside id="sidebar" class="sidebar fixed left-0 top-0 h-screen bg-gray-900 text-white shadow-xl overflow-y-auto">
-        <div class="p-4 border-b border-gray-700">
-            <div class="flex items-center justify-between">
-                <div class="flex items-center">
-                    <i class="fas fa-shield-halved text-2xl text-blue-400"></i>
-                    <span class="logo-text ml-3 font-bold text-lg">Jacksons Admin</span>
-                </div>
-                <button id="sidebarToggle" class="lg:block hidden text-gray-400 hover:text-white">
-                    <i class="fas fa-bars"></i>
-                </button>
-            </div>
-        </div>
-
-        <nav class="p-4">
-            <div class="mb-6">
-                <div class="text-xs text-gray-500 uppercase mb-2 px-3 sidebar-text">Main</div>
-                <a href="#" class="flex items-center px-3 py-2.5 bg-blue-600 rounded-lg mb-1">
-                    <i class="fas fa-home w-5"></i>
-                    <span class="sidebar-text ml-3">Dashboard</span>
-                </a>
-                <a href="#orders" class="flex items-center px-3 py-2.5 text-gray-300 hover:bg-gray-800 rounded-lg mb-1">
-                    <i class="fas fa-shopping-cart w-5"></i>
-                    <span class="sidebar-text ml-3">Orders</span>
-                    <span class="sidebar-text ml-auto bg-red-500 text-white text-xs px-2 py-0.5 rounded-full">12</span>
-                </a>
-                <a href="#products" class="flex items-center px-3 py-2.5 text-gray-300 hover:bg-gray-800 rounded-lg mb-1">
-                    <i class="fas fa-box w-5"></i>
-                    <span class="sidebar-text ml-3">Products</span>
-                </a>
-                <a href="#customers" class="flex items-center px-3 py-2.5 text-gray-300 hover:bg-gray-800 rounded-lg mb-1">
-                    <i class="fas fa-users w-5"></i>
-                    <span class="sidebar-text ml-3">Customers</span>
-                </a>
-            </div>
-
-            <div class="mb-6">
-                <div class="text-xs text-gray-500 uppercase mb-2 px-3 sidebar-text">Content</div>
-                <a href="#categories" class="flex items-center px-3 py-2.5 text-gray-300 hover:bg-gray-800 rounded-lg mb-1">
-                    <i class="fas fa-folder w-5"></i>
-                    <span class="sidebar-text ml-3">Categories</span>
-                </a>
-                <a href="#media" class="flex items-center px-3 py-2.5 text-gray-300 hover:bg-gray-800 rounded-lg mb-1">
-                    <i class="fas fa-images w-5"></i>
-                    <span class="sidebar-text ml-3">Media Library</span>
-                </a>
-            </div>
-
-            <div class="mb-6">
-                <div class="text-xs text-gray-500 uppercase mb-2 px-3 sidebar-text">Analytics</div>
-                <a href="#reports" class="flex items-center px-3 py-2.5 text-gray-300 hover:bg-gray-800 rounded-lg mb-1">
-                    <i class="fas fa-chart-bar w-5"></i>
-                    <span class="sidebar-text ml-3">Reports</span>
-                </a>
-                <a href="#analytics" class="flex items-center px-3 py-2.5 text-gray-300 hover:bg-gray-800 rounded-lg mb-1">
-                    <i class="fas fa-chart-line w-5"></i>
-                    <span class="sidebar-text ml-3">Analytics</span>
-                </a>
-            </div>
-
-            <div class="mb-6" id="adminOnlySection">
-                <div class="text-xs text-gray-500 uppercase mb-2 px-3 sidebar-text">Administration</div>
-                <a href="#users" class="flex items-center px-3 py-2.5 text-gray-300 hover:bg-gray-800 rounded-lg mb-1">
-                    <i class="fas fa-user-shield w-5"></i>
-                    <span class="sidebar-text ml-3">Admin Users</span>
-                </a>
-                <a href="#settings" class="flex items-center px-3 py-2.5 text-gray-300 hover:bg-gray-800 rounded-lg mb-1">
-                    <i class="fas fa-cog w-5"></i>
-                    <span class="sidebar-text ml-3">Settings</span>
-                </a>
-                <a href="#activity" class="flex items-center px-3 py-2.5 text-gray-300 hover:bg-gray-800 rounded-lg mb-1">
-                    <i class="fas fa-history w-5"></i>
-                    <span class="sidebar-text ml-3">Activity Log</span>
-                </a>
-            </div>
-        </nav>
-    </aside>
+    <?php include('include/sidebar.php') ?>
 
     <!-- Main Content -->
     <div id="mainContent" class="main-content min-h-screen">
@@ -173,7 +200,7 @@
                     <div class="flex items-center justify-between mb-4">
                         <div>
                             <p class="text-gray-500 text-sm font-medium">Total Revenue</p>
-                            <h3 class="text-3xl font-bold text-gray-800">£45,231</h3>
+                            <h3 class="text-3xl font-bold text-gray-800">£<?php echo number_format($stats['total_revenue'] ?? 0, 2); ?></h3>
                         </div>
                         <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
                             <i class="fas fa-pound-sign text-green-600 text-xl"></i>
@@ -189,15 +216,14 @@
                     <div class="flex items-center justify-between mb-4">
                         <div>
                             <p class="text-gray-500 text-sm font-medium">Orders</p>
-                            <h3 class="text-3xl font-bold text-gray-800">1,254</h3>
+                            <h3 class="text-3xl font-bold text-gray-800"><?php echo number_format($stats['total_orders'] ?? 0); ?></h3>
                         </div>
                         <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
                             <i class="fas fa-shopping-cart text-blue-600 text-xl"></i>
                         </div>
                     </div>
                     <div class="flex items-center text-sm">
-                        <span class="text-green-600 font-medium">+8.2%</span>
-                        <span class="text-gray-500 ml-2">vs last month</span>
+                        <span class="text-yellow-600 font-medium"><?php echo $pending_count; ?> pending</span>
                     </div>
                 </div>
 
@@ -205,7 +231,7 @@
                     <div class="flex items-center justify-between mb-4">
                         <div>
                             <p class="text-gray-500 text-sm font-medium">Customers</p>
-                            <h3 class="text-3xl font-bold text-gray-800">3,842</h3>
+                            <h3 class="text-3xl font-bold text-gray-800"><?php echo number_format($stats['total_customers'] ?? 0); ?></h3>
                         </div>
                         <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
                             <i class="fas fa-users text-purple-600 text-xl"></i>
@@ -221,7 +247,7 @@
                     <div class="flex items-center justify-between mb-4">
                         <div>
                             <p class="text-gray-500 text-sm font-medium">Products</p>
-                            <h3 class="text-3xl font-bold text-gray-800">582</h3>
+                            <h3 class="text-3xl font-bold text-gray-800"><?php echo number_format($total_products ?? 0); ?></h3>
                         </div>
                         <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
                             <i class="fas fa-box text-orange-600 text-xl"></i>
@@ -269,25 +295,43 @@
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
                                 </tr>
                             </thead>
-                            <tbody class="divide-y divide-gray-100">
-                                <tr class="hover:bg-gray-50">
-                                    <td class="px-6 py-4 text-sm font-medium text-gray-900">#ORD-1234</td>
-                                    <td class="px-6 py-4 text-sm text-gray-600">John Smith</td>
-                                    <td class="px-6 py-4 text-sm font-semibold text-gray-900">£234.50</td>
-                                    <td class="px-6 py-4"><span class="px-2 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full">Completed</span></td>
-                                </tr>
-                                <tr class="hover:bg-gray-50">
-                                    <td class="px-6 py-4 text-sm font-medium text-gray-900">#ORD-1235</td>
-                                    <td class="px-6 py-4 text-sm text-gray-600">Jane Doe</td>
-                                    <td class="px-6 py-4 text-sm font-semibold text-gray-900">£456.00</td>
-                                    <td class="px-6 py-4"><span class="px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full">Processing</span></td>
-                                </tr>
-                                <tr class="hover:bg-gray-50">
-                                    <td class="px-6 py-4 text-sm font-medium text-gray-900">#ORD-1236</td>
-                                    <td class="px-6 py-4 text-sm text-gray-600">Mike Johnson</td>
-                                    <td class="px-6 py-4 text-sm font-semibold text-gray-900">£189.99</td>
-                                    <td class="px-6 py-4"><span class="px-2 py-1 text-xs font-medium bg-yellow-100 text-yellow-800 rounded-full">Pending</span></td>
-                                </tr>
+                           <tbody class="divide-y divide-gray-100">
+                                <?php if (empty($recent_orders)): ?>
+                                    <tr>
+                                        <td colspan="4" class="px-6 py-8 text-center text-gray-500">
+                                            <i class="fas fa-inbox text-3xl mb-2"></i>
+                                            <p>No recent orders</p>
+                                        </td>
+                                    </tr>
+                                <?php else: ?>
+                                    <?php foreach ($recent_orders as $order): ?>
+                                        <?php
+                                        $status_colors = [
+                                            'completed' => 'bg-green-100 text-green-800',
+                                            'processing' => 'bg-blue-100 text-blue-800',
+                                            'pending' => 'bg-yellow-100 text-yellow-800',
+                                            'cancelled' => 'bg-red-100 text-red-800',
+                                            'on_hold' => 'bg-gray-100 text-gray-800',
+                                            'refunded' => 'bg-purple-100 text-purple-800'
+                                        ];
+                                        $status_class = $status_colors[$order['status']] ?? 'bg-gray-100 text-gray-800';
+                                        ?>
+                                        <tr class="hover:bg-gray-50">
+                                            <td class="px-6 py-4 text-sm font-medium text-gray-900">
+                                                <a href="order_details.php?id=<?php echo $order['id']; ?>" class="text-blue-600 hover:underline">
+                                                    <?php echo htmlspecialchars($order['id']); ?>
+                                                </a>
+                                            </td>
+                                            <td class="px-6 py-4 text-sm text-gray-600"><?php echo htmlspecialchars($order['customer_name']); ?></td>
+                                            <td class="px-6 py-4 text-sm font-semibold text-gray-900">£<?php echo number_format($order['total_amount'], 2); ?></td>
+                                            <td class="px-6 py-4">
+                                                <span class="px-2 py-1 text-xs font-medium <?php echo $status_class; ?> rounded-full">
+                                                    <?php echo ucfirst(str_replace('_', ' ', $order['status'])); ?>
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
                             </tbody>
                         </table>
                     </div>
@@ -302,45 +346,25 @@
                         </div>
                     </div>
                     <div class="p-6 space-y-4">
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center space-x-3">
-                                <div class="w-12 h-12 bg-gray-200 rounded"></div>
-                                <div>
-                                    <p class="font-medium text-gray-800">Leisure Battery 12V</p>
-                                    <p class="text-sm text-gray-500">SKU: LB-12V-100</p>
+                        <?php if (empty($top_products)): ?>
+                            <p class="text-center text-gray-500 py-4">No product data available</p>
+                        <?php else: ?>
+                            <?php foreach ($top_products as $product): ?>
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center space-x-3">
+                                        <div class="w-12 h-12 bg-gray-200 rounded"></div>
+                                        <div>
+                                            <p class="font-medium text-gray-800"><?php echo htmlspecialchars($product['name']); ?></p>
+                                            <!-- <p class="text-sm text-gray-500">SKU: <?php echo htmlspecialchars($product['sku']); ?></p> -->
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="font-semibold text-gray-800">£<?php echo number_format($product['price'], 2); ?></p>
+                                        <p class="text-sm text-gray-500"><?php echo $product['total_quantity'] ?? 0; ?> sold</p>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="text-right">
-                                <p class="font-semibold text-gray-800">£89.99</p>
-                                <p class="text-sm text-gray-500">142 sold</p>
-                            </div>
-                        </div>
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center space-x-3">
-                                <div class="w-12 h-12 bg-gray-200 rounded"></div>
-                                <div>
-                                    <p class="font-medium text-gray-800">Water Pump Kit</p>
-                                    <p class="text-sm text-gray-500">SKU: WP-KIT-01</p>
-                                </div>
-                            </div>
-                            <div class="text-right">
-                                <p class="font-semibold text-gray-800">£45.50</p>
-                                <p class="text-sm text-gray-500">98 sold</p>
-                            </div>
-                        </div>
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center space-x-3">
-                                <div class="w-12 h-12 bg-gray-200 rounded"></div>
-                                <div>
-                                    <p class="font-medium text-gray-800">Solar Panel 100W</p>
-                                    <p class="text-sm text-gray-500">SKU: SP-100W</p>
-                                </div>
-                            </div>
-                            <div class="text-right">
-                                <p class="font-semibold text-gray-800">£199.00</p>
-                                <p class="text-sm text-gray-500">76 sold</p>
-                            </div>
-                        </div>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
@@ -377,22 +401,54 @@
             }
         });
 
-        // Charts
+        // Revenue Chart with dynamic data
         const revenueCtx = document.getElementById('revenueChart').getContext('2d');
         new Chart(revenueCtx, {
             type: 'line',
             data: {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                labels: <?php echo json_encode(array_column($revenue_data, 'month')); ?>,
                 datasets: [{
                     label: 'Revenue',
-                    data: [12000, 19000, 15000, 25000, 22000, 30000],
+                    data: <?php echo json_encode(array_column($revenue_data, 'revenue')); ?>,
                     borderColor: 'rgb(59, 130, 246)',
                     backgroundColor: 'rgba(59, 130, 246, 0.1)',
                     tension: 0.4
                 }]
             },
-            options: { responsive: true, maintainAspectRatio: false }
+            options: { 
+                responsive: true, 
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return '£' + value.toLocaleString();
+                            }
+                        }
+                    }
+                }
+            }
         });
+
+// Orders Chart with dynamic data
+const ordersCtx = document.getElementById('ordersChart').getContext('2d');
+new Chart(ordersCtx, {
+    type: 'doughnut',
+    data: {
+        labels: ['Completed', 'Processing', 'Pending', 'Cancelled'],
+        datasets: [{
+            data: [
+                <?php echo $stats['completed_orders'] ?? 0; ?>,
+                <?php echo $stats['processing_orders'] ?? 0; ?>,
+                <?php echo $stats['pending_orders'] ?? 0; ?>,
+                <?php echo $stats['cancelled_orders'] ?? 0; ?>
+            ],
+            backgroundColor: ['#10b981', '#3b82f6', '#f59e0b', '#ef4444']
+        }]
+    },
+    options: { responsive: true, maintainAspectRatio: false }
+});
 
         const ordersCtx = document.getElementById('ordersChart').getContext('2d');
         new Chart(ordersCtx, {

@@ -1,9 +1,12 @@
 <?php
 // api/admin/process_register.php
 session_start();
+
+// Include database configuration
 require_once '../../config.php';
 
-header('Content-Type: application/json');
+// Get database connection
+$conn = getDbConnection();
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header('Location: ../../admin/admin_register.php?error=invalid');
@@ -17,7 +20,7 @@ $require_invitation = false; // Set to true to require invitation token
 $default_role_for_new_users = 'editor'; // 'editor' or 'admin'
 
 if (!$allow_registration) {
-    header('Location: ../../admin_register.php?error=registration_disabled');
+    header('Location: ../../admin/admin_register.php?error=registration_disabled');
     exit;
 }
 
@@ -43,17 +46,21 @@ $errors = [];
 // Check invitation token if required
 if ($require_invitation) {
     if (empty($invitation_token)) {
-        header('Location: ../../admin_register.php?error=invitation_required');
+        header('Location: ../../admin/admin_register.php?error=invitation_required');
         exit;
     }
     
     // Validate invitation token
-    $stmt = $pdo->prepare("SELECT * FROM admin_invitations WHERE token = :token AND used = 0 AND expires_at > NOW()");
-    $stmt->execute(['token' => $invitation_token]);
-    $invitation = $stmt->fetch(PDO::FETCH_ASSOC);
+    $stmt = $conn->prepare("SELECT * FROM admin_invitations WHERE token = ? AND used = 0 AND expires_at > NOW()");
+    $stmt->bind_param("s", $invitation_token);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $invitation = $result->fetch_assoc();
+    $stmt->close();
     
     if (!$invitation) {
-        header('Location: ../../admin_register.php?error=invalid_token');
+        closeDbConnection($conn);
+        header('Location: ../../admin/admin_register.php?error=invalid_token');
         exit;
     }
 }
@@ -67,12 +74,17 @@ if (empty($username)) {
     $errors[] = 'Username can only contain letters and numbers';
 } else {
     // Check if username exists
-    $stmt = $pdo->prepare("SELECT id FROM admin_users WHERE username = :username");
-    $stmt->execute(['username' => $username]);
-    if ($stmt->fetch()) {
-        header('Location: ../../admin_register.php?error=username_exists');
+    $stmt = $conn->prepare("SELECT id FROM admin_users WHERE username = ?");
+    $stmt->bind_param("s", $username);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    if ($result->fetch_assoc()) {
+        $stmt->close();
+        closeDbConnection($conn);
+        header('Location: ../../admin/admin_register.php?error=username_exists');
         exit;
     }
+    $stmt->close();
 }
 
 // Email validation
@@ -82,12 +94,17 @@ if (empty($email)) {
     $errors[] = 'Invalid email format';
 } else {
     // Check if email exists
-    $stmt = $pdo->prepare("SELECT id FROM admin_users WHERE email = :email");
-    $stmt->execute(['email' => $email]);
-    if ($stmt->fetch()) {
-        header('Location: ../../admin_register.php?error=email_exists');
+    $stmt = $conn->prepare("SELECT id FROM admin_users WHERE email = ?");
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    if ($result->fetch_assoc()) {
+        $stmt->close();
+        closeDbConnection($conn);
+        header('Location: ../../admin/admin_register.php?error=email_exists');
         exit;
     }
+    $stmt->close();
 }
 
 // Password validation
@@ -107,7 +124,8 @@ if (empty($password)) {
 
 // Confirm password
 if ($password !== $confirm_password) {
-    header('Location: ../../admin_register.php?error=passwords_mismatch');
+    closeDbConnection($conn);
+    header('Location: ../../admin/admin_register.php?error=passwords_mismatch');
     exit;
 }
 
@@ -127,7 +145,8 @@ if (!$terms || !$data_handling || !$code_of_conduct) {
 
 // If there are validation errors
 if (!empty($errors)) {
-    header('Location: ../../admin_register.php?error=validation&msg=' . urlencode(implode(', ', $errors)));
+    closeDbConnection($conn);
+    header('Location: ../../admin/admin_register.php?error=validation&msg=' . urlencode(implode(', ', $errors)));
     exit;
 }
 
@@ -148,92 +167,88 @@ try {
     }
     
     // Insert new admin user
-    $stmt = $pdo->prepare("
+    $stmt = $conn->prepare("
         INSERT INTO admin_users (
             username, email, password, first_name, last_name, 
             role, status, created_at
-        ) VALUES (
-            :username, :email, :password, :first_name, :last_name, 
-            :role, :status, NOW()
-        )
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, NOW())
     ");
     
-    $stmt->execute([
-        'username' => $username,
-        'email' => $email,
-        'password' => $hashed_password,
-        'first_name' => $first_name,
-        'last_name' => $last_name,
-        'role' => $role,
-        'status' => $status
-    ]);
+    $stmt->bind_param("sssssss", 
+        $username, $email, $hashed_password, $first_name, $last_name, $role, $status
+    );
     
-    $admin_id = $pdo->lastInsertId();
+    $stmt->execute();
+    $admin_id = $conn->insert_id;
+    $stmt->close();
     
     // Store additional information in a separate table (create this if needed)
     if (!empty($phone) || !empty($department) || !empty($bio)) {
-        $stmt = $pdo->prepare("
+        $stmt = $conn->prepare("
             INSERT INTO admin_profiles (
                 admin_id, phone, department, bio, requested_role, created_at
-            ) VALUES (
-                :admin_id, :phone, :department, :bio, :requested_role, NOW()
-            )
+            ) VALUES (?, ?, ?, ?, ?, NOW())
         ");
         
-        $stmt->execute([
-            'admin_id' => $admin_id,
-            'phone' => $phone,
-            'department' => $department,
-            'bio' => $bio,
-            'requested_role' => $requested_role
-        ]);
+        $stmt->bind_param("issss", 
+            $admin_id, $phone, $department, $bio, $requested_role
+        );
+        
+        $stmt->execute();
+        $stmt->close();
     }
     
     // Mark invitation as used if applicable
     if ($require_invitation && isset($invitation)) {
-        $stmt = $pdo->prepare("UPDATE admin_invitations SET used = 1, used_by = :admin_id WHERE id = :id");
-        $stmt->execute([
-            'admin_id' => $admin_id,
-            'id' => $invitation['id']
-        ]);
+        $stmt = $conn->prepare("UPDATE admin_invitations SET used = 1, used_by = ? WHERE id = ?");
+        $stmt->bind_param("ii", $admin_id, $invitation['id']);
+        $stmt->execute();
+        $stmt->close();
     }
     
     // Log registration activity
-    $stmt = $pdo->prepare("
+    $stmt = $conn->prepare("
         INSERT INTO admin_activity_log (admin_id, action, description, ip_address, user_agent)
-        VALUES (:admin_id, 'registration', :description, :ip_address, :user_agent)
+        VALUES (?, 'registration', ?, ?, ?)
     ");
     
     $description = $require_approval ? 
         "New admin account registered (pending approval)" : 
         "New admin account registered";
     
-    $stmt->execute([
-        'admin_id' => $admin_id,
-        'description' => $description,
-        'ip_address' => $_SERVER['REMOTE_ADDR'],
-        'user_agent' => $_SERVER['HTTP_USER_AGENT']
-    ]);
+    $ip_address = $_SERVER['REMOTE_ADDR'];
+    $user_agent = $_SERVER['HTTP_USER_AGENT'];
+    
+    $stmt->bind_param("isss", 
+        $admin_id, $description, $ip_address, $user_agent
+    );
+    
+    $stmt->execute();
+    $stmt->close();
     
     // Send notification email to user
     sendWelcomeEmail($email, $first_name, $username, $require_approval);
     
     // Send notification to existing admins about new registration
     if ($require_approval) {
-        notifyAdminsOfNewRegistration($pdo, $username, $email, $requested_role);
+        notifyAdminsOfNewRegistration($conn, $username, $email, $requested_role);
     }
+    
+    // Close database connection
+    closeDbConnection($conn);
     
     // Redirect based on approval requirement
     if ($require_approval) {
-        header('Location: ../../admin_register.php?success=pending_approval');
+        header('Location: ../../admin/admin_register.php?success=pending_approval');
     } else {
-        header('Location: ../../admin_login.php?registered=true');
+        header('Location: ../../admin/admin_login.php?registered=true');
     }
     exit;
     
-} catch (PDOException $e) {
+} catch (Exception $e) {
     error_log("Admin registration error: " . $e->getMessage());
-    header('Location: ../../admin_register.php?error=system');
+    closeDbConnection($conn);
+    header('Location: ../../admin/admin_register.php?error=system');
     exit;
 }
 
@@ -255,7 +270,7 @@ function sendWelcomeEmail($email, $firstName, $username, $requireApproval) {
         $message = "Hello $firstName,\n\n";
         $message .= "Welcome to the Jacksons Admin Portal!\n\n";
         $message .= "Username: $username\n\n";
-        $message .= "You can now log in at: " . $_SERVER['HTTP_HOST'] . "/admin_login.php\n\n";
+        $message .= "You can now log in at: " . $_SERVER['HTTP_HOST'] . "/admin/admin_login.php\n\n";
         $message .= "Best regards,\n";
         $message .= "Jacksons Leisure and Supplies";
     }
@@ -264,11 +279,13 @@ function sendWelcomeEmail($email, $firstName, $username, $requireApproval) {
     // Or use PHPMailer for better email handling
 }
 
-function notifyAdminsOfNewRegistration($pdo, $username, $email, $requestedRole) {
+function notifyAdminsOfNewRegistration($conn, $username, $email, $requestedRole) {
     // Get all active admin users
-    $stmt = $pdo->prepare("SELECT email, first_name FROM admin_users WHERE role = 'admin' AND status = 'active'");
+    $stmt = $conn->prepare("SELECT email, first_name FROM admin_users WHERE role = 'admin' AND status = 'active'");
     $stmt->execute();
-    $admins = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $result = $stmt->get_result();
+    $admins = $result->fetch_all(MYSQLI_ASSOC);
+    $stmt->close();
     
     $subject = "New Admin Registration Pending Approval";
     $approvalLink = $_SERVER['HTTP_HOST'] . "/admin/approve_user.php";
