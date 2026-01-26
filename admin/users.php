@@ -198,7 +198,7 @@ $current_page = 'users';
     <!-- Toast -->
     <div id="toast" class="fixed bottom-4 right-4 bg-gray-800 text-white px-6 py-3 rounded-lg shadow-lg transform translate-y-full opacity-0 transition-all duration-300 z-50">
         <div class="flex items-center space-x-3">
-            <i id="toastIcon" class="fas fa-check-circle text-green-400"></i>
+            <i id="toastIcon" class="fas fa-check-circle text-[#022658]"></i>
             <span id="toastMessage">Action successful</span>
         </div>
     </div>
@@ -233,7 +233,7 @@ $current_page = 'users';
             tbody.innerHTML = '';
             
             users.forEach(user => {
-                const statusClass = user.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800';
+                const statusClass = user.status === 'active' ? 'bg-[#022658]/10 text-[#022658]' : 'bg-gray-100 text-gray-800';
                 
                 let actions = '';
                 if (currentAdminRole === 'admin') {
@@ -371,7 +371,7 @@ $current_page = 'users';
 
             msg.textContent = message;
             if (type === 'success') {
-                icon.className = 'fas fa-check-circle text-green-400';
+                icon.className = 'fas fa-check-circle text-[#022658]';
             } else {
                 icon.className = 'fas fa-exclamation-circle text-red-400';
             }

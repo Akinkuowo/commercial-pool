@@ -208,10 +208,10 @@ $admin_role = $_SESSION['admin_role'] ?? 'admin';
                     <div class="flex items-center justify-between">
                         <div>
                             <p class="text-xs text-gray-500 uppercase">Completed</p>
-                            <h3 class="text-2xl font-bold text-green-600"><?php echo number_format($stats['completed']); ?></h3>
+                            <h3 class="text-2xl font-bold text-[#022658]"><?php echo number_format($stats['completed']); ?></h3>
                         </div>
-                        <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                            <i class="fas fa-check-circle text-green-600"></i>
+                        <div class="w-10 h-10 bg-[#022658]/10 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-check-circle text-[#022658]"></i>
                         </div>
                     </div>
                 </div>
@@ -221,8 +221,8 @@ $admin_role = $_SESSION['admin_role'] ?? 'admin';
                             <p class="text-xs text-gray-500 uppercase">Revenue</p>
                             <h3 class="text-2xl font-bold text-gray-800">£<?php echo number_format($stats['total_revenue'], 2); ?></h3>
                         </div>
-                        <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                            <i class="fas fa-pound-sign text-green-600"></i>
+                        <div class="w-10 h-10 bg-[#022658]/10 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-pound-sign text-[#022658]"></i>
                         </div>
                     </div>
                 </div>
@@ -281,7 +281,7 @@ $admin_role = $_SESSION['admin_role'] ?? 'admin';
                         <a href="orders.php" class="bg-gray-200 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-300 transition">
                             <i class="fas fa-times mr-2"></i>Clear
                         </a>
-                        <button type="button" onclick="exportOrders()" class="ml-auto bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition">
+                        <button type="button" onclick="exportOrders()" class="ml-auto bg-[#022658] text-white px-6 py-2 rounded-lg hover:bg-[#022658]/90 transition">
                             <i class="fas fa-file-export mr-2"></i>Export
                         </button>
                     </div>
@@ -339,7 +339,7 @@ $admin_role = $_SESSION['admin_role'] ?? 'admin';
                                     <td class="px-6 py-4">
                                         <?php
                                         $payment_colors = [
-                                            'paid' => 'bg-green-100 text-green-800',
+                                            'paid' => 'bg-[#022658]/10 text-[#022658]',
                                             'pending' => 'bg-yellow-100 text-yellow-800',
                                             'failed' => 'bg-red-100 text-red-800',
                                             'refunded' => 'bg-purple-100 text-purple-800'
@@ -373,7 +373,7 @@ $admin_role = $_SESSION['admin_role'] ?? 'admin';
                                                 <i class="fas fa-eye"></i>
                                             </a>
                                             <button onclick="printOrder(<?php echo $order['id']; ?>)" 
-                                                    class="text-green-600 hover:text-green-800" 
+                                                    class="text-[#022658] hover:text-[#022658]/80" 
                                                     title="Print">
                                                 <i class="fas fa-print"></i>
                                             </button>
@@ -447,7 +447,7 @@ $admin_role = $_SESSION['admin_role'] ?? 'admin';
     <!-- Toast Notification -->
     <div id="toast" class="fixed bottom-4 right-4 bg-gray-800 text-white px-6 py-3 rounded-lg shadow-lg transform translate-y-full opacity-0 transition-all duration-300 z-50">
         <div class="flex items-center space-x-3">
-            <i id="toastIcon" class="fas fa-check-circle text-green-400"></i>
+            <i id="toastIcon" class="fas fa-check-circle text-[#022658]"></i>
             <span id="toastMessage">Action successful</span>
         </div>
     </div>
@@ -480,7 +480,7 @@ $admin_role = $_SESSION['admin_role'] ?? 'admin';
 
             msg.textContent = message;
             if (type === 'success') {
-                icon.className = 'fas fa-check-circle text-green-400';
+                icon.className = 'fas fa-check-circle text-[#022658]';
             } else {
                 icon.className = 'fas fa-exclamation-circle text-red-400';
             }

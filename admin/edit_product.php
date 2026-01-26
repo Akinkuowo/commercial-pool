@@ -1,5 +1,5 @@
 <?php
-// admin/add_product.php
+// admin/edit_product.php
 session_start();
 require_once '../config.php';
 require_once 'include/auth_check.php';
@@ -10,13 +10,35 @@ checkAdminAuth();
 $admin_name = $_SESSION['admin_name'] ?? 'Admin User';
 $admin_role = $_SESSION['admin_role'] ?? 'admin';
 $current_page = 'products';
+
+// Get product ID
+$product_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
+
+if ($product_id <= 0) {
+    header('Location: products.php');
+    exit;
+}
+
+// Fetch product details
+$conn = getDbConnection();
+$stmt = $conn->prepare("SELECT * FROM products WHERE id = ?");
+$stmt->bind_param('i', $product_id);
+$stmt->execute();
+$result = $stmt->get_result();
+$product = $result->fetch_assoc();
+$stmt->close();
+
+if (!$product) {
+    header('Location: products.php');
+    exit;
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Product | Admin Dashboard</title>
+    <title>Edit Product | Admin Dashboard</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -48,7 +70,7 @@ $current_page = 'products';
                         <div class="flex items-center text-sm text-gray-600">
                             <a href="products.php" class="hover:text-blue-600">Products</a>
                             <i class="fas fa-chevron-right mx-2 text-xs"></i>
-                            <span class="font-semibold text-gray-800">Add Product</span>
+                            <span class="font-semibold text-gray-800">Edit Product</span>
                         </div>
                     </div>
                     <div class="relative">
@@ -74,25 +96,29 @@ $current_page = 'products';
         <main class="p-6">
             <div class="max-w-4xl mx-auto">
                 <div class="flex items-center justify-between mb-6">
-                    <h1 class="text-2xl font-bold text-gray-800">Add New Product</h1>
+                    <h1 class="text-2xl font-bold text-gray-800">Edit Product</h1>
                     <a href="products.php" class="text-gray-600 hover:text-gray-900">
                         <i class="fas fa-arrow-left mr-2"></i>Back to Products
                     </a>
                 </div>
 
                 <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-                    <form id="addProductForm" class="p-6 space-y-6">
+                    <form id="editProductForm" class="p-6 space-y-6">
+                        <input type="hidden" name="product_id" value="<?php echo $product['id']; ?>">
+                        
                         <!-- Basic Info -->
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Product Name *</label>
                                 <input type="text" name="product_name" required
+                                    value="<?php echo htmlspecialchars($product['product_name']); ?>"
                                     class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                     placeholder="e.g. Luxury 4-Person Tent">
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">SKU Number *</label>
                                 <input type="text" name="sku_number" required
+                                    value="<?php echo htmlspecialchars($product['sku_number']); ?>"
                                     class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                     placeholder="e.g. TN-4P-LUX">
                             </div>
@@ -110,6 +136,7 @@ $current_page = 'products';
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Brand Name</label>
                                 <input type="text" name="brand_name"
+                                    value="<?php echo htmlspecialchars($product['brand_name'] ?? ''); ?>"
                                     class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                     placeholder="e.g. Vango">
                             </div>
@@ -120,12 +147,14 @@ $current_page = 'products';
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Price (£) *</label>
                                 <input type="number" step="0.01" name="price" required
+                                    value="<?php echo $product['price']; ?>"
                                     class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                     placeholder="0.00">
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Stock Quantity *</label>
                                 <input type="number" name="stock" required
+                                    value="<?php echo $product['quantity'] ?? 0; ?>"
                                     class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                     placeholder="0">
                             </div>
@@ -136,12 +165,29 @@ $current_page = 'products';
                             <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
                             <textarea name="product_description" rows="4"
                                 class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                placeholder="Enter product description..."></textarea>
+                                placeholder="Enter product description..."><?php echo htmlspecialchars($product['product_description'] ?? ''); ?></textarea>
                         </div>
 
-                        <!-- Image -->
+                        <!-- Current Image -->
+                        <?php if (!empty($product['image'])): ?>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Product Image</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Current Image</label>
+                            <div class="flex items-center space-x-4">
+                                <img src="../<?php echo htmlspecialchars($product['image']); ?>" 
+                                     alt="Product Image" 
+                                     class="w-32 h-32 object-cover rounded-lg border border-gray-200">
+                                <button type="button" onclick="removeCurrentImage()" class="text-red-600 hover:text-red-800">
+                                    <i class="fas fa-trash mr-1"></i>Remove Image
+                                </button>
+                            </div>
+                            <input type="hidden" id="currentImage" name="current_image" value="<?php echo htmlspecialchars($product['image']); ?>">
+                            <input type="hidden" id="removeImage" name="remove_image" value="0">
+                        </div>
+                        <?php endif; ?>
+
+                        <!-- New Image Upload -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Upload New Image</label>
                             <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-lg hover:border-blue-500 transition-colors">
                                 <div class="space-y-1 text-center">
                                     <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-3"></i>
@@ -163,18 +209,22 @@ $current_page = 'products';
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
                                 <select name="status" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                                    <option value="draft">Draft</option>
-                                    <option value="published">Published</option>
+                                    <option value="draft" <?php echo $product['status'] === 'draft' ? 'selected' : ''; ?>>Draft</option>
+                                    <option value="published" <?php echo $product['status'] === 'published' ? 'selected' : ''; ?>>Published</option>
                                 </select>
                             </div>
                             
                             <div class="flex space-x-6">
                                 <label class="flex items-center space-x-2 cursor-pointer">
-                                    <input type="checkbox" name="is_new_product" value="1" class="rounded text-blue-600 focus:ring-blue-500">
+                                    <input type="checkbox" name="is_new_product" value="1" 
+                                        <?php echo $product['is_new_product'] ? 'checked' : ''; ?>
+                                        class="rounded text-blue-600 focus:ring-blue-500">
                                     <span class="text-sm text-gray-700">Mark as New Arrival</span>
                                 </label>
                                 <label class="flex items-center space-x-2 cursor-pointer">
-                                    <input type="checkbox" name="is_popular_product" value="1" class="rounded text-blue-600 focus:ring-blue-500">
+                                    <input type="checkbox" name="is_popular_product" value="1"
+                                        <?php echo $product['is_popular_product'] ? 'checked' : ''; ?>
+                                        class="rounded text-blue-600 focus:ring-blue-500">
                                     <span class="text-sm text-gray-700">Mark as Popular</span>
                                 </label>
                             </div>
@@ -186,7 +236,7 @@ $current_page = 'products';
                                 Cancel
                             </a>
                             <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center">
-                                <i class="fas fa-save mr-2"></i>Save Product
+                                <i class="fas fa-save mr-2"></i>Update Product
                             </button>
                         </div>
                     </form>
@@ -204,6 +254,8 @@ $current_page = 'products';
     </div>
 
     <script>
+        const currentCategory = "<?php echo htmlspecialchars($product['category'] ?? ''); ?>";
+
         // User menu toggle
         document.getElementById('userMenuBtn').addEventListener('click', function() {
             document.getElementById('userMenu').classList.toggle('hidden');
@@ -242,6 +294,13 @@ $current_page = 'products';
             document.getElementById('image-preview').classList.add('hidden');
         }
 
+        function removeCurrentImage() {
+            if (confirm('Are you sure you want to remove the current image?')) {
+                document.getElementById('removeImage').value = '1';
+                document.querySelector('img[alt="Product Image"]').parentElement.parentElement.style.display = 'none';
+            }
+        }
+
         function showToast(message, type = 'success') {
             const toast = document.getElementById('toast');
             const icon = document.getElementById('toastIcon');
@@ -271,10 +330,14 @@ $current_page = 'products';
                         function addOption(category, level = 0) {
                             const prefix = level > 0 ? '&nbsp;&nbsp;&nbsp;'.repeat(level) + '- ' : '';
                             const option = document.createElement('option');
-                            // Use category name as value since products table stores category name currently
-                            // If it stored ID, we would use category.id
-                            option.value = category.name; 
+                            option.value = category.name;
                             option.innerHTML = prefix + category.name;
+                            
+                            // Select current category
+                            if (category.name === currentCategory) {
+                                option.selected = true;
+                            }
+                            
                             select.appendChild(option);
 
                             if (category.children && category.children.length > 0) {
@@ -292,29 +355,29 @@ $current_page = 'products';
         loadCategories();
 
         // Form Submission
-        document.getElementById('addProductForm').addEventListener('submit', function(e) {
+        document.getElementById('editProductForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
             const submitBtn = this.querySelector('button[type="submit"]');
             const originalText = submitBtn.innerHTML;
             submitBtn.disabled = true;
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Saving...';
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Updating...';
 
             const formData = new FormData(this);
 
-            fetch('../api/admin/add_product.php', {
+            fetch('../api/admin/update_product.php', {
                 method: 'POST',
                 body: formData
             })
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    showToast(data.message || 'Product added successfully!');
+                    showToast(data.message || 'Product updated successfully!');
                     setTimeout(() => {
                         window.location.href = 'products.php';
                     }, 1000);
                 } else {
-                    showToast(data.message || 'Error creating product', 'error');
+                    showToast(data.message || 'Error updating product', 'error');
                     submitBtn.disabled = false;
                     submitBtn.innerHTML = originalText;
                 }

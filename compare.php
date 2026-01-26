@@ -320,7 +320,7 @@
                             </a>
                             
                             ${inStock ? `
-                                <button class="add-to-cart-btn w-full bg-[#0e703a] hover:bg-[#CC4514] text-white py-2 px-4 rounded-md transition text-sm font-medium" 
+                                <button class="add-to-cart-btn w-full bg-[#022658] hover:bg-[#CC4514] text-white py-2 px-4 rounded-md transition text-sm font-medium" 
                                         onclick="addToCart(${product.id}, this)">
                                     <i class="fas fa-shopping-cart mr-2"></i>Add to Cart
                                 </button>
@@ -353,14 +353,14 @@
                 { label: 'Price', key: 'price', format: (v) => `£${parseFloat(v).toFixed(2)}` },
                 { label: 'Stock Status', key: 'stock', format: (v, p) => {
                     const inStock = v === 'In Stock' || p.quantity > 0;
-                    return `<span class="px-2 py-1 rounded text-xs font-medium ${inStock ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">${inStock ? 'In Stock' : 'Out of Stock'}</span>`;
+                    return `<span class="px-2 py-1 rounded text-xs font-medium ${inStock ? 'bg-[#022658]/10 text-[#022658]' : 'bg-red-100 text-red-800'}">${inStock ? 'In Stock' : 'Out of Stock'}</span>`;
                 }},
                 { label: 'Quantity Available', key: 'quantity', format: (v) => v > 0 ? v : 'N/A' },
                 { label: 'Description', key: 'description', format: (v) => v || 'No description available' },
                 { label: 'Size/Model', key: 'size', format: (v) => v || 'N/A' },
                 { label: 'Color/Type', key: 'color', format: (v) => v || 'N/A' },
                 { label: 'Category', key: 'category', format: (v) => v || 'N/A' },
-                { label: 'New Product', key: 'is_new', format: (v) => v == 1 ? '<i class="fas fa-check text-green-600"></i>' : '<i class="fas fa-times text-gray-400"></i>' },
+                { label: 'New Product', key: 'is_new', format: (v) => v == 1 ? '<i class="fas fa-check text-[#022658]"></i>' : '<i class="fas fa-times text-gray-400"></i>' },
                 { label: 'Popular Product', key: 'is_popular', format: (v) => v == 1 ? '<i class="fas fa-check text-blue-600"></i>' : '<i class="fas fa-times text-gray-400"></i>' }
             ];
             
@@ -525,7 +525,7 @@
         // Notification system
         function showNotification(message, type = 'info') {
             const colors = {
-                success: 'bg-green-500',
+                success: 'bg-[#022658]',
                 error: 'bg-red-500',
                 warning: 'bg-yellow-500',
                 info: 'bg-blue-500'

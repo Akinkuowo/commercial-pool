@@ -185,10 +185,10 @@ $current_page = 'customers';
                     <div class="flex items-center justify-between">
                         <div>
                             <p class="text-xs text-gray-500 uppercase">Active Accounts</p>
-                            <h3 class="text-2xl font-bold text-green-600"><?php echo number_format($customer_stats['active']); ?></h3>
+                            <h3 class="text-2xl font-bold text-[#022658]"><?php echo number_format($customer_stats['active']); ?></h3>
                         </div>
-                        <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                            <i class="fas fa-user-check text-green-600"></i>
+                        <div class="w-10 h-10 bg-[#022658]/10 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-user-check text-[#022658]"></i>
                         </div>
                     </div>
                 </div>
@@ -304,7 +304,7 @@ $current_page = 'customers';
                                     </td>
                                     <td class="px-6 py-4">
                                         <?php if ($customer['is_active']): ?>
-                                            <span class="px-3 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full">
+                                            <span class="px-3 py-1 text-xs font-medium bg-[#022658]/10 text-[#022658] rounded-full">
                                                 Active
                                             </span>
                                         <?php else: ?>

@@ -1,9 +1,5 @@
-
-
-// ============================================
-// FILE: api/admin/update_product.php
-// ============================================
 <?php
+// api/admin/update_product.php
 session_start();
 require_once '../../config.php';
 
@@ -59,6 +55,16 @@ if (!$current_product) {
 
 $image_path = $current_product['image'];
 
+// Check if image should be removed
+$remove_image = intval($_POST['remove_image'] ?? 0);
+if ($remove_image == 1 && !empty($image_path)) {
+    $full_path = '../../' . $image_path;
+    if (file_exists($full_path)) {
+        unlink($full_path);
+    }
+    $image_path = '';
+}
+
 // Handle image upload
 if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
     $upload_dir = '../../assets/img/Products/';
@@ -89,7 +95,7 @@ $sql = "UPDATE products SET
     product_name = ?, 
     sku_number = ?, 
     price = ?, 
-    stock = ?, 
+    quantity = ?, 
     product_description = ?, 
     category = ?, 
     brand_name = ?, 

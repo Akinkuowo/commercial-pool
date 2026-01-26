@@ -151,7 +151,7 @@ $current_page = 'analytics';
             const ctx = document.getElementById('categorySalesChart').getContext('2d');
             
             // Random vibrant colors
-            const colors = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#6366f1'];
+            const colors = ['#3b82f6', '#022658', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#6366f1'];
 
             new Chart(ctx, {
                 type: 'doughnut',
@@ -173,7 +173,7 @@ $current_page = 'analytics';
             const ctx = document.getElementById('stockHealthChart').getContext('2d');
             
             const colorMap = {
-                'In Stock': '#10b981', // green
+                'In Stock': '#022658', // dark blue
                 'Low Stock': '#f59e0b', // orange
                 'Out of Stock': '#ef4444' // red
             };

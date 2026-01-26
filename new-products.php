@@ -318,7 +318,7 @@
 
                 <!-- Load More Button -->
                 <div id="loadMoreContainer" class="hidden mt-8 text-center">
-                    <button id="loadMoreBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-md transition">
+                    <button id="loadMoreBtn" class="bg-[#022658] hover:bg-[#011a3d] text-white px-8 py-3 rounded-md transition">
                         Load More Products
                     </button>
                 </div>
@@ -328,12 +328,12 @@
 
     <!-- Compare Floating Badge -->
     <div id="compareBadge" class="compare-badge hidden">
-        <div class="bg-[#0e703a] text-white rounded-lg shadow-lg p-4 flex items-center gap-3">
+        <div class="bg-[#022658] text-white rounded-lg shadow-lg p-4 flex items-center gap-3">
             <div class="flex-1">
                 <p class="font-semibold">Compare Products</p>
                 <p class="text-sm opacity-90"><span id="compareCount">0</span> products selected</p>
             </div>
-            <button id="viewCompareBtn" class="bg-white text-[#0e703a] px-4 py-2 rounded hover:bg-blue-50 transition font-medium text-sm">
+            <button id="viewCompareBtn" class="bg-white text-[#022658] px-4 py-2 rounded hover:bg-blue-50 transition font-medium text-sm">
                 Compare
             </button>
             <button id="clearCompareBtn" class="text-white hover:text-gray-200 transition">
@@ -496,7 +496,7 @@
         // Notification system
         function showNotification(message, type = 'info') {
             const colors = {
-                success: 'bg-green-500',
+                success: 'bg-[#022658]',
                 error: 'bg-red-500',
                 warning: 'bg-yellow-500',
                 info: 'bg-blue-500'
@@ -762,7 +762,7 @@
                         </div>
 
                         <div class="absolute top-2 right-2 flex flex-col gap-1">
-                        ${isNew ? '<span class="bg-green-500 text-white text-xs px-2 py-1 rounded">NEW</span>' : ''}
+                        ${isNew ? '<span class="bg-[#022658] text-white text-xs px-2 py-1 rounded">NEW</span>' : ''}
                         ${isPopular ? '<span class="bg-blue-500 text-white text-xs px-2 py-1 rounded">POPULAR</span>' : ''}
                     </div>
                     ${!inStock ? '<div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center"><span class="bg-red-500 text-white px-4 py-2 rounded">Out of Stock</span></div>' : ''}
@@ -776,7 +776,7 @@
                     <div class="flex justify-between items-center">
                         <span class="text-xl font-bold text-[#CC4514]">£${parseFloat(product.price).toFixed(2)}</span>
                         ${inStock ? `
-                            <button class="add-to-cart-btn bg-[#0e703a] hover:bg-[#CC4514] text-white px-6 py-2 rounded transition" data-product-id="${product.id}">
+                            <button class="add-to-cart-btn bg-[#022658] hover:bg-[#011a3d] text-white px-6 py-2 rounded transition" data-product-id="${product.id}">
                                 Add to Cart
                             </button>
                         ` : `
@@ -834,7 +834,7 @@
                                     ${product.sku ? `<p class="text-xs text-gray-400 mt-1">SKU: ${product.sku}</p>` : ''}
                                 </div>
                                 <div class="flex flex-col gap-1">
-                                    ${isNew ? '<span class="bg-green-500 text-white text-xs px-2 py-1 rounded">NEW</span>' : ''}
+                                    ${isNew ? '<span class="bg-[#022658] text-white text-xs px-2 py-1 rounded">NEW</span>' : ''}
                                     ${isPopular ? '<span class="bg-blue-500 text-white text-xs px-2 py-1 rounded">POPULAR</span>' : ''}
                                 </div>
                             </div>
@@ -848,7 +848,7 @@
                                     <button onclick="event.preventDefault(); event.stopPropagation(); window.location.href='product_detail.php?id=${product.id}'" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded transition">
                                         View Details
                                     </button>
-                                    <button class="add-to-cart-btn bg-[#0e703a] hover:bg-[#CC4514] text-white px-6 py-2 rounded transition" data-product-id="${product.id}">
+                                    <button class="add-to-cart-btn bg-[#022658] hover:bg-[#011a3d] text-white px-6 py-2 rounded transition" data-product-id="${product.id}">
                                         Add to Cart
                                     </button>
                                     

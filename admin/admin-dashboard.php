@@ -202,12 +202,12 @@ $admin_role = $_SESSION['admin_role'] ?? 'admin';
                             <p class="text-gray-500 text-sm font-medium">Total Revenue</p>
                             <h3 class="text-3xl font-bold text-gray-800">£<?php echo number_format($stats['total_revenue'] ?? 0, 2); ?></h3>
                         </div>
-                        <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                            <i class="fas fa-pound-sign text-green-600 text-xl"></i>
+                        <div class="w-12 h-12 bg-[#022658]/10 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-pound-sign text-[#022658] text-xl"></i>
                         </div>
                     </div>
                     <div class="flex items-center text-sm">
-                        <span class="text-green-600 font-medium">+12.5%</span>
+                        <span class="text-[#022658] font-medium">+12.5%</span>
                         <span class="text-gray-500 ml-2">vs last month</span>
                     </div>
                 </div>
@@ -238,7 +238,7 @@ $admin_role = $_SESSION['admin_role'] ?? 'admin';
                         </div>
                     </div>
                     <div class="flex items-center text-sm">
-                        <span class="text-green-600 font-medium">+15.3%</span>
+                        <span class="text-[#022658] font-medium">+15.3%</span>
                         <span class="text-gray-500 ml-2">vs last month</span>
                     </div>
                 </div>
@@ -307,7 +307,7 @@ $admin_role = $_SESSION['admin_role'] ?? 'admin';
                                     <?php foreach ($recent_orders as $order): ?>
                                         <?php
                                         $status_colors = [
-                                            'completed' => 'bg-green-100 text-green-800',
+                                            'completed' => 'bg-[#022658]/10 text-[#022658]',
                                             'processing' => 'bg-blue-100 text-blue-800',
                                             'pending' => 'bg-yellow-100 text-yellow-800',
                                             'cancelled' => 'bg-red-100 text-red-800',
@@ -444,24 +444,11 @@ new Chart(ordersCtx, {
                 <?php echo $stats['pending_orders'] ?? 0; ?>,
                 <?php echo $stats['cancelled_orders'] ?? 0; ?>
             ],
-            backgroundColor: ['#10b981', '#3b82f6', '#f59e0b', '#ef4444']
+            backgroundColor: ['#022658', '#3b82f6', '#f59e0b', '#ef4444']
         }]
     },
     options: { responsive: true, maintainAspectRatio: false }
 });
-
-        const ordersCtx = document.getElementById('ordersChart').getContext('2d');
-        new Chart(ordersCtx, {
-            type: 'doughnut',
-            data: {
-                labels: ['Completed', 'Processing', 'Pending', 'Cancelled'],
-                datasets: [{
-                    data: [450, 280, 120, 50],
-                    backgroundColor: ['#10b981', '#3b82f6', '#f59e0b', '#ef4444']
-                }]
-            },
-            options: { responsive: true, maintainAspectRatio: false }
-        });
     </script>
 <?php if(isset($conn)) $conn->close(); ?>
 </body>

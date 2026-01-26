@@ -40,8 +40,8 @@ if (!$order_id) {
         <div class="bg-white rounded-lg shadow-sm p-8 md:p-12 text-center">
             
             <!-- Success Icon -->
-            <div class="mx-auto flex items-center justify-center h-20 w-20 rounded-full bg-green-100 mb-8">
-                <i class="fas fa-check text-green-600 text-4xl"></i>
+            <div class="mx-auto flex items-center justify-center h-20 w-20 rounded-full bg-[#022658]/10 mb-8">
+                <i class="fas fa-check text-[#022658] text-4xl"></i>
             </div>
             
             <h1 class="text-3xl font-bold text-gray-900 mb-4">Order Confirmed!</h1>

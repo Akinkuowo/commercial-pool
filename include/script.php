@@ -226,7 +226,7 @@ document.addEventListener('DOMContentLoaded', function() {
         button.addEventListener('click', function() {
             // Add your cart logic here
             this.textContent = 'Added!';
-            this.style.background = '#16a34a';
+            this.style.background = '#022658';
             
             setTimeout(() => {
                 this.textContent = 'Add to Cart';
@@ -548,7 +548,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     </div>
                     <div class="text-right">
                         <p class="text-sm font-semibold text-gray-900">£${parseFloat(product.price).toFixed(2)}</p>
-                        ${inStock ? '<p class="text-xs text-green-600">In Stock</p>' : '<p class="text-xs text-red-600">Out of Stock</p>'}
+                        ${inStock ? '<p class="text-xs text-[#022658]">In Stock</p>' : '<p class="text-xs text-red-600">Out of Stock</p>'}
                     </div>
                 `;
                 

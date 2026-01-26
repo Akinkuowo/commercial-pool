@@ -161,7 +161,7 @@ if ($conn) {
                         <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
                             <div class="flex items-center justify-between mb-4">
                                 <h3 class="text-gray-500 text-sm font-medium">Credit Available</h3>
-                                <div class="w-8 h-8 rounded-full bg-green-50 text-green-600 flex items-center justify-center">
+                                <div class="w-8 h-8 rounded-full bg-[#022658]/10 text-[#022658] flex items-center justify-center">
                                     <i class="fas fa-credit-card text-sm"></i>
                                 </div>
                             </div>
@@ -219,10 +219,10 @@ if ($conn) {
                                 <p class="font-medium text-gray-900">Request Quote</p>
                                 <p class="text-sm text-gray-500">For large projects</p>
                             </a>
-                            <a href="product-data.php" class="p-4 border border-gray-200 rounded-lg hover:bg-green-50 hover:border-green-200 transition group">
+                            <a href="product-data.php" class="p-4 border border-gray-200 rounded-lg hover:bg-[#022658]/5 hover:border-[#022658]/20 transition group">
                                 <div class="flex items-center justify-between mb-2">
-                                    <i class="fas fa-download text-green-600 text-lg"></i>
-                                    <i class="fas fa-arrow-right text-gray-400 group-hover:text-green-600 transition"></i>
+                                    <i class="fas fa-download text-[#022658] text-lg"></i>
+                                    <i class="fas fa-arrow-right text-gray-400 group-hover:text-[#022658] transition"></i>
                                 </div>
                                 <p class="font-medium text-gray-900">Product Data</p>
                                 <p class="text-sm text-gray-500">CSV/PDF downloads</p>
@@ -243,7 +243,7 @@ if ($conn) {
                         <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
                             <div class="flex items-center justify-between mb-4">
                                 <h3 class="text-gray-500 text-sm font-medium">Total Spent</h3>
-                                <div class="w-8 h-8 rounded-full bg-green-50 text-green-600 flex items-center justify-center">
+                                <div class="w-8 h-8 rounded-full bg-[#022658]/10 text-[#022658] flex items-center justify-center">
                                     <i class="fas fa-pound-sign text-sm"></i>
                                 </div>
                             </div>
@@ -282,10 +282,10 @@ if ($conn) {
                                 <p class="font-medium text-gray-900">Compatibility Finder</p>
                                 <p class="text-sm text-gray-500">Match equipment to your pool</p>
                             </a>
-                            <a href="energy-calculator.php" class="p-4 border border-gray-200 rounded-lg hover:bg-green-50 hover:border-green-200 transition group">
+                            <a href="energy-calculator.php" class="p-4 border border-gray-200 rounded-lg hover:bg-[#022658]/5 hover:border-[#022658]/20 transition group">
                                 <div class="flex items-center justify-between mb-2">
-                                    <i class="fas fa-bolt text-green-600 text-lg"></i>
-                                    <i class="fas fa-arrow-right text-gray-400 group-hover:text-green-600 transition"></i>
+                                    <i class="fas fa-bolt text-[#022658] text-lg"></i>
+                                    <i class="fas fa-arrow-right text-gray-400 group-hover:text-[#022658] transition"></i>
                                 </div>
                                 <p class="font-medium text-gray-900">Energy Calculator</p>
                                 <p class="text-sm text-gray-500">Compare running costs</p>
@@ -606,7 +606,7 @@ if ($conn) {
                                     <label class="block text-sm font-medium text-gray-700 mb-1">Account Status</label>
                                     <div class="flex items-center gap-2">
                                         <?php if ($user['approved_by_admin'] ?? 0): ?>
-                                            <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">
+                                            <span class="px-3 py-1 bg-[#022658]/10 text-[#022658] rounded-full text-xs font-medium">
                                                 <i class="fas fa-check-circle mr-1"></i> Approved
                                             </span>
                                             <span class="text-sm text-gray-600">Full trade access enabled</span>
@@ -661,8 +661,8 @@ if ($conn) {
                             <!-- Technical Data -->
                             <div class="border border-gray-200 rounded-lg p-5 hover:bg-gray-50 transition">
                                 <div class="flex items-center gap-4 mb-3">
-                                    <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                                        <i class="fas fa-file-alt text-green-600 text-xl"></i>
+                                    <div class="w-12 h-12 bg-[#022658]/10 rounded-lg flex items-center justify-center">
+                                        <i class="fas fa-file-alt text-[#022658] text-xl"></i>
                                     </div>
                                     <div>
                                         <h3 class="font-semibold text-gray-900">Technical Data</h3>
@@ -670,15 +670,15 @@ if ($conn) {
                                     </div>
                                 </div>
                                 <div class="space-y-2">
-                                    <a href="#" class="flex items-center justify-between text-sm hover:text-green-600 py-1">
+                                    <a href="#" class="flex items-center justify-between text-sm hover:text-[#022658] py-1">
                                         <span>Installation Guides</span>
                                         <i class="fas fa-download text-gray-400"></i>
                                     </a>
-                                    <a href="#" class="flex items-center justify-between text-sm hover:text-green-600 py-1">
+                                    <a href="#" class="flex items-center justify-between text-sm hover:text-[#022658] py-1">
                                         <span>Technical Specifications</span>
                                         <i class="fas fa-download text-gray-400"></i>
                                     </a>
-                                    <a href="#" class="flex items-center justify-between text-sm hover:text-green-600 py-1">
+                                    <a href="#" class="flex items-center justify-between text-sm hover:text-[#022658] py-1">
                                         <span>Safety Data Sheets</span>
                                         <i class="fas fa-download text-gray-400"></i>
                                     </a>
@@ -896,7 +896,7 @@ if ($conn) {
                                         View Details
                                     </button>
                                     <?php if ($is_trader): ?>
-                                    <button onclick="quickReorder(${order.id})" class="ml-2 text-green-600 hover:text-green-800 font-medium text-sm border border-green-200 hover:bg-green-50 px-3 py-1 rounded transition">
+                                    <button onclick="quickReorder(${order.id})" class="ml-2 text-[#022658] hover:text-[#011a3d] font-medium text-sm border border-[#022658]/20 hover:bg-[#022658]/10 px-3 py-1 rounded transition">
                                         Reorder
                                     </button>
                                     <?php endif; ?>
@@ -937,7 +937,7 @@ if ($conn) {
                 if (result.success && result.quotes.length > 0) {
                     let html = '';
                     result.quotes.forEach(quote => {
-                        const statusColor = quote.status === 'Accepted' ? 'bg-green-100 text-green-700' :
+                        const statusColor = quote.status === 'Accepted' ? 'bg-[#022658]/10 text-[#022658]' :
                                           quote.status === 'Pending' ? 'bg-orange-100 text-orange-700' :
                                           quote.status === 'Expired' ? 'bg-gray-100 text-gray-700' :
                                           'bg-red-100 text-red-700';
@@ -958,7 +958,7 @@ if ($conn) {
                                         View
                                     </button>
                                     ${quote.status === 'Accepted' ? `
-                                    <button onclick="convertQuoteToOrder(${quote.id})" class="ml-2 text-green-600 hover:text-green-800 text-sm">
+                                    <button onclick="convertQuoteToOrder(${quote.id})" class="ml-2 text-[#022658] hover:text-[#011a3d] text-sm">
                                         Order Now
                                     </button>` : ''}
                                 </td>
@@ -1207,7 +1207,7 @@ if ($conn) {
         function getStatusColor(status) {
             switch(status.toLowerCase()) {
                 case 'pending': return 'bg-orange-100 text-orange-700';
-                case 'completed': return 'bg-green-100 text-green-700';
+                case 'completed': return 'bg-[#022658]/10 text-[#022658]';
                 case 'ready': return 'bg-blue-100 text-blue-700';
                 case 'cancelled': return 'bg-red-100 text-red-700';
                 case 'processing': return 'bg-blue-100 text-blue-700';

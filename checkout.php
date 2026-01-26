@@ -32,7 +32,7 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
             theme: {
                 extend: {
                     colors: {
-                        'custom-blue': '#0e703a',
+                        'custom-blue': '#022658',
                     }
                 }
             }
@@ -42,13 +42,13 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
     <?php include('include/style.php') ?>
     <style>
         /* Custom styles for color replacements */
-        .bg-custom-blue { background-color: #0e703a; }
-        .hover\:bg-custom-blue:hover { background-color: #0b5a2e; }
-        .text-custom-blue { color: #0e703a; }
-        .hover\:text-custom-blue:hover { color: #0b5a2e; }
-        .border-custom-blue { border-color: #0e703a; }
-        .focus\:ring-custom-blue:focus { --tw-ring-color: #0e703a; }
-        .focus\:border-custom-blue:focus { border-color: #0e703a; }
+        .bg-custom-blue { background-color: #022658; }
+        .hover\:bg-custom-blue:hover { background-color: #011a3d; }
+        .text-custom-blue { color: #022658; }
+        .hover\:text-custom-blue:hover { color: #011a3d; }
+        .border-custom-blue { border-color: #022658; }
+        .focus\:ring-custom-blue:focus { --tw-ring-color: #022658; }
+        .focus\:border-custom-blue:focus { border-color: #022658; }
     </style>
 </head>
 <body class="bg-gray-50">
@@ -674,9 +674,9 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
                 
                 if (index < currentIndex) {
                     // Completed steps
-                    indicator.className = 'w-10 h-10 rounded-full bg-orange-500 text-white flex items-center justify-center font-semibold mb-2 shadow-sm';
+                    indicator.className = 'w-10 h-10 rounded-full bg-[#022658] text-white flex items-center justify-center font-semibold mb-2 shadow-sm';
                     indicator.innerHTML = '<i class="fas fa-check"></i>';
-                    label.className = 'text-sm font-medium text-orange-500';
+                    label.className = 'text-sm font-medium text-[#022658]';
                 } else if (index === currentIndex) {
                     // Current step
                     indicator.className = 'w-10 h-10 rounded-full bg-custom-blue text-white flex items-center justify-center font-semibold mb-2 shadow-sm';

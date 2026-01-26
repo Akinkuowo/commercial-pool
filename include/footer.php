@@ -276,7 +276,7 @@
                 <!-- Trust Seals (Optional) -->
                 <div class="flex flex-wrap items-center justify-center gap-6 mt-6 pt-6 border-t border-gray-800">
                     <div class="flex items-center space-x-2">
-                        <i class="fas fa-shield-alt text-green-500"></i>
+                        <i class="fas fa-shield-alt text-[#022658]"></i>
                         <span class="text-white text-sm">Secure SSL Encryption</span>
                     </div>
                     <div class="flex items-center space-x-2">

@@ -104,7 +104,7 @@ if ($conn) {
             color: white;
         }
         .step-circle.completed {
-            background-color: #10b981;
+            background-color: #022658;
             color: white;
         }
         .step-content {
@@ -160,8 +160,8 @@ if ($conn) {
             font-weight: 600;
         }
         .compatible {
-            background-color: #d1fae5;
-            color: #065f46;
+            background-color: rgba(2, 38, 88, 0.1);
+            color: #022658;
         }
         .incompatible {
             background-color: #fee2e2;
@@ -282,8 +282,8 @@ if ($conn) {
                             <h4 class="font-semibold text-gray-900 mb-3">Quick Tools</h4>
                             <div class="space-y-2">
                                 <a href="energy-calculator.php" class="flex items-center gap-3 p-3 hover:bg-gray-50 rounded-lg transition">
-                                    <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
-                                        <i class="fas fa-bolt text-green-600"></i>
+                                    <div class="w-8 h-8 bg-[#022658]/10 rounded-lg flex items-center justify-center">
+                                        <i class="fas fa-bolt text-[#022658]"></i>
                                     </div>
                                     <span class="text-sm font-medium">Energy Calculator</span>
                                 </a>
@@ -340,10 +340,10 @@ if ($conn) {
                     
                     <!-- Messages -->
                     <?php if (isset($success_message)): ?>
-                    <div class="bg-green-50 border-l-4 border-green-500 p-4 mb-6">
+                    <div class="bg-[#022658]/10 border-l-4 border-[#022658] p-4 mb-6">
                         <div class="flex items-center">
-                            <i class="fas fa-check-circle text-green-500 mr-3"></i>
-                            <p class="text-green-700"><?php echo $success_message; ?></p>
+                            <i class="fas fa-check-circle text-[#022658] mr-3"></i>
+                            <p class="text-[#022658]"><?php echo $success_message; ?></p>
                         </div>
                     </div>
                     <?php endif; ?>
@@ -387,7 +387,7 @@ if ($conn) {
                                         <label class="pool-type-card">
                                             <input type="radio" name="pool_type" value="Above-ground" class="hidden" required>
                                             <div class="mb-3">
-                                                <i class="fas fa-water text-3xl text-green-600"></i>
+                                                <i class="fas fa-water text-3xl text-[#022658]"></i>
                                             </div>
                                             <p class="font-medium">Above-ground</p>
                                             <p class="text-xs text-gray-500 mt-1">Steel, resin, inflatable</p>
@@ -637,15 +637,15 @@ if ($conn) {
                                     <h4 class="font-semibold text-gray-900 mb-4">Compatibility Tips</h4>
                                     <div class="space-y-3">
                                         <div class="flex items-start gap-3">
-                                            <i class="fas fa-check-circle text-green-500 mt-1"></i>
+                                            <i class="fas fa-check-circle text-[#022658] mt-1"></i>
                                             <p class="text-sm text-gray-700">Ensure pump and filter flow rates are compatible</p>
                                         </div>
                                         <div class="flex items-start gap-3">
-                                            <i class="fas fa-check-circle text-green-500 mt-1"></i>
+                                            <i class="fas fa-check-circle text-[#022658] mt-1"></i>
                                             <p class="text-sm text-gray-700">Heater capacity should match pool volume for efficient heating</p>
                                         </div>
                                         <div class="flex items-start gap-3">
-                                            <i class="fas fa-check-circle text-green-500 mt-1"></i>
+                                            <i class="fas fa-check-circle text-[#022658] mt-1"></i>
                                             <p class="text-sm text-gray-700">Consider energy efficiency ratings for long-term savings</p>
                                         </div>
                                     </div>
@@ -720,7 +720,7 @@ if ($conn) {
                                     <button type="button" onclick="prevStep(3)" class="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-medium">
                                         <i class="fas fa-arrow-left mr-2"></i> Back
                                     </button>
-                                    <button type="submit" class="flex-1 px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 font-medium">
+                                    <button type="submit" class="flex-1 px-6 py-3 bg-[#022658] text-white rounded-lg hover:bg-[#022658]/90 font-medium">
                                         <i class="fas fa-save mr-2"></i> Save Pool Profile
                                     </button>
                                     <button type="button" onclick="generateCompatibilityReport()" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium">
@@ -968,45 +968,14 @@ if ($conn) {
                             recommendation: volume > 100000 ? 'Commercial Heat Pump' : 'Efficient Gas Heater',
                             compatibility: volume > 150000 ? 'Verify' : 'High',
                             icon: 'fire',
-                            color: 'orange'
-                        },
-                        {
-                            category: 'Cleaning',
-                            recommendation: 'Automatic Pool Cleaner',
-                            compatibility: 'High',
-                            icon: 'broom',
-                            color: 'green'
-                        }
-                    ];
-                } else if (poolType.includes('Above-ground')) {
-                    recommendations = [
-                        {
-                            category: 'Filtration',
-                            recommendation: 'Cartridge Filter System',
-                            compatibility: 'High',
-                            icon: 'filter',
                             color: 'blue'
-                        },
-                        {
-                            category: 'Pumps',
-                            recommendation: '0.5-1 HP Above-ground Pump',
-                            compatibility: 'High',
-                            icon: 'tint',
-                            color: 'blue'
-                        },
-                        {
-                            category: 'Heating',
-                            recommendation: 'Solar Heater with Cover',
-                            compatibility: 'High',
-                            icon: 'sun',
-                            color: 'orange'
                         },
                         {
                             category: 'Maintenance',
                             recommendation: 'Manual Vacuum Kit',
                             compatibility: 'High',
                             icon: 'broom',
-                            color: 'green'
+                            color: 'blue'
                         }
                     ];
                 } else if (poolType.includes('Spa')) {
@@ -1164,7 +1133,7 @@ if ($conn) {
         function showNotification(type, message) {
             const notification = document.createElement('div');
             notification.className = `fixed top-4 right-4 z-50 px-6 py-4 rounded-lg shadow-lg transition-all transform translate-x-0 ${
-                type === 'success' ? 'bg-green-600' : 'bg-red-600'
+                type === 'success' ? 'bg-[#022658]' : 'bg-red-600'
             } text-white`;
             
             notification.innerHTML = `

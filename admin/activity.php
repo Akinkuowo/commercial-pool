@@ -154,7 +154,7 @@ $current_page = 'activity';
                 
                 // Color coding actions
                 let actionColor = 'text-gray-600 bg-gray-100';
-                if (log.action.includes('login')) actionColor = 'text-green-600 bg-green-100';
+                if (log.action.includes('login')) actionColor = 'text-[#022658] bg-[#022658]/10';
                 if (log.action.includes('delete')) actionColor = 'text-red-600 bg-red-100';
                 if (log.action.includes('update')) actionColor = 'text-blue-600 bg-blue-100';
                 if (log.action.includes('create')) actionColor = 'text-purple-600 bg-purple-100';

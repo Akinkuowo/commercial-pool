@@ -220,7 +220,7 @@
         }
         
         .badge-new {
-            background: #10b981;
+            background: #022658;
             color: white;
             padding: 4px 12px;
             border-radius: 4px;
@@ -360,22 +360,22 @@
                 <!-- Features List -->
                 <ul class="space-y-2 mb-6">
                     <li class="flex items-start">
-                        <i class="fas fa-check text-green-600 mt-1 mr-3"></i>
+                        <i class="fas fa-check text-[#022658] mt-1 mr-3"></i>
                         <span class="text-gray-700">High-quality construction</span>
                     </li>
                     <li class="flex items-start">
-                        <i class="fas fa-check text-green-600 mt-1 mr-3"></i>
+                        <i class="fas fa-check text-[#022658] mt-1 mr-3"></i>
                         <span class="text-gray-700">Durable materials for long-lasting use</span>
                     </li>
                     <?php if (!empty($product['size'])): ?>
                     <li class="flex items-start">
-                        <i class="fas fa-check text-green-600 mt-1 mr-3"></i>
+                        <i class="fas fa-check text-[#022658] mt-1 mr-3"></i>
                         <span class="text-gray-700">Size: <?php echo htmlspecialchars($product['size']); ?></span>
                     </li>
                     <?php endif; ?>
                     <?php if (!empty($product['color'])): ?>
                     <li class="flex items-start">
-                        <i class="fas fa-check text-green-600 mt-1 mr-3"></i>
+                        <i class="fas fa-check text-[#022658] mt-1 mr-3"></i>
                         <span class="text-gray-700">Color: <?php echo htmlspecialchars($product['color']); ?></span>
                     </li>
                     <?php endif; ?>
@@ -422,7 +422,7 @@
                         </div>
                         
                         <?php if ($product['stock'] === 'In Stock' || $product['quantity'] > 0): ?>
-                        <button id="addToCartBtn" class="add-to-cart-btn flex-1 bg-[#0e703a] hover:bg-lime-600 text-white font-semibold py-3 px-6 rounded-lg transition flex items-center justify-center gap-2">
+                        <button id="addToCartBtn" class="add-to-cart-btn flex-1 bg-[#022658] hover:bg-[#011a3d] text-white font-semibold py-3 px-6 rounded-lg transition flex items-center justify-center gap-2">
                             <i class="fas fa-shopping-cart"></i>
                             <span>Add to Cart</span>
                         </button>
@@ -446,7 +446,7 @@
                     </div>
                     
                     <?php if ($product['stock'] === 'In Stock' || $product['quantity'] > 0): ?>
-                    <div class="flex items-center gap-2 text-[#0e703a] mb-4">
+                    <div class="flex items-center gap-2 text-[#022658] mb-4">
                         <i class="fas fa-check-circle"></i>
                         <span class="text-sm font-medium">Available for immediate dispatch</span>
                     </div>
@@ -575,19 +575,19 @@
                             <div class="px-6 pb-6">
                                 <ul class="space-y-2">
                                     <li class="flex items-start">
-                                        <i class="fas fa-check text-green-600 mt-1 mr-3"></i>
+                                        <i class="fas fa-check text-[#022658] mt-1 mr-3"></i>
                                         <span class="text-gray-700">Durable construction for long-term use</span>
                                     </li>
                                     <li class="flex items-start">
-                                        <i class="fas fa-check text-green-600 mt-1 mr-3"></i>
+                                        <i class="fas fa-check text-[#022658] mt-1 mr-3"></i>
                                         <span class="text-gray-700">Weather-resistant materials</span>
                                     </li>
                                     <li class="flex items-start">
-                                        <i class="fas fa-check text-green-600 mt-1 mr-3"></i>
+                                        <i class="fas fa-check text-[#022658] mt-1 mr-3"></i>
                                         <span class="text-gray-700">Easy to assemble and use</span>
                                     </li>
                                     <li class="flex items-start">
-                                        <i class="fas fa-check text-green-600 mt-1 mr-3"></i>
+                                        <i class="fas fa-check text-[#022658] mt-1 mr-3"></i>
                                         <span class="text-gray-700">Portable and lightweight design</span>
                                     </li>
                                 </ul>
@@ -829,7 +829,7 @@
         // Notification system
         function showNotification(message, type = 'info') {
             const colors = {
-                success: 'bg-green-500',
+                success: 'bg-[#022658]',
                 error: 'bg-red-500',
                 warning: 'bg-yellow-500',
                 info: 'bg-blue-500'
@@ -906,13 +906,13 @@
                                     <h4 style="font-weight: 600; margin-bottom: 8px;">Commercial Pool Equipment - Main Store</h4>
                                     <p style="color: #666; font-size: 14px; margin-bottom: 4px;">123 High Street, Town Center</p>
                                     <p style="color: #666; font-size: 14px; margin-bottom: 8px;">Open: Mon-Sat 9am-6pm, Sun 10am-4pm</p>
-                                    <span style="background: #10b981; color: white; padding: 4px 12px; border-radius: 4px; font-size: 12px; font-weight: 600;">Available</span>
+                                    <span style="background: #022658; color: white; padding: 4px 12px; border-radius: 4px; font-size: 12px; font-weight: 600;">Available</span>
                                 </div>
                                 <div style="border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px; margin-bottom: 12px;">
                                     <h4 style="font-weight: 600; margin-bottom: 8px;">Commercial Pool Equipment - North Branch</h4>
                                     <p style="color: #666; font-size: 14px; margin-bottom: 4px;">456 Park Avenue, Northside</p>
                                     <p style="color: #666; font-size: 14px; margin-bottom: 8px;">Open: Mon-Sat 9am-6pm, Sun 10am-4pm</p>
-                                    <span style="background: #10b981; color: white; padding: 4px 12px; border-radius: 4px; font-size: 12px; font-weight: 600;">Available</span>
+                                    <span style="background: #022658; color: white; padding: 4px 12px; border-radius: 4px; font-size: 12px; font-weight: 600;">Available</span>
                                 </div>
                                 <div style="border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px; margin-bottom: 12px;">
                                     <h4 style="font-weight: 600; margin-bottom: 8px;">Commercial Pool Equipment - South Location</h4>

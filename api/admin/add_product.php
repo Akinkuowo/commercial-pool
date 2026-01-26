@@ -1,7 +1,5 @@
-// ============================================
-// FILE: api/admin/add_product.php
-// ============================================
 <?php
+// api/admin/add_product.php
 session_start();
 require_once '../../config.php';
 
@@ -26,7 +24,7 @@ $conn = getDbConnection();
 $product_name = trim($_POST['product_name'] ?? '');
 $sku_number = trim($_POST['sku_number'] ?? '');
 $price = floatval($_POST['price'] ?? 0);
-$stock = intval($_POST['stock'] ?? 0);
+$quantity = intval($_POST['stock'] ?? 0); // Changed from 'quantity' to 'stock' to match form field
 $product_description = trim($_POST['product_description'] ?? '');
 $category = trim($_POST['category'] ?? '');
 $brand_name = trim($_POST['brand_name'] ?? '');
@@ -64,7 +62,7 @@ if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
 
 // Insert product
 $sql = "INSERT INTO products (
-    product_name, sku_number, price, stock, product_description, 
+    product_name, sku_number, price, quantity, product_description, 
     category, brand_name, image, status, is_new_product, 
     is_popular_product, created_by_username, created_at
 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())";
@@ -77,7 +75,7 @@ $stmt->bind_param(
     $product_name,
     $sku_number,
     $price,
-    $stock,
+    $quantity,
     $product_description,
     $category,
     $brand_name,

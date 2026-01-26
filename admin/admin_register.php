@@ -122,10 +122,10 @@ if ($require_invitation && !isset($_GET['token'])) {
                     </div>
 
                     <?php if (isset($_GET['success'])): ?>
-                        <div class="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+                        <div class="mb-6 p-4 bg-[#022658]/10 border border-[#022658]/20 rounded-lg">
                             <div class="flex items-center">
-                                <i class="fas fa-check-circle text-green-500 mr-3"></i>
-                                <p class="text-green-700 font-medium">Registration successful! You can now sign in.</p>
+                                <i class="fas fa-check-circle text-[#022658] mr-3"></i>
+                                <p class="text-[#022658] font-medium">Registration successful! You can now sign in.</p>
                             </div>
                         </div>
                     <?php endif; ?>

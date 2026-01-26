@@ -227,7 +227,7 @@ if ($order_id <= 0) {
     <!-- Toast Notification -->
     <div id="toast" class="fixed bottom-4 right-4 bg-gray-800 text-white px-6 py-3 rounded-lg shadow-lg transform translate-y-full opacity-0 transition-all duration-300 z-50">
         <div class="flex items-center space-x-3">
-            <i id="toastIcon" class="fas fa-check-circle text-green-400"></i>
+            <i id="toastIcon" class="fas fa-check-circle text-[#022658]"></i>
             <span id="toastMessage">Action successful</span>
         </div>
     </div>
@@ -330,7 +330,7 @@ if ($order_id <= 0) {
 
         function getStatusColor(status) {
             switch(status) {
-                case 'completed': return 'bg-green-100 text-green-800';
+                case 'completed': return 'bg-[#022658]/10 text-[#022658]';
                 case 'processing': return 'bg-blue-100 text-blue-800';
                 case 'cancelled': return 'bg-red-100 text-red-800';
                 case 'refunded': return 'bg-purple-100 text-purple-800';
@@ -340,7 +340,7 @@ if ($order_id <= 0) {
 
         function getPaymentColor(status) {
             switch(status) {
-                case 'paid': return 'bg-green-100 text-green-800';
+                case 'paid': return 'bg-[#022658]/10 text-[#022658]';
                 case 'failed': return 'bg-red-100 text-red-800';
                 case 'refunded': return 'bg-purple-100 text-purple-800';
                 default: return 'bg-yellow-100 text-yellow-800';
@@ -394,7 +394,7 @@ if ($order_id <= 0) {
 
             msg.textContent = message;
             if (type === 'success') {
-                icon.className = 'fas fa-check-circle text-green-400';
+                icon.className = 'fas fa-check-circle text-[#022658]';
             } else {
                 icon.className = 'fas fa-exclamation-circle text-red-400';
             }

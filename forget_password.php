@@ -8,15 +8,15 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         .form-input:focus {
-            border-color: #0e703a;
-            box-shadow: 0 0 0 3px rgba(14, 112, 58, 0.1);
+            border-color: #022658;
+            box-shadow: 0 0 0 3px rgba(2, 38, 88, 0.1);
         }
         .btn-primary {
-            background-color: #0e703a;
+            background-color: #022658;
             transition: background-color 0.3s ease;
         }
         .btn-primary:hover {
-            background-color: #0a5a2d;
+            background-color: #011a3d;
         }
     </style>
 </head>
@@ -45,13 +45,13 @@
                 
                 <div>
                     <button type="submit" 
-                            class="w-full btn-primary text-white font-semibold py-3 px-4 rounded-lg hover:bg-green-800 transition duration-300">
+                            class="w-full btn-primary text-white font-semibold py-3 px-4 rounded-lg hover:bg-[#011a3d] transition duration-300">
                         Send Reset Link
                     </button>
                 </div>
                 
                 <div class="text-center">
-                    <a href="login.php" class="text-sm text-green-700 hover:text-green-800 hover:underline">
+                    <a href="login.php" class="text-sm text-[#022658] hover:text-[#011a3d] hover:underline">
                         Back to Sign In
                     </a>
                 </div>

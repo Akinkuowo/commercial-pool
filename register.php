@@ -31,12 +31,12 @@
         }
         
         .step-indicator.active {
-            background-color: #16a34a;
+            background-color: #022658;
             color: white;
         }
         
         .step-indicator.completed {
-            background-color: #16a34a;
+            background-color: #022658;
             color: white;
         }
         
@@ -53,12 +53,12 @@
         }
         
         .btn-primary {
-            background-color: #16a34a;
+            background-color: #022658;
         }
         
         .form-input:focus, .form-select:focus {
-            border-color: #16a34a;
-            ring-color: #16a34a;
+            border-color: #022658;
+            ring-color: #022658;
         }
     </style>
 </head>
@@ -70,7 +70,7 @@
             <nav class="mb-6" aria-label="Breadcrumb">
                 <ol class="flex items-center text-sm text-gray-600">
                     <li class="inline-flex items-center">
-                        <a href="/" class="hover:text-green-700">Home</a>
+                        <a href="/" class="hover:text-[#011a3d]">Home</a>
                         <span class="mx-2">›</span>
                     </li>
                     <li class="inline-flex items-center text-gray-900 font-medium" aria-current="page">
@@ -218,7 +218,7 @@
                     
                     <div class="flex justify-end">
                         <button type="button" id="nextStep1" 
-                                class="btn-primary text-white font-semibold py-3 px-8 rounded-lg hover:bg-green-800 transition duration-300">
+                                class="btn-primary text-white font-semibold py-3 px-8 rounded-lg hover:bg-[#011a3d] transition duration-300">
                             Next <i class="fas fa-arrow-right ml-2"></i>
                         </button>
                     </div>
@@ -287,7 +287,7 @@
                         </button>
                         
                         <button type="button" id="nextStep2" 
-                                class="btn-primary text-white font-semibold py-3 px-8 rounded-lg hover:bg-green-800 transition duration-300">
+                                class="btn-primary text-white font-semibold py-3 px-8 rounded-lg hover:bg-[#011a3d] transition duration-300">
                             Next <i class="fas fa-arrow-right ml-2"></i>
                         </button>
                     </div>
@@ -371,10 +371,10 @@
                     <div class="mb-8 p-4 bg-gray-50 rounded-lg">
                         <div class="flex items-start mb-4">
                             <input type="checkbox" id="terms" name="terms" required 
-                                   class="h-4 w-4 text-green-700 focus:ring-green-500 border-gray-300 rounded mt-1">
+                                   class="h-4 w-4 text-[#022658] focus:ring-[#022658] border-gray-300 rounded mt-1">
                             <label for="terms" class="ml-3 text-sm text-gray-700">
-                                I agree to the <a href="/terms" class="text-green-700 hover:underline">Terms and Conditions</a> 
-                                and <a href="/privacy" class="text-green-700 hover:underline">Privacy Policy</a>. 
+                                I agree to the <a href="/terms" class="text-[#022658] hover:underline">Terms and Conditions</a> 
+                                and <a href="/privacy" class="text-[#022658] hover:underline">Privacy Policy</a>. 
                                 I understand that my data will be processed in accordance with these documents.
                             </label>
                         </div>
@@ -382,7 +382,7 @@
                         
                         <div class="flex items-start">
                             <input type="checkbox" id="marketing" name="marketing" 
-                                   class="h-4 w-4 text-green-700 focus:ring-green-500 border-gray-300 rounded mt-1">
+                                   class="h-4 w-4 text-[#022658] focus:ring-[#022658] border-gray-300 rounded mt-1">
                             <label for="marketing" class="ml-3 text-sm text-gray-700">
                                 I would like to receive marketing communications about products, services, 
                                 and special offers from Commercial Pool Equipment and Supplies.
@@ -398,7 +398,7 @@
                         </button>
                         
                         <button type="submit" id="submitBtn" 
-                                class="btn-primary text-white font-semibold py-3 px-8 rounded-lg hover:bg-green-800 transition duration-300">
+                                class="btn-primary text-white font-semibold py-3 px-8 rounded-lg hover:bg-[#011a3d] transition duration-300">
                             Create Account
                         </button>
                     </div>
@@ -409,7 +409,7 @@
             <div class="mt-8 text-center">
                 <p class="text-gray-600">
                     Already have an account? 
-                    <a href="login.php<?php echo isset($_GET['redirect']) ? '?redirect=' . urlencode($_GET['redirect']) : ''; ?>" class="text-green-700 font-semibold hover:underline">
+                    <a href="login.php<?php echo isset($_GET['redirect']) ? '?redirect=' . urlencode($_GET['redirect']) : ''; ?>" class="text-[#022658] font-semibold hover:underline">
                         Sign in here
                     </a>
                 </p>

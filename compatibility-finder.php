@@ -434,7 +434,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_to_cart'])) {
             font-size: 12px;
             font-weight: 600;
         }
-        .compatibility-score-90 { background-color: #10b981; color: white; }
+        .compatibility-score-90 { background-color: #022658; color: white; }
         .compatibility-score-80 { background-color: #3b82f6; color: white; }
         .compatibility-score-70 { background-color: #f59e0b; color: white; }
         .compatibility-score-60 { background-color: #ef4444; color: white; }
@@ -475,7 +475,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_to_cart'])) {
             font-weight: bold;
         }
         .trade-price {
-            color: #059669;
+            color: #022658;
             font-weight: bold;
         }
         .retail-price {
@@ -540,10 +540,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_to_cart'])) {
 
         <!-- Success Message -->
         <?php if (isset($cart_success) && $cart_success): ?>
-        <div class="mb-6 bg-green-50 border-l-4 border-green-500 p-4 rounded">
+        <div class="mb-6 bg-[#022658]/10 border-l-4 border-[#022658] p-4 rounded">
             <div class="flex items-center">
-                <i class="fas fa-check-circle text-green-500 mr-3"></i>
-                <p class="text-green-700 font-medium">Product added to cart successfully!</p>
+                <i class="fas fa-check-circle text-[#022658] mr-3"></i>
+                <p class="text-[#022658] font-medium">Product added to cart successfully!</p>
             </div>
         </div>
         <?php endif; ?>
@@ -620,7 +620,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_to_cart'])) {
                                             <span class="font-bold"><?php echo $avg_compatibility; ?>%</span>
                                         </div>
                                         <div class="compatibility-meter">
-                                            <div class="compatibility-fill" style="width: <?php echo $avg_compatibility; ?>%; background-color: #10b981;"></div>
+                                            <div class="compatibility-fill" style="width: <?php echo $avg_compatibility; ?>%; background-color: #022658;"></div>
                                         </div>
                                     </div>
                                     <div class="flex justify-between text-sm">
@@ -702,7 +702,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_to_cart'])) {
                         <div class="p-6">
                             <h3 class="font-bold text-gray-900 mb-4">Quick Actions</h3>
                             <div class="space-y-3">
-                                <button onclick="addAllCompatible()" class="w-full px-4 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 font-medium flex items-center justify-center gap-2">
+                                <button onclick="addAllCompatible()" class="w-full px-4 py-3 bg-[#022658] text-white rounded-lg hover:bg-[#022658]/90 font-medium flex items-center justify-center gap-2">
                                     <i class="fas fa-cart-plus"></i> Add All Compatible to Cart
                                 </button>
                                 <button onclick="createPackage()" class="w-full px-4 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 font-medium flex items-center justify-center gap-2">
@@ -813,13 +813,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_to_cart'])) {
                                                 <?php echo $price_display; ?>
                                             </div>
                                             <?php if ($is_trader): ?>
-                                            <div class="text-xs text-green-600 font-medium">
+                                            <div class="text-xs text-[#022658] font-medium">
                                                 Trade price applied (<?php echo $user_price_tier; ?>)
                                             </div>
                                             <?php endif; ?>
                                         </div>
                                         <div class="text-right">
-                                            <div class="text-sm <?php echo $product['stock'] > 10 ? 'text-green-600' : ($product['stock'] > 0 ? 'text-orange-600' : 'text-red-600'); ?>">
+                                            <div class="text-sm <?php echo $product['stock'] > 10 ? 'text-[#022658]' : ($product['stock'] > 0 ? 'text-orange-600' : 'text-red-600'); ?>">
                                                 <?php if ($product['stock'] > 10): ?>
                                                 <i class="fas fa-check-circle"></i> In Stock (<?php echo $product['stock']; ?>)
                                                 <?php elseif ($product['stock'] > 0): ?>
@@ -930,23 +930,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_to_cart'])) {
                                 </div>
                                 <ul class="space-y-2 mb-4">
                                     <li class="flex items-center text-sm">
-                                        <i class="fas fa-check text-green-500 mr-2"></i>
-                                        Pump + Filter System
+                                        <i class="fas fa-check text-[#022658] mr-2"></i>
+                                        Energy-efficient pump
                                     </li>
-                                    <li class="flex items-center text-sm">
-                                        <i class="fas fa-check text-green-500 mr-2"></i>
-                                        Basic Chemical Kit
+                                    <li class="flex items-center text-sm text-gray-600">
+                                        <i class="fas fa-check text-[#022658] mr-2"></i>
+                                        Proper flow rate
                                     </li>
-                                    <li class="flex items-center text-sm">
-                                        <i class="fas fa-check text-green-500 mr-2"></i>
-                                        Manual Cleaning Equipment
+                                    <li class="flex items-center text-sm text-gray-600">
+                                        <i class="fas fa-check text-[#022658] mr-2"></i>
+                                        Compatible fittings
                                     </li>
                                 </ul>
                                 <div class="flex justify-between items-center">
                                     <div class="font-bold text-lg">
                                         <?php if ($is_trader): ?>
-                                        <span class="text-gray-500 line-through">£1,299.99</span>
-                                        <span class="text-green-600 ml-2">£<?php echo number_format(1299.99 * ($price_multiplier ?? 1), 2); ?></span>
+                                         Trade Savings:
+                                        <span class="text-[#022658] ml-2">£<?php echo number_format(1299.99 * ($price_multiplier ?? 1), 2); ?></span>
                                         <?php else: ?>
                                         <span>£1,299.99</span>
                                         <?php endif; ?>
@@ -1224,14 +1224,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_to_cart'])) {
                             <h5 class="font-semibold text-gray-900 mb-1">Compatibility Score</h5>
                             <div class="flex items-center gap-2">
                                 <div class="compatibility-meter flex-1">
-                                    <div class="compatibility-fill" style="width: ${product.compatibility_score}%; background-color: #10b981;"></div>
+                                    <div class="compatibility-fill" style="width: ${product.compatibility_score}%; background-color: #022658;"></div>
                                 </div>
                                 <span class="font-bold">${product.compatibility_score}%</span>
                             </div>
                             <p class="text-sm text-gray-600 mt-1">Based on your pool specifications</p>
                         </div>
                         
-                        <div class="bg-green-50 p-4 rounded-lg">
+                        <div class="bg-[#022658]/10 p-4 rounded-lg">
                             <h5 class="font-semibold text-gray-900 mb-1">Pricing</h5>
                             <div class="space-y-1">
                                 <div class="flex justify-between">
@@ -1241,7 +1241,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_to_cart'])) {
                                 <?php if ($is_trader): ?>
                                 <div class="flex justify-between">
                                     <span class="text-gray-600">Your Price:</span>
-                                    <span class="font-bold text-green-600">£${product.trade_price.toFixed(2)}</span>
+                                    <span class="font-bold text-[#022658]">£${product.trade_price.toFixed(2)}</span>
                                 </div>
                                 <?php endif; ?>
                             </div>

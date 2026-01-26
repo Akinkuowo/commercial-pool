@@ -226,7 +226,7 @@
                         </div>
 
                         <!-- Checkout Button -->
-                        <button id="checkoutBtn" class="w-full bg-lime-500 hover:bg-lime-600 text-white font-semibold py-3 px-6 rounded-lg transition mb-3">
+                        <button id="checkoutBtn" class="w-full bg-[#022658] hover:bg-[#011a3d] text-white font-semibold py-3 px-6 rounded-lg transition mb-3">
                             Proceed to Checkout
                         </button>
                         
@@ -436,7 +436,7 @@
                         <div class="mt-4 pt-4 border-t border-gray-100">
                             ${item.delivery_method === 'collection' 
                                 ? '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800"><i class="fas fa-store mr-1"></i> Click & Collect</span>' 
-                                : '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800"><i class="fas fa-truck mr-1"></i> Home Delivery</span>'}
+                                : '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-[#022658]/10 text-[#022658]"><i class="fas fa-truck mr-1"></i> Home Delivery</span>'}
                         </div>
                     </div>
                 `;
@@ -554,9 +554,9 @@
                 modalIcon.innerHTML = '<i class="fas fa-info-circle text-blue-600 text-2xl"></i>';
                 confirmBtn.className = 'confirm-btn flex-1 px-5 py-2.5 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition duration-200';
             } else if (type === 'success') {
-                modalIcon.className = 'mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-green-100 mb-4';
-                modalIcon.innerHTML = '<i class="fas fa-check-circle text-green-600 text-2xl"></i>';
-                confirmBtn.className = 'confirm-btn flex-1 px-5 py-2.5 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 transition duration-200';
+                modalIcon.className = 'mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-[#022658]/10 mb-4';
+                modalIcon.innerHTML = '<i class="fas fa-check-circle text-[#022658] text-2xl"></i>';
+                confirmBtn.className = 'confirm-btn flex-1 px-5 py-2.5 bg-[#022658] text-white text-sm font-medium rounded-lg hover:bg-[#011a3d] focus:outline-none focus:ring-2 focus:ring-[#022658] focus:ring-opacity-50 transition duration-200';
             }
             
             // Show modal with animation
@@ -749,7 +749,7 @@
 
             // Update free shipping message
             if (subtotal >= FREE_SHIPPING_THRESHOLD) {
-                document.getElementById('shippingMessage').innerHTML = '<span class="text-green-600 font-medium">You qualify for free shipping!</span>';
+                document.getElementById('shippingMessage').innerHTML = '<span class="text-[#022658] font-medium">You qualify for free shipping!</span>';
             } else {
                 const remaining = FREE_SHIPPING_THRESHOLD - subtotal;
                 document.getElementById('freeShippingRemaining').textContent = remaining.toFixed(2);
@@ -882,7 +882,7 @@
 
         function showNotification(message, type = 'info') {
             const colors = {
-                success: 'bg-green-500',
+                success: 'bg-[#022658]',
                 error: 'bg-red-500',
                 warning: 'bg-yellow-500',
                 info: 'bg-blue-500'

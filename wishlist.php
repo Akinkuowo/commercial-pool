@@ -59,7 +59,7 @@
                 </div>
                 <h3 class="text-2xl font-semibold text-gray-700 mb-2">Your wishlist is empty</h3>
                 <p class="text-gray-500 mb-8">Save items you like to your wishlist to find them easily later.</p>
-                <a href="product.php" class="inline-block bg-[#0e703a] hover:bg-lime-600 text-white font-semibold px-8 py-3 rounded-md transition">
+                <a href="product.php" class="inline-block bg-[#022658] hover:bg-[#011a3d] text-white font-semibold px-8 py-3 rounded-md transition">
                     Continue Shopping
                 </a>
             </div>
@@ -144,7 +144,7 @@
                             </a>
                             <div class="mt-auto pt-4 flex flex-col gap-3">
                                 <div class="text-xl font-bold text-[#CC4514]">£${parseFloat(item.price).toFixed(2)}</div>
-                                <button onclick="addToCart(${item.id}, this)" class="w-full bg-[#0e703a] hover:bg-lime-600 text-white font-semibold py-2 rounded transition flex items-center justify-center gap-2">
+                                <button onclick="addToCart(${item.id}, this)" class="w-full bg-[#022658] hover:bg-[#011a3d] text-white font-semibold py-2 rounded transition flex items-center justify-center gap-2">
                                     <i class="fas fa-shopping-cart text-sm"></i>
                                     <span>Add to Cart</span>
                                 </button>

@@ -50,13 +50,13 @@ if ($search) {
 if ($stock_filter) {
     switch ($stock_filter) {
         case 'in_stock':
-            $where_conditions[] = "stock > 10";
+            $where_conditions[] = "quantity > 10";
             break;
         case 'low_stock':
-            $where_conditions[] = "stock <= 10 AND stock > 0";
+            $where_conditions[] = "quantity <= 10 AND quantity > 0";
             break;
         case 'out_of_stock':
-            $where_conditions[] = "stock = 0";
+            $where_conditions[] = "quantity = 0";
             break;
     }
 }
@@ -111,9 +111,9 @@ $stats_query = "SELECT
     COALESCE(COUNT(*), 0) as total_products,
     COALESCE(SUM(CASE WHEN status = 'published' THEN 1 ELSE 0 END), 0) as published,
     COALESCE(SUM(CASE WHEN status = 'draft' THEN 1 ELSE 0 END), 0) as draft,
-    COALESCE(SUM(CASE WHEN stock <= 10 AND stock > 0 THEN 1 ELSE 0 END), 0) as low_stock,
-    COALESCE(SUM(CASE WHEN stock = 0 THEN 1 ELSE 0 END), 0) as out_of_stock,
-    COALESCE(SUM(CASE WHEN stock IS NOT NULL THEN stock ELSE 0 END), 0) as total_stock
+    COALESCE(SUM(CASE WHEN quantity <= 10 AND quantity > 0 THEN 1 ELSE 0 END), 0) as low_stock,
+    COALESCE(SUM(CASE WHEN quantity = 0 THEN 1 ELSE 0 END), 0) as out_of_stock,
+    COALESCE(SUM(CASE WHEN quantity IS NOT NULL THEN quantity ELSE 0 END), 0) as total_stock
 FROM products";
 
 $stats_result = $conn->query($stats_query);
@@ -223,10 +223,10 @@ $current_page = 'products';
                     <div class="flex items-center justify-between">
                         <div>
                             <p class="text-xs text-gray-500 uppercase">Published</p>
-                            <h3 class="text-2xl font-bold text-green-600"><?php echo number_format($product_stats['published']); ?></h3>
+                            <h3 class="text-2xl font-bold text-[#022658]"><?php echo number_format($product_stats['published']); ?></h3>
                         </div>
-                        <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                            <i class="fas fa-check-circle text-green-600"></i>
+                        <div class="w-10 h-10 bg-[#022658]/10 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-check-circle text-[#022658]"></i>
                         </div>
                     </div>
                 </div>
@@ -319,7 +319,7 @@ $current_page = 'products';
                         <a href="products.php" class="bg-gray-200 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-300 transition">
                             <i class="fas fa-times mr-2"></i>Clear
                         </a>
-                        <button type="button" onclick="exportProducts()" class="ml-auto bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition">
+                        <button type="button" onclick="exportProducts()" class="ml-auto bg-[#022658] text-white px-6 py-2 rounded-lg hover:bg-[#022658]/90 transition">
                             <i class="fas fa-file-export mr-2"></i>Export
                         </button>
                     </div>
@@ -374,8 +374,8 @@ $current_page = 'products';
                                     <td class="px-6 py-4 text-sm text-gray-900"><?php echo htmlspecialchars($product['sku_number']); ?></td>
                                     <td class="px-6 py-4">
                                         <?php
-                                        $stock = $product['stock'] ?? 0;
-                                        $stock_class = $stock > 10 ? 'text-green-600' : ($stock > 0 ? 'text-orange-600' : 'text-red-600');
+                                        $stock = $product['quantity'] ?? 0;
+                                        $stock_class = $stock > 10 ? 'text-[#022658]' : ($stock > 0 ? 'text-orange-600' : 'text-red-600');
                                         ?>
                                         <span class="text-sm font-medium <?php echo $stock_class; ?>"><?php echo $stock; ?></span>
                                         <span class="text-xs text-gray-500 ml-1">units</span>
@@ -387,7 +387,7 @@ $current_page = 'products';
                                     <td class="px-6 py-4">
                                         <?php
                                         $status_colors = [
-                                            'published' => 'bg-green-100 text-green-800',
+                                            'published' => 'bg-[#022658]/10 text-[#022658]',
                                             'draft' => 'bg-yellow-100 text-yellow-800'
                                         ];
                                         $status_class = $status_colors[$product['status']] ?? 'bg-gray-100 text-gray-800';
@@ -401,7 +401,7 @@ $current_page = 'products';
                                             <button onclick="editProduct(<?php echo $product['id']; ?>)" class="text-blue-600 hover:text-blue-800" title="Edit">
                                                 <i class="fas fa-edit"></i>
                                             </button>
-                                            <button onclick="viewProduct(<?php echo $product['id']; ?>)" class="text-green-600 hover:text-green-800" title="View">
+                                            <button onclick="viewProduct(<?php echo $product['id']; ?>)" class="text-[#022658] hover:text-[#022658]/80" title="View">
                                                 <i class="fas fa-eye"></i>
                                             </button>
                                             <?php if ($admin_role === 'admin'): ?>

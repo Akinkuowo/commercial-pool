@@ -26,7 +26,7 @@
                 <nav class="mb-8" aria-label="Breadcrumb">
                     <ol class="flex items-center text-sm text-gray-600">
                         <li class="inline-flex items-center">
-                            <a href="/" class="hover:text-green-700">Home</a>
+                            <a href="/" class="hover:text-[#022658]">Home</a>
                             <span class="mx-2">›</span>
                         </li>
                         <li class="inline-flex items-center text-gray-900 font-medium" aria-current="page">
@@ -38,19 +38,19 @@
                 <h1 class="text-3xl font-bold text-gray-900 mb-8">Sign in</h1>
                 
                 <?php if (isset($_GET['registered']) && $_GET['registered'] == 'true'): ?>
-                    <div class="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+                    <div class="mb-6 p-4 bg-[#022658]/10 border border-[#022658]/20 rounded-lg">
                         <div class="flex items-center">
-                            <i class="fas fa-check-circle text-green-500 mr-3"></i>
-                            <p class="text-green-700 font-medium">Account created successfully! Please sign in.</p>
+                            <i class="fas fa-check-circle text-[#022658] mr-3"></i>
+                            <p class="text-[#022658] font-medium">Account created successfully! Please sign in.</p>
                         </div>
                     </div>
                 <?php endif; ?>
                 
                 <?php if (isset($_GET['reset']) && $_GET['reset'] == 'success'): ?>
-                    <div class="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+                    <div class="mb-6 p-4 bg-[#022658]/10 border border-[#022658]/20 rounded-lg">
                         <div class="flex items-center">
-                            <i class="fas fa-check-circle text-green-500 mr-3"></i>
-                            <p class="text-green-700 font-medium">Password reset successfully! You can now sign in.</p>
+                            <i class="fas fa-check-circle text-[#022658] mr-3"></i>
+                            <p class="text-[#022658] font-medium">Password reset successfully! You can now sign in.</p>
                         </div>
                     </div>
                 <?php endif; ?>
@@ -75,7 +75,7 @@
                                id="email" 
                                name="email" 
                                required 
-                               class="w-full px-4 py-3 border border-gray-300 rounded-lg form-input focus:outline-none focus:ring-2 focus:ring-green-500"
+                               class="w-full px-4 py-3 border border-gray-300 rounded-lg form-input focus:outline-none focus:ring-2 focus:ring-[#022658]"
                                placeholder="your.email@example.com"
                                value="<?php echo isset($_POST['email']) ? htmlspecialchars($_POST['email']) : ''; ?>">
                         <div id="emailError" class="error-message"></div>
@@ -90,7 +90,7 @@
                                    id="password" 
                                    name="password" 
                                    required 
-                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg form-input focus:outline-none focus:ring-2 focus:ring-green-500 pr-12"
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg form-input focus:outline-none focus:ring-2 focus:ring-[#022658] pr-12"
                                    placeholder="Enter your password">
                             <button type="button" 
                                     id="togglePassword" 
@@ -106,19 +106,19 @@
                             <input type="checkbox" 
                                    id="remember" 
                                    name="remember"
-                                   class="h-4 w-4 text-green-700 focus:ring-green-500 border-gray-300 rounded">
+                                   class="h-4 w-4 text-[#022658] focus:ring-[#022658] border-gray-300 rounded">
                             <label for="remember" class="ml-2 block text-sm text-gray-700">
                                 Remember me
                             </label>
                         </div>
-                        <a href="forgot_password.php" class="text-sm text-green-700 hover:text-green-800 hover:underline">
+                        <a href="forgot_password.php" class="text-sm text-[#022658] hover:text-[#011a3d] hover:underline">
                             Forgot your password?
                         </a>
                     </div>
                     
                     <button type="submit" 
                             id="submitBtn"
-                            class="w-full btn-primary text-white font-semibold py-3 px-4 rounded-lg hover:bg-green-800 transition duration-300">
+                            class="w-full btn-primary text-white font-semibold py-3 px-4 rounded-lg hover:opacity-90 transition duration-300">
                         Sign in
                     </button>
                 </form>
@@ -147,59 +147,59 @@
             </div>
             
             <!-- Right Column - New Customer Info -->
-            <div class="lg:w-1/2 bg-gradient-to-br from-green-700 to-green-900 p-8 lg:p-12 text-white">
+            <div class="lg:w-1/2 bg-gradient-to-br from-[#022658] to-[#011a3d] p-8 lg:p-12 text-white">
                 <h2 class="text-2xl font-bold mb-6">Trade Account Member?</h2>
                 <p class="text-lg mb-6">Create an account with us and you'll be able to:</p>
                 
                 <ul class="space-y-4 mb-8">
                     <li class="flex items-start">
-                        <i class="fas fa-check-circle text-green-300 mr-3 mt-1"></i>
+                        <i class="fas fa-check-circle text-blue-200 mr-3 mt-1"></i>
                         <span>Check out faster</span>
                     </li>
                     <li class="flex items-start">
-                        <i class="fas fa-check-circle text-green-300 mr-3 mt-1"></i>
+                        <i class="fas fa-check-circle text-blue-200 mr-3 mt-1"></i>
                         <span>Save multiple shipping addresses</span>
                     </li>
                     <li class="flex items-start">
-                        <i class="fas fa-check-circle text-green-300 mr-3 mt-1"></i>
+                        <i class="fas fa-check-circle text-blue-200 mr-3 mt-1"></i>
                         <span>Access your order history</span>
                     </li>
                     <li class="flex items-start">
-                        <i class="fas fa-check-circle text-green-300 mr-3 mt-1"></i>
+                        <i class="fas fa-check-circle text-blue-200 mr-3 mt-1"></i>
                         <span>Track new orders</span>
                     </li>
                     <li class="flex items-start">
-                        <i class="fas fa-check-circle text-green-300 mr-3 mt-1"></i>
+                        <i class="fas fa-check-circle text-blue-200 mr-3 mt-1"></i>
                         <span>Save items to your lists</span>
                     </li>
                     <li class="flex items-start">
-                        <i class="fas fa-check-circle text-green-300 mr-3 mt-1"></i>
+                        <i class="fas fa-check-circle text-blue-200 mr-3 mt-1"></i>
                         <span class="font-semibold">View trade prices and discounts</span>
                     </li>
                 </ul>
                 
                 <a href="register.php<?php echo isset($_GET['redirect']) ? '?redirect=' . urlencode($_GET['redirect']) : ''; ?>" 
-                   class="inline-block bg-white text-green-700 font-semibold py-3 px-8 rounded-lg hover:bg-gray-100 transition duration-300 transform hover:scale-105">
+                   class="inline-block bg-white text-[#022658] font-semibold py-3 px-8 rounded-lg hover:bg-gray-100 transition duration-300 transform hover:scale-105">
                     Create Account
                 </a>
                 
-                <div class="mt-12 pt-8 border-t border-green-500">
+                <div class="mt-12 pt-8 border-t border-[#022658]/30">
                     <h3 class="text-xl font-bold mb-4">Trade Account Benefits</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div class="flex items-start">
-                            <i class="fas fa-percentage text-green-300 mr-2 mt-1"></i>
+                            <i class="fas fa-percentage text-blue-200 mr-2 mt-1"></i>
                             <span>Exclusive trade discounts</span>
                         </div>
                         <div class="flex items-start">
-                            <i class="fas fa-truck text-green-300 mr-2 mt-1"></i>
+                            <i class="fas fa-truck text-blue-200 mr-2 mt-1"></i>
                             <span>Priority shipping</span>
                         </div>
                         <div class="flex items-start">
-                            <i class="fas fa-headset text-green-300 mr-2 mt-1"></i>
+                            <i class="fas fa-headset text-blue-200 mr-2 mt-1"></i>
                             <span>Dedicated trade support</span>
                         </div>
                         <div class="flex items-start">
-                            <i class="fas fa-file-invoice-dollar text-green-300 mr-2 mt-1"></i>
+                            <i class="fas fa-file-invoice-dollar text-blue-200 mr-2 mt-1"></i>
                             <span>Trade credit accounts</span>
                         </div>
                     </div>

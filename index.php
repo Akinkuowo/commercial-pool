@@ -535,8 +535,8 @@
     <section class="py-16 px-4 bg-[#f8f9fa] relative overflow-hidden">
         <!-- Background pattern (optional) -->
         <div class="absolute inset-0 opacity-5">
-            <div class="absolute top-0 left-0 w-64 h-64 bg-[#0e703a] rounded-full -translate-x-1/2 -translate-y-1/2"></div>
-            <div class="absolute bottom-0 right-0 w-96 h-96 bg-[#0e703a] rounded-full translate-x-1/2 translate-y-1/2"></div>
+            <div class="absolute top-0 left-0 w-64 h-64 bg-[#022658] rounded-full -translate-x-1/2 -translate-y-1/2"></div>
+            <div class="absolute bottom-0 right-0 w-96 h-96 bg-[#022658] rounded-full translate-x-1/2 translate-y-1/2"></div>
         </div>
         
         <div class="max-w-4xl mx-auto relative z-10">
@@ -632,16 +632,16 @@
                 </div>
                 
                 <!-- Success Message (Hidden by default) -->
-                <div id="successMessage" class="hidden mt-6 p-4 bg-green-50 border border-green-200 rounded-xl">
+                <div id="successMessage" class="hidden mt-6 p-4 bg-[#022658]/10 border border-[#022658]/20 rounded-xl">
                     <div class="flex items-center space-x-3">
-                        <div class="flex-shrink-0 w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <div class="flex-shrink-0 w-10 h-10 bg-[#022658]/20 rounded-full flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#022658" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <polyline points="20 6 9 17 4 12"></polyline>
                             </svg>
                         </div>
                         <div>
-                            <h3 class="font-bold text-green-800">Welcome to Commercial Pool Equipment and Supplies Limited!</h3>
-                            <p class="text-green-700 text-sm">
+                            <h3 class="font-bold text-[#022658]">Welcome to Commercial Pool Equipment and Supplies Limited!</h3>
+                            <p class="text-[#022658] text-sm">
                                 Thank you for subscribing! Check your email for a special welcome message and your 10% discount code.
                             </p>
                         </div>
@@ -709,7 +709,7 @@
         }
         
         function showNotification(message, type = 'info') {
-            const colors = { success: 'bg-green-500', error: 'bg-red-500', warning: 'bg-yellow-500', info: 'bg-blue-500' };
+            const colors = { success: 'bg-[#022658]', error: 'bg-red-500', warning: 'bg-yellow-500', info: 'bg-blue-500' };
             const notification = document.createElement('div');
             notification.className = `fixed top-4 right-4 ${colors[type]} text-white px-6 py-3 rounded-lg shadow-lg z-50 transition-all duration-300 translate-x-[400px]`;
             notification.textContent = message;
