@@ -88,6 +88,27 @@
             <!-- Multi-step Form -->
             <form id="registerForm" class="bg-white rounded-xl shadow-lg p-6 lg:p-8">
                 <input type="hidden" name="redirect" value="<?php echo isset($_GET['redirect']) ? htmlspecialchars($_GET['redirect']) : ''; ?>">
+                <!-- Step 0: Customer Type Selection -->
+                <div id="customerTypeSection" class="mb-8 p-4 bg-blue-50 rounded-lg border border-blue-100">
+                    <label class="block text-sm font-semibold text-gray-700 mb-3 text-center">I am creating a...</label>
+                    <div class="flex justify-center gap-4">
+                        <label class="cursor-pointer group flex-1 max-w-[200px]">
+                            <input type="radio" name="customer_type" value="public" class="hidden peer" onchange="toggleFormMode('public')">
+                            <div class="p-4 border-2 border-gray-200 rounded-lg text-center peer-checked:border-[#022658] peer-checked:bg-white transition-all">
+                                <i class="fas fa-user text-2xl mb-2 text-gray-400 group-hover:text-[#022658]"></i>
+                                <p class="text-sm font-medium text-gray-600">Public Account</p>
+                            </div>
+                        </label>
+                        <label class="cursor-pointer group flex-1 max-w-[200px]">
+                            <input type="radio" name="customer_type" value="trade" class="hidden peer" checked onchange="toggleFormMode('trade')">
+                            <div class="p-4 border-2 border-gray-200 rounded-lg text-center peer-checked:border-[#022658] peer-checked:bg-white transition-all">
+                                <i class="fas fa-briefcase text-2xl mb-2 text-gray-400 group-hover:text-[#022658]"></i>
+                                <p class="text-sm font-medium text-gray-600">Trade Account</p>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
                 <!-- Step Indicators -->
                 <div class="mb-8">
                     <div class="flex items-center justify-center space-x-6">
@@ -418,6 +439,34 @@
     </div>
 
     <?php include('include/footer.php') ?>
+    <script>
+        function toggleFormMode(type) {
+            const businessFields = ['business_name', 'business_type', 'website_url', 'vat_number', 'company_registration_no'];
+            const labels = document.querySelectorAll('label');
+            
+            if (type === 'public') {
+                businessFields.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) {
+                        el.closest('div').classList.add('hidden');
+                        el.required = false;
+                    }
+                });
+                document.querySelector('h1').textContent = 'Create Public Account';
+                document.querySelector('p.text-gray-600').textContent = 'Create an account for personal use.';
+            } else {
+                businessFields.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) {
+                        el.closest('div').classList.remove('hidden');
+                        if (id === 'business_name' || id === 'business_type') el.required = true;
+                    }
+                });
+                document.querySelector('h1').textContent = 'Create Trade Account';
+                document.querySelector('p.text-gray-600').textContent = 'Create your trade account to access exclusive benefits and pricing.';
+            }
+        }
+    </script>
     <?php include('include/script.php') ?>
 
     <script src="assets/js/register.js"></script>

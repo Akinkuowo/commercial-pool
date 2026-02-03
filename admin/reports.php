@@ -43,37 +43,11 @@ $date_from = date('Y-m-d', strtotime('-30 days'));
     <!-- Main Content -->
     <div id="mainContent" class="main-content min-h-screen">
         <!-- Header -->
-        <header class="bg-white border-b border-gray-200 sticky top-0 z-40">
-            <div class="px-6 py-4">
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center">
-                        <button id="mobileSidebarToggle" class="lg:hidden mr-4 text-gray-600">
-                            <i class="fas fa-bars text-xl"></i>
-                        </button>
-                        <div>
-                            <h1 class="text-2xl font-bold text-gray-800">Reports & Analytics</h1>
-                            <p class="text-gray-600 mt-1">Business performance overview</p>
-                        </div>
-                    </div>
-                    <div class="relative">
-                        <button id="userMenuBtn" class="flex items-center space-x-3 p-2 hover:bg-gray-100 rounded-lg">
-                            <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white font-semibold">
-                                <?php echo strtoupper(substr($admin_name, 0, 1)); ?>
-                            </div>
-                            <div class="hidden md:block text-left">
-                                <div class="text-sm font-semibold text-gray-700"><?php echo htmlspecialchars($admin_name); ?></div>
-                                <div class="text-xs text-gray-500"><?php echo ucfirst($admin_role); ?></div>
-                            </div>
-                        </button>
-                        <div id="userMenu" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2">
-                            <a href="../api/admin/logout.php" class="block px-4 py-2 text-red-600 hover:bg-gray-100">
-                                <i class="fas fa-sign-out-alt mr-2"></i>Logout
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </header>
+        <?php 
+        $header_title = "Reports & Analytics";
+        $header_description = "Business performance overview";
+        include('include/header.php'); 
+        ?>
 
         <main class="p-6">
             <!-- Filter Bar -->
@@ -91,6 +65,9 @@ $date_from = date('Y-m-d', strtotime('-30 days'));
                     </div>
                     <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition">
                         Update Reports
+                    </button>
+                    <button type="button" onclick="exportReport()" class="bg-[#022658] text-white px-6 py-2 rounded-lg hover:bg-[#022658]/90 transition">
+                        <i class="fas fa-file-download mr-2"></i>Download CSV
                     </button>
                 </form>
             </div>
@@ -119,7 +96,9 @@ $date_from = date('Y-m-d', strtotime('-30 days'));
                 <!-- Sales Chart -->
                 <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                     <h3 class="text-lg font-bold text-gray-800 mb-4">Sales Overview</h3>
-                    <canvas id="salesChart" height="300"></canvas>
+                    <div class="h-[300px]">
+                        <canvas id="salesChart"></canvas>
+                    </div>
                 </div>
 
                 <!-- Status Chart -->
@@ -165,6 +144,12 @@ $date_from = date('Y-m-d', strtotime('-30 days'));
 
         let salesChartInstance = null;
         let statusChartInstance = null;
+
+        function exportReport() {
+            const dateFrom = document.getElementById('dateFrom').value;
+            const dateTo = document.getElementById('dateTo').value;
+            window.location.href = `../api/admin/export_reports.php?from=${dateFrom}&to=${dateTo}`;
+        }
 
         function loadReports() {
             const formData = new FormData(document.getElementById('reportFilterForm'));

@@ -2,6 +2,7 @@
 // api/admin/add_product.php
 session_start();
 require_once '../../config.php';
+require_once '../admin/include/utils.php';
 
 header('Content-Type: application/json');
 
@@ -87,10 +88,15 @@ $stmt->bind_param(
 );
 
 if ($stmt->execute()) {
+    $product_id = $stmt->insert_id;
+    
+    // Log activity
+    logActivity($conn, 'create_product', "Created product: $product_name (ID: $product_id, SKU: $sku_number)");
+    
     echo json_encode([
         'success' => true,
         'message' => 'Product added successfully',
-        'product_id' => $stmt->insert_id
+        'product_id' => $product_id
     ]);
 } else {
     echo json_encode([

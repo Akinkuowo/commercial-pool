@@ -31,4 +31,6 @@ function closeDbConnection($conn) {
         $conn->close();
     }
 }
+// Multi-currency support
+require_once __DIR__ . '/include/currency_init.php';
 ?>

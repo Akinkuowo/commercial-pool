@@ -15,6 +15,9 @@
         session_start();
     }
     
+    // Include currency initialization
+    require_once 'include/currency_init.php';
+    
     // Function to get product image with fallback
     function getProductImage($image, $category = '') {
         // If image exists in database, use it
@@ -256,6 +259,22 @@
                                         </div>
                                     </div>
                                     
+                                    <!-- Size Filter -->
+                                <div class="mb-6">
+                                    <h3 class="text-sm font-semibold text-gray-900 mb-3 uppercase tracking-wider">Size</h3>
+                                    <div class="space-y-2" id="sizeFilters">
+                                        <!-- Populated via JS -->
+                                    </div>
+                                </div>
+
+                                <!-- Color Filter -->
+                                <div class="mb-6">
+                                    <h3 class="text-sm font-semibold text-gray-900 mb-3 uppercase tracking-wider">Color / Type</h3>
+                                    <div class="space-y-2" id="colorFilters">
+                                        <!-- Populated via JS -->
+                                    </div>
+                                </div>
+                                    
                                     <!-- Stock Status Filter -->
                                     <div class="mb-6">
                                         <h3 class="text-sm font-medium text-gray-700 mb-3">Availability</h3>
@@ -387,6 +406,16 @@
         }
         
 
+        const currentCurrency = '<?php echo $currentCurrency; ?>';
+        const exchangeRates = <?php echo json_encode($exchangeRates); ?>;
+        const currencySymbols = <?php echo json_encode($currencySymbols); ?>;
+
+        function formatPriceJS(price) {
+            const rate = exchangeRates[currentCurrency] || 1.0;
+            const converted = price * rate;
+            return currencySymbols[currentCurrency] + converted.toFixed(2);
+        }
+
         // Initialize page
         document.addEventListener('DOMContentLoaded', () => {
             loadProducts();
@@ -404,7 +433,9 @@
                     category: filters.category,
                     subcategory: filters.subcategory,
                     type: filters.type,
-                    brand: filters.brand,
+                    brand: Array.from(document.querySelectorAll('#brandFilters input:checked')).map(cb => cb.value).join(','),
+                    size: Array.from(document.querySelectorAll('#sizeFilters input:checked')).map(cb => cb.value).join(','),
+                    color: Array.from(document.querySelectorAll('#colorFilters input:checked')).map(cb => cb.value).join(','),
                     search: filters.search
                 });
                 
@@ -415,10 +446,13 @@
                     products = data.products;
                     filteredProducts = [...products];
                     
+                    displayFilters(data.brands, 'brandFilters', 'brand');
+                    displayFilters(data.sizes, 'sizeFilters', 'size');
+                    displayFilters(data.colors, 'colorFilters', 'color');
+                    
                     updatePriceRangeFromProducts();
                     updatePageTitle();
                     applyAllFilters();
-                    renderBrandFilters(data.brands);
                     
                     document.getElementById('loadingState').classList.add('hidden');
                 } else {
@@ -428,6 +462,30 @@
                 console.error('Error loading products:', error);
                 showError('An error occurred while loading products');
             }
+        }
+
+        function displayFilters(items, containerId, type) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            
+            const currentChecked = Array.from(container.querySelectorAll('input:checked')).map(cb => cb.value);
+            container.innerHTML = '';
+            
+            items.forEach(item => {
+                const label = document.createElement('label');
+                label.className = 'flex items-center group cursor-pointer';
+                const value = item[type] || item.name;
+                const isChecked = currentChecked.includes(value);
+                
+                label.innerHTML = `
+                    <input type="checkbox" value="${value}" ${isChecked ? 'checked' : ''} 
+                           class="w-4 h-4 border-gray-300 rounded text-[#022658] focus:ring-[#022658] ${type}-filter"
+                           onchange="loadProducts()">
+                    <span class="ml-3 text-sm text-gray-600 group-hover:text-gray-900">${value}</span>
+                    <span class="ml-auto text-xs text-gray-400">(${item.count})</span>
+                `;
+                container.appendChild(label);
+            });
         }
 
 
@@ -520,6 +578,7 @@
         }
 
         // Initialize price range
+
         function initializePriceRange() {
             const minRange = document.getElementById('minPriceRange');
             const maxRange = document.getElementById('maxPriceRange');
@@ -739,7 +798,9 @@
         function createProductCardGrid(product) {
             const isNew = product.is_new == 1;
             const isPopular = product.is_popular == 1;
-            const inStock = product.stock === 'In Stock' || product.quantity > 0;
+            const quantity = parseInt(product.quantity || 0);
+            const inStock = product.stock === 'In Stock' || quantity > 0;
+            const lowStock = inStock && quantity > 0 && quantity <= 5;
             const inCompare = compareList.includes(product.id);
             
             return `
@@ -763,6 +824,7 @@
                         <div class="absolute top-2 right-2 flex flex-col gap-1">
                         ${isNew ? '<span class="bg-[#022658] text-white text-xs px-2 py-1 rounded">NEW</span>' : ''}
                         ${isPopular ? '<span class="bg-blue-500 text-white text-xs px-2 py-1 rounded">POPULAR</span>' : ''}
+                        ${lowStock ? '<span class="bg-orange-500 text-white text-xs px-2 py-1 rounded">LOW STOCK</span>' : ''}
                     </div>
                     ${!inStock ? '<div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center"><span class="bg-red-500 text-white px-4 py-2 rounded">Out of Stock</span></div>' : ''}
                 </div>
@@ -797,7 +859,9 @@
     function createProductCardList(product) {
         const isNew = product.is_new == 1;
         const isPopular = product.is_popular == 1;
-        const inStock = product.stock === 'In Stock' || product.quantity > 0;
+        const quantity = parseInt(product.quantity || 0);
+        const inStock = product.stock === 'In Stock' || quantity > 0;
+        const lowStock = inStock && quantity > 0 && quantity <= 5;
         const inCompare = compareList.includes(product.id);
         
         return `
@@ -839,8 +903,11 @@
                             <p class="text-sm text-gray-600 mb-4 line-clamp-3 flex-1">${product.description || 'No description available'}</p>
                         </a>
 
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-xl font-bold text-[#022658]">${formatPriceJS(product.price)}</span>
+                            <span class="text-sm text-gray-500 line-through">${product.oldPrice ? formatPriceJS(product.oldPrice) : ''}</span>
+                        </div>
                         <div class="flex items-center justify-between mt-auto">
-                            <span class="text-2xl font-bold text-[#022658]">£${parseFloat(product.price).toFixed(2)}</span>
                             ${inStock ? `
                                 <div class="flex gap-2">
                                     <button onclick="event.preventDefault(); event.stopPropagation(); window.location.href='product_detail.php?id=${product.id}'" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded transition">

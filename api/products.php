@@ -149,6 +149,8 @@ try {
     $type = isset($_GET['type']) ? $conn->real_escape_string($_GET['type']) : '';
     $brand = isset($_GET['brand']) ? $conn->real_escape_string($_GET['brand']) : '';
     $search = isset($_GET['search']) ? $conn->real_escape_string($_GET['search']) : '';
+    $size = isset($_GET['size']) ? $conn->real_escape_string($_GET['size']) : '';
+    $color = isset($_GET['color']) ? $conn->real_escape_string($_GET['color']) : '';
     $limit = isset($_GET['limit']) ? intval($_GET['limit']) : 100;
     $offset = isset($_GET['offset']) ? intval($_GET['offset']) : 0;
     
@@ -188,6 +190,18 @@ try {
         $params[] = $searchTerm;
         $params[] = $searchTerm;
         $types .= 'sss';
+    }
+
+    if (!empty($size)) {
+        $whereConditions[] = "size_variant_model = ?";
+        $params[] = $size;
+        $types .= 's';
+    }
+
+    if (!empty($color)) {
+        $whereConditions[] = "colour_type = ?";
+        $params[] = $color;
+        $types .= 's';
     }
     
     $whereClause = !empty($whereConditions) ? 'WHERE ' . implode(' AND ', $whereConditions) : '';
@@ -309,16 +323,32 @@ try {
             }
         }
         $brandsStmt->close();
-    } else {
-        // Fallback if prepare fails
-        $brandsResult = $conn->query($brandsSql);
-        if ($brandsResult) {
-            while ($brandRow = $brandsResult->fetch_assoc()) {
-                if (!empty($brandRow['brand'])) {
-                    $brands[] = $brandRow;
-                }
-            }
+    }
+    
+    // Get available sizes
+    $sizesSql = "SELECT DISTINCT size_variant_model as size, COUNT(*) as count FROM products $whereClause GROUP BY size_variant_model ORDER BY size ASC";
+    $sizesStmt = $conn->prepare($sizesSql);
+    $sizes = [];
+    if ($sizesStmt) {
+        if (!empty($params)) $sizesStmt->bind_param($types, ...$params);
+        if ($sizesStmt->execute()) {
+            $sizesRes = $sizesStmt->get_result();
+            while ($sRow = $sizesRes->fetch_assoc()) if (!empty($sRow['size'])) $sizes[] = $sRow;
         }
+        $sizesStmt->close();
+    }
+
+    // Get available colors
+    $colorsSql = "SELECT DISTINCT colour_type as color, COUNT(*) as count FROM products $whereClause GROUP BY colour_type ORDER BY colour_type ASC";
+    $colorsStmt = $conn->prepare($colorsSql);
+    $colors = [];
+    if ($colorsStmt) {
+        if (!empty($params)) $colorsStmt->bind_param($types, ...$params);
+        if ($colorsStmt->execute()) {
+            $colorsRes = $colorsStmt->get_result();
+            while ($cRow = $colorsRes->fetch_assoc()) if (!empty($cRow['color'])) $colors[] = $cRow;
+        }
+        $colorsStmt->close();
     }
     
     ob_clean();
@@ -326,6 +356,8 @@ try {
         'success' => true,
         'products' => $products,
         'brands' => $brands,
+        'sizes' => $sizes,
+        'colors' => $colors,
         'total' => $totalProducts,
         'count' => count($products),
         'filters' => [
@@ -333,6 +365,8 @@ try {
             'subcategory' => $subcategory,
             'type' => $type,
             'brand' => $brand,
+            'size' => $size,
+            'color' => $color,
             'search' => $search
         ]
     ], JSON_UNESCAPED_UNICODE);

@@ -73,7 +73,7 @@
             }
         }
         
-        closeDbConnection($conn);
+        // Connection will be closed later in the footer or by PHP at script end
     } catch (Exception $e) {
         error_log("Error fetching products: " . $e->getMessage());
     }
@@ -119,413 +119,75 @@
         </div>
     </section>
 
-    <!-- Category Section -->
-    <section class="py-12 md:py-16">
-        <div class="container mx-auto px-4 max-w-[1400px]">
-            <!-- Section Header -->
-            <div class="mb-8 px-8">
-                <h2 class="text-2xl md:text-3xl font-bold text-gray-900 uppercase tracking-wide">
-                    Shop by Category
-                </h2>
-            </div>
-            
-            <!-- Category Slider -->
-            <div class="category-slider">
-                <!-- Left Arrow -->
-                <button class="slider-nav left disabled" id="prevBtn" aria-label="Previous categories">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                        <polyline points="15 18 9 12 15 6"></polyline>
-                    </svg>
-                </button>
-                
-                <!-- Category Track -->
-                <div class="category-track" id="categoryTrack">
-                    <!-- Category 1: Pumps & Filters -->
-                    <a href="product.php?category=bathroom" class="category-card">
-                        <img src="assets/img/pumps-filters.jpg" alt="Pumps & Filters" onerror="this.src='https://images.unsplash.com/photo-1566073771259-6a8506099945?w=500&h=600&fit=crop&auto=format'">
-                        <div class="category-title">
-                            <h3 class="category-name">Pumps & Filters</h3>
-                        </div>
-                    </a>
-                    
-                    <!-- Category 2: Lights -->
-                    <a href="product.php?category=kitchen" class="category-card">
-                        <img src="assets/img/lights.jpg" alt="Lights" onerror="this.src='https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=500&h=600&fit=crop&auto=format'">
-                        <div class="category-title">
-                            <h3 class="category-name">Lights</h3>
-                        </div>
-                    </a>
-                    
-                    <!-- Category 3: Heaters -->
-                    <a href="product.php?category=kitchen" class="category-card">
-                        <img src="assets/img/heaters.jpg" alt="Heaters" onerror="this.src='https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=500&h=600&fit=crop&auto=format'">
-                        <div class="category-title">
-                            <h3 class="category-name">Heaters</h3>
-                        </div>
-                    </a>
-                    
-                    <!-- Category 4: Cleaners -->
-                    <a href="product.php?category=kitchen" class="category-card">
-                        <img src="assets/img/cleaners.jpg" alt="Cleaners" onerror="this.src='https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=500&h=600&fit=crop&auto=format'">
-                        <div class="category-title">
-                            <h3 class="category-name">Cleaners</h3>
-                        </div>
-                    </a>
-                    
-                    <!-- Category 5: Covers -->
-                    <a href="product.php?category=gas-water" class="category-card">
-                        <img src="assets/img/covers.jpg" alt="Covers" onerror="this.src='https://images.unsplash.com/photo-1575429198097-0414ec08e8cd?w=500&h=600&fit=crop&auto=format'">
-                        <div class="category-title">
-                            <h3 class="category-name">Covers</h3>
-                        </div>
-                    </a>
-                    
-                    <!-- Category 6: Competition -->
-                    <a href="product.php?category=heater-air-cons" class="category-card">
-                        <img src="assets/img/competition.jpg" alt="Competition Equipment" onerror="this.src='https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=500&h=600&fit=crop&auto=format'">
-                        <div class="category-title">
-                            <h3 class="category-name">Competition</h3>
-                        </div>
-                    </a>
-                    
-                    <!-- Category 7: Pool Side -->
-                    <a href="product.php?category=awnings" class="category-card">
-                        <img src="assets/img/pool-side.jpg" alt="Pool Side Equipment" onerror="this.src='https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=500&h=600&fit=crop&auto=format'">
-                        <div class="category-title">
-                            <h3 class="category-name">Pool Side</h3>
-                        </div>
-                    </a>
-                    
-                    <!-- Category 8: Sauna, Spa & Therapy -->
-                    <a href="product.php?category=kitchen" class="category-card">
-                        <img src="assets/img/sauna-spa.jpg" alt="Sauna, Spa & Therapy" onerror="this.src='https://images.unsplash.com/photo-1600706861265-0d69d48f3a1d?w=500&h=600&fit=crop&auto=format'">
-                        <div class="category-title">
-                            <h3 class="category-name">Sauna, Spa & Therapy</h3>
-                        </div>
-                    </a>
-                </div>
-                
-                <!-- Right Arrow -->
-                <button class="slider-nav right" id="nextBtn" aria-label="Next categories">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                        <polyline points="9 18 15 12 9 6"></polyline>
-                    </svg>
-                </button>
-            </div>
-
-            <div class="mx-auto max-w-xs text-center mt-10">
-                <a href="product.php" class="shop-now-btn">View More</a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Life Guide Equipment Section -->
-    <section class="campervan-section py-16 md:py-24">
-        <div class="container mx-auto px-4 max-w-7xl">
-            <div class="campervan-content grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-                
-                <!-- Left Column: Image -->
-                <div class="order-2 lg:order-1">
-                    <div class="conversion-image" style="height: 500px;">
-                        <img src="assets/img/lifeguard-equipment.jpg" alt="Life Guard Equipment" onerror="this.src='https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&h=1000&fit=crop&auto=format'">
-                    </div>
-                </div>
-                
-                <!-- Right Column: Content -->
-                <div class="order-1 lg:order-2">
-                    <div class="mb-6">
-                        <span class="text-[#022658] font-bold text-sm uppercase tracking-wider">Competition & Safety</span>
-                        <h2 class="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mt-3 mb-6 leading-tight">
-                            Professional Life Guard & Competition Equipment
-                        </h2>
-                    </div>
-                    
-                    <p class="text-gray-700 text-lg mb-8 leading-relaxed">
-                        Ensure maximum safety and professional standards at your pool with our comprehensive range of life guard equipment. From rescue tubes and life rings to first aid kits and emergency response gear, we provide everything needed for effective pool supervision and water safety.
-                    </p>
-                    
-                    <p class="text-gray-700 text-lg mb-10 leading-relaxed">
-                        Our competition equipment meets international standards for swimming competitions, including lane ropes, starting blocks, turn indicators, and water polo goals. Trust our expertly curated selection for reliable performance during training and competitive events.
-                    </p>
-                    
-                    <!-- Feature Badges -->
-                    <div class="mb-10 space-y-3">
-                        <div class="feature-badge">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#022658" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <polyline points="20 6 9 17 4 12"></polyline>
-                            </svg>
-                            <span class="text-gray-800 font-semibold">Professional Rescue Equipment</span>
-                        </div>
-                        <div class="feature-badge">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#022658" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <polyline points="20 6 9 17 4 12"></polyline>
-                            </svg>
-                            <span class="text-gray-800 font-semibold">Competition Standard Equipment</span>
-                        </div>
-                        <div class="feature-badge">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#022658" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <polyline points="20 6 9 17 4 12"></polyline>
-                            </svg>
-                            <span class="text-gray-800 font-semibold">Certified Safety Standards</span>
-                        </div>
-                        <div class="feature-badge">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#022658" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <polyline points="20 6 9 17 4 12"></polyline>
-                            </svg>
-                            <span class="text-gray-800 font-semibold">Durable & Weather Resistant</span>
-                        </div>
-                    </div>
-                    
-                    <!-- CTA Buttons -->
-                    <div class="flex flex-col sm:flex-row gap-4">
-                        <a href="product.php?category=heater-air-cons&subcategory=competition" class="shop-now-btn text-center text-md">
-                            View Life Guard Equipment
-                        </a>
-                        <a href="product.php?category=heater-air-cons" class="text-md text-center btn-secondary">
-                            Browse Competition Gear
-                        </a>
-                    </div>
-                </div>
-                
-            </div>
-        </div>
-    </section>
-
-    <!-- New Products Section -->
-    <section class="py-16 md:py-20 bg-white">
+    <!-- Shop by Category Section -->
+    <section class="py-16 md:py-24 bg-gray-50">
         <div class="container mx-auto px-4 max-w-7xl">
             <!-- Section Header -->
-            <div class="text-center mb-12">
-                <span class="text-[#022658] font-bold text-sm uppercase tracking-wider">Just Arrived</span>
-                <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mt-2 mb-4">
-                    New Products
-                </h2>
-                <p class="text-gray-600 text-lg max-w-2xl mx-auto">
-                    Discover our latest additions to help you make the most of your outdoor adventures
-                </p>
-            </div>
-            
-            <!-- Products Carousel -->
-            <div class="products-carousel">
-                <div class="products-track" id="newProductsTrack">
-                    <?php if (!empty($newProducts)): ?>
-                        <?php foreach ($newProducts as $product): ?>
-                            <?php 
-                                $inStock = $product['stock'] === 'In Stock' || $product['quantity'] > 0;
-                            ?>
-                            <div class="product-card">
-                                <div class="product-image">
-                                    <span class="new-badge">NEW</span>
-                                    <a href="product_detail.php?id=<?php echo $product['id']; ?>">
-                                      <img src="<?php echo htmlspecialchars($product['image']); ?>" 
-                                        alt="<?php echo htmlspecialchars($product['name']); ?>"
-                                        onerror="this.onerror=null; this.src='assets/img/Products/product1.webp';"> 
-                                    </a>
-                                    <div class="absolute top-2 left-2 flex flex-col gap-2">
-                                        <button class="wishlist-btn bg-white rounded-full w-10 h-10 flex items-center justify-center shadow-md hover:shadow-lg text-gray-600 hover:text-red-500" 
-                                                data-wishlist-btn
-                                                data-wishlist-id="<?php echo $product['id']; ?>" 
-                                                title="Add to Wishlist">
-                                            <i class="far fa-heart"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                                <div class="product-info">
-                                    <a href="product_detail.php?id=<?php echo $product['id']; ?>">
-                                        <p class="text-xs text-gray-500 mb-1"><?php echo htmlspecialchars($product['brand'] ?: 'Generic'); ?></p>
-                                        <h3 class="product-name"><?php echo htmlspecialchars($product['name']); ?></h3>
-                                        <p class="text-sm text-gray-600 mb-3 line-clamp-2"><?php echo htmlspecialchars(substr($product['description'] ?: '', 0, 100)); ?></p>
-                                    </a>
-                                    <div class="flex justify-between items-center">
-                                        <div class="product-price">£<?php echo number_format($product['price'], 2); ?></div>
-                                        <?php if ($inStock): ?>
-                                            <button class="add-to-cart-btn" data-product-id="<?php echo $product['id']; ?>">
-                                                Add to Cart
-                                            </button>
-                                        <?php else: ?>
-                                            <button disabled class="bg-gray-300 text-gray-500 px-4 py-2 rounded text-sm cursor-not-allowed">
-                                                Out of Stock
-                                            </button>
-                                        <?php endif; ?>
-                                    </div>
-                                </div>
-                            </div>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <div class="col-span-full text-center py-8">
-                            <p class="text-gray-500">No new products available at the moment.</p>
-                        </div>
-                    <?php endif; ?>
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
+                <div class="mb-6 md:mb-0">
+                    <span class="text-[#022658] font-bold text-sm uppercase tracking-wider">Explore Collections</span>
+                    <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mt-2">
+                        Shop by Category
+                    </h2>
                 </div>
-            </div>
-            
-            <!-- View All Button -->
-            <div class="text-center mt-12">
-                <a href="new-products.php" class="inline-block bg-transparent text-[#022658] px-10 py-4 rounded-full font-semibold text-lg border-2 border-[#022658] hover:bg-[#022658] hover:text-white transition-all duration-300 uppercase tracking-wide">
-                    View All Products
+                <a href="product.php" class="text-[#022658] font-semibold flex items-center gap-2 hover:gap-3 transition-all">
+                    View All Categories
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
                 </a>
             </div>
-        </div>
-    </section>
-
-    <!-- Brand Logos Section -->
-    <section class="brands-section py-12 md:py-16">
-        <div class="container mx-auto px-4 max-w-7xl">
-            <!-- Section Header -->
-            <div class="text-center mb-10">
-                <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mb-3">Trusted Brands</h2>
-                <p class="text-gray-600">We stock premium products from leading outdoor leisure brands</p>
-            </div>
             
-            <!-- Brands Carousel -->
-            <div class="relative">
-                <div class="brands-track">
-                    <!-- Brand logos remain the same -->
-                    <div class="brand-logo">
-                        <img src="assets/img/Brands/truma logo.png" alt="Truma" onerror="this.parentElement.innerHTML='<div class=\'brand-name\'>TRUMA</div>'">
+            <!-- Category Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+                <!-- Pumps & Filters -->
+                <a href="product.php?category=pumps-filters" class="group relative overflow-hidden rounded-2xl aspect-[4/5] shadow-lg hover:shadow-2xl transition-all duration-500">
+                    <img src="assets/img/Category/pumps.png" alt="Pumps & Filters" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" onerror="this.src='https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?w=600&h=800&fit=crop'">
+                    <div class="absolute inset-0 bg-gradient-to-t from-gray-900/90 via-gray-900/20 to-transparent"></div>
+                    <div class="absolute bottom-0 left-0 p-6 w-full">
+                        <h3 class="text-xl font-bold text-white mb-2">Pumps & Filters</h3>
+                        <span class="inline-flex items-center text-sm font-medium text-blue-400 group-hover:text-blue-300 transition-colors">
+                            Browse Collection
+                            <svg class="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                        </span>
                     </div>
-                    <div class="brand-logo">
-                        <img src="assets/img/Brands/M6_lg_Fiamma-1.jpg" alt="Fiamma" onerror="this.parentElement.innerHTML='<div class=\'brand-name\'>FIAMMA</div>'">
-                    </div>
-                    <div class="brand-logo">
-                        <img src="assets/img/Brands/Vitrifrigo logo.png" alt="Vitrifrigo" onerror="this.parentElement.innerHTML='<div class=\'brand-name\'>VITRIFRIGO</div>'">
-                    </div>
-                    <div class="brand-logo">
-                        <img src="assets/img/Brands/certikin brand logo.png" alt="Certikin" onerror="this.parentElement.innerHTML='<div class=\'brand-name\'>CERTIKIN</div>'">
-                    </div>
-                    <div class="brand-logo">
-                        <img src="assets/img/Brands/max logo.png" alt="MAX AIR" onerror="this.parentElement.innerHTML='<div class=\'brand-name\'>MAX AIR</div>'">
-                    </div>
-                    <div class="brand-logo">
-                        <img src="assets/img/Brands/propex logo.png" alt="PROPEX" onerror="this.parentElement.innerHTML='<div class=\'brand-name\'>PROPEX</div>'">
-                    </div>
-                    <div class="brand-logo">
-                        <img src="assets/img/Brands/reimo logo.jpg" alt="REIMO" onerror="this.parentElement.innerHTML='<div class=\'brand-name\'>REIMO</div>'">
-                    </div>
-                    <div class="brand-logo">
-                        <img src="assets/img/Brands/Thule logo.png" alt="Thule" onerror="this.parentElement.innerHTML='<div class=\'brand-name\'>THULE</div>'">
-                    </div>
-                    <div class="brand-logo">
-                        <img src="assets/img/Brands/thetford-vector-logo.png" alt="Thetford" onerror="this.parentElement.innerHTML='<div class=\'brand-name\'>THETFORD</div>'">
-                    </div>
-                    <div class="brand-logo">
-                        <img src="assets/img/Brands/Sr Smith.jpg" alt="SR Smith" onerror="this.parentElement.innerHTML='<div class=\'brand-name\'>SR SMITH</div>'">
-                    </div>
-                    <!-- Duplicate for seamless loop -->
-                    <div class="brand-logo">
-                        <img src="assets/img/Brands/truma logo.png" alt="Truma" onerror="this.parentElement.innerHTML='<div class=\'brand-name\'>TRUMA</div>'">
-                    </div>
-                    <div class="brand-logo">
-                        <img src="assets/img/Brands/M6_lg_Fiamma-1.jpg" alt="Fiamma" onerror="this.parentElement.innerHTML='<div class=\'brand-name\'>FIAMMA</div>'">
-                    </div>
-                    <div class="brand-logo">
-                        <img src="assets/img/Brands/Vitrifrigo logo.png" alt="Vitrifrigo" onerror="this.parentElement.innerHTML='<div class=\'brand-name\'>VITRIFRIGO</div>'">
-                    </div>
-                    <div class="brand-logo">
-                        <img src="assets/img/Brands/certikin brand logo.png" alt="Certikin" onerror="this.parentElement.innerHTML='<div class=\'brand-name\'>CERTIKIN</div>'">
-                    </div>
-                    <div class="brand-logo">
-                        <img src="assets/img/Brands/max logo.png" alt="MAX AIR" onerror="this.parentElement.innerHTML='<div class=\'brand-name\'>MAX AIR</div>'">
-                    </div>
-                    <div class="brand-logo">
-                        <img src="assets/img/Brands/propex logo.png" alt="PROPEX" onerror="this.parentElement.innerHTML='<div class=\'brand-name\'>PROPEX</div>'">
-                    </div>
-                    <div class="brand-logo">
-                        <img src="assets/img/Brands/reimo logo.jpg" alt="REIMO" onerror="this.parentElement.innerHTML='<div class=\'brand-name\'>REIMO</div>'">
-                    </div>
-                    <div class="brand-logo">
-                        <img src="assets/img/Brands/Thule logo.png" alt="Thule" onerror="this.parentElement.innerHTML='<div class=\'brand-name\'>THULE</div>'">
-                    </div>
-                    <div class="brand-logo">
-                        <img src="assets/img/Brands/thetford-vector-logo.png" alt="Thetford" onerror="this.parentElement.innerHTML='<div class=\'brand-name\'>THETFORD</div>'">
-                    </div>
-                    <div class="brand-logo">
-                        <img src="assets/img/Brands/Sr Smith.jpg" alt="SR Smith" onerror="this.parentElement.innerHTML='<div class=\'brand-name\'>SR SMITH</div>'">
-                    </div>
-                </div>
-            </div>
-
-            <!-- View All Button -->
-            <div class="text-center mt-12">
-                <a href="brands.php" class="inline-block bg-transparent text-[#022658] px-10 py-4 rounded-full font-semibold text-lg border-2 border-[#022658] hover:bg-[#022658] hover:text-white transition-all duration-300 uppercase tracking-wide">
-                    SEE MORE
                 </a>
-            </div>
-        </div>
-    </section>
 
-    <!-- Popular Products Section -->
-    <section class="py-16 md:py-20 bg-white">
-        <div class="container mx-auto px-4 max-w-7xl">
-            <!-- Section Header -->
-            <div class="text-center mb-12">
-                <span class="text-[#022658] font-bold text-sm uppercase tracking-wider">Most Views</span>
-                <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mt-2 mb-4">
-                    Popular Products
-                </h2>
-                <p class="text-gray-600 text-lg max-w-2xl mx-auto">
-                    Discover what customers mainly buy to help you make the most of your outdoor adventures
-                </p>
-            </div>
-            
-            <!-- Products Carousel -->
-            <div class="products-carousel">
-                <div class="products-track" id="popularProductsTrack">
-                    <?php if (!empty($popularProducts)): ?>
-                        <?php foreach ($popularProducts as $product): ?>
-                            <?php 
-                                $inStock = $product['stock'] === 'In Stock' || $product['quantity'] > 0;
-                            ?>
-                            <div class="product-card">
-                                <div class="product-image">
-                                    <span class="popular-badge">Popular</span>
-                                    <a href="product_detail.php?id=<?php echo $product['id']; ?>">
-                                    <img src="<?php echo htmlspecialchars($product['image']); ?>" 
-                                        alt="<?php echo htmlspecialchars($product['name']); ?>"
-                                        onerror="this.onerror=null; this.src='assets/img/Products/product1.webp';"> 
-                                    </a>
-                                    <div class="absolute top-2 left-2 flex flex-col gap-2">
-                                        <button class="wishlist-btn bg-white rounded-full w-10 h-10 flex items-center justify-center shadow-md hover:shadow-lg text-gray-600 hover:text-red-500" 
-                                                data-wishlist-id="<?php echo $product['id']; ?>" 
-                                                data-wishlist-btn
-                                                title="Add to Wishlist">
-                                            <i class="far fa-heart"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                                <div class="product-info">
-                                    <a href="product_detail.php?id=<?php echo $product['id']; ?>">
-                                        <p class="text-xs text-gray-500 mb-1"><?php echo htmlspecialchars($product['brand'] ?: 'Generic'); ?></p>
-                                        <h3 class="product-name"><?php echo htmlspecialchars($product['name']); ?></h3>
-                                        <p class="text-sm text-gray-600 mb-3 line-clamp-2"><?php echo htmlspecialchars(substr($product['description'] ?: '', 0, 100)); ?></p>
-                                    </a>
-                                    <div class="flex justify-between items-center">
-                                        <div class="product-price">£<?php echo number_format($product['price'], 2); ?></div>
-                                        <?php if ($inStock): ?>
-                                            <button class="add-to-cart-btn" data-product-id="<?php echo $product['id']; ?>">
-                                                Add to Cart
-                                            </button>
-                                        <?php else: ?>
-                                            <button disabled class="bg-gray-300 text-gray-500 px-4 py-2 rounded text-sm cursor-not-allowed">
-                                                Out of Stock
-                                            </button>
-                                        <?php endif; ?>
-                                    </div>
-                                </div>
-                            </div>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <div class="col-span-full text-center py-8">
-                            <p class="text-gray-500">No popular products available at the moment.</p>
-                        </div>
-                    <?php endif; ?>
-                </div>
-            </div>
-            
-            <!-- View All Button -->
-            <div class="text-center mt-12">
-                <a href="product.php" class="inline-block bg-transparent text-[#022658] px-10 py-4 rounded-full font-semibold text-lg border-2 border-[#022658] hover:bg-[#022658] hover:text-white transition-all duration-300 uppercase tracking-wide">
-                    View All Products
+                <!-- Lights -->
+                <a href="product.php?category=lights" class="group relative overflow-hidden rounded-2xl aspect-[4/5] shadow-lg hover:shadow-2xl transition-all duration-500">
+                    <img src="assets/img/Category/lights.png" alt="Pool Lights" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" onerror="this.src='https://images.unsplash.com/photo-1544148103-0773bf10d330?w=600&h=800&fit=crop'">
+                    <div class="absolute inset-0 bg-gradient-to-t from-gray-900/90 via-gray-900/20 to-transparent"></div>
+                    <div class="absolute bottom-0 left-0 p-6 w-full">
+                        <h3 class="text-xl font-bold text-white mb-2">Pool Lights</h3>
+                        <span class="inline-flex items-center text-sm font-medium text-blue-400 group-hover:text-blue-300 transition-colors">
+                            Browse Collection
+                            <svg class="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                        </span>
+                    </div>
+                </a>
+
+                <!-- Cleaners -->
+                <a href="product.php?category=cleaners" class="group relative overflow-hidden rounded-2xl aspect-[4/5] shadow-lg hover:shadow-2xl transition-all duration-500">
+                    <img src="assets/img/Category/cleaners.png" alt="Pool Cleaners" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" onerror="this.src='https://images.unsplash.com/photo-1533038590840-1cde6e668a91?w=600&h=800&fit=crop'">
+                    <div class="absolute inset-0 bg-gradient-to-t from-gray-900/90 via-gray-900/20 to-transparent"></div>
+                    <div class="absolute bottom-0 left-0 p-6 w-full">
+                        <h3 class="text-xl font-bold text-white mb-2">Pool Cleaners</h3>
+                        <span class="inline-flex items-center text-sm font-medium text-blue-400 group-hover:text-blue-300 transition-colors">
+                            Browse Collection
+                            <svg class="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                        </span>
+                    </div>
+                </a>
+
+                <!-- Heaters -->
+                <a href="product.php?category=heaters" class="group relative overflow-hidden rounded-2xl aspect-[4/5] shadow-lg hover:shadow-2xl transition-all duration-500">
+                    <img src="assets/img/Category/heaters.png" alt="Heaters" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" onerror="this.src='https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=600&h=800&fit=crop'">
+                    <div class="absolute inset-0 bg-gradient-to-t from-gray-900/90 via-gray-900/20 to-transparent"></div>
+                    <div class="absolute bottom-0 left-0 p-6 w-full">
+                        <h3 class="text-xl font-bold text-white mb-2">Pool Heaters</h3>
+                        <span class="inline-flex items-center text-sm font-medium text-blue-400 group-hover:text-blue-300 transition-colors">
+                            Browse Collection
+                            <svg class="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                        </span>
+                    </div>
                 </a>
             </div>
         </div>
@@ -542,7 +204,7 @@
         <div class="max-w-4xl mx-auto relative z-10">
             <div class="text-center mb-12 fade-in">
                 <h2 class="text-4xl md:text-5xl font-bold  mb-4">
-                    Stay Connected with Jacksons
+                    Stay Connected with Commerial Pool Equipment
                 </h2>
                 <p class="text-xl text-[#022658] max-w-2xl mx-auto">
                     Subscribe to our newsletter and be the first to know about new products, exclusive offers, and camping tips.

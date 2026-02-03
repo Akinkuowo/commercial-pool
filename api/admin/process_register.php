@@ -257,7 +257,7 @@ function sendWelcomeEmail($email, $firstName, $username, $requireApproval) {
     // Implement email sending logic here
     // You can use PHPMailer or similar
     
-    $subject = "Welcome to Jacksons Admin Portal";
+    $subject = "Welcome to Commerial Pool Equipment Admin Portal";
     
     if ($requireApproval) {
         $message = "Hello $firstName,\n\n";
@@ -265,14 +265,14 @@ function sendWelcomeEmail($email, $firstName, $username, $requireApproval) {
         $message .= "Username: $username\n\n";
         $message .= "Your account is currently pending approval. You will receive another email once an administrator reviews and approves your account.\n\n";
         $message .= "Best regards,\n";
-        $message .= "Jacksons Leisure and Supplies";
+        $message .= "Commerial Pool Equipment Leisure and Supplies";
     } else {
         $message = "Hello $firstName,\n\n";
-        $message .= "Welcome to the Jacksons Admin Portal!\n\n";
+        $message .= "Welcome to the Commerial Pool Equipment Admin Portal!\n\n";
         $message .= "Username: $username\n\n";
         $message .= "You can now log in at: " . $_SERVER['HTTP_HOST'] . "/admin/admin_login.php\n\n";
         $message .= "Best regards,\n";
-        $message .= "Jacksons Leisure and Supplies";
+        $message .= "Commerial Pool Equipment Leisure and Supplies";
     }
     
     // mail($email, $subject, $message);
@@ -298,7 +298,7 @@ function notifyAdminsOfNewRegistration($conn, $username, $email, $requestedRole)
         $message .= "Requested Role: $requestedRole\n\n";
         $message .= "Please review and approve at: $approvalLink\n\n";
         $message .= "Best regards,\n";
-        $message .= "Jacksons System";
+        $message .= "Commerial Pool Equipment System";
         
         // mail($admin['email'], $subject, $message);
     }

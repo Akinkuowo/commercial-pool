@@ -97,7 +97,7 @@ const Wishlist = {
                 // If it's the header span that might be hidden
                 counter.parentElement.classList.remove('hidden');
             } else {
-                // Optional: hide if 0? Jacksons header seems to hide it
+                // Optional: hide if 0? Commerial Pool Equipment header seems to hide it
                 // counter.classList.add('hidden');
             }
         });

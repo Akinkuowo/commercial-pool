@@ -1,5 +1,6 @@
 <?php
-// admin/include/sidebar.php
+// Ensure authentication helper is loaded
+require_once __DIR__ . '/auth_check.php';
 
 // Ensure database connection
 if (!isset($conn)) {
@@ -44,8 +45,14 @@ $c = $current_page ?? ''; // Prevent notice if not set
             </button>
         </div>
     </div>
-
+    <!-- Navigation -->
     <nav class="p-4">
+        <div class="mb-6">
+            <a href="../index.php" class="flex items-center text-gray-400 hover:text-white px-3 py-2 transition-colors">
+                <i class="fas fa-external-link-alt w-5 mr-3"></i>
+                <span class="sidebar-text">View Website</span>
+            </a>
+        </div>
         <div class="mb-6">
             <div class="text-xs text-gray-500 uppercase mb-2 px-3 sidebar-text truncate">Main</div>
             
@@ -101,19 +108,23 @@ $c = $current_page ?? ''; // Prevent notice if not set
             </a>
         </div>
 
+        <!-- Admin Only Section -->
+        <?php if (getAdminRole() === 'admin'): ?>
         <div class="mb-6" id="adminOnlySection">
             <div class="text-xs text-gray-500 uppercase mb-2 px-3 sidebar-text truncate">Administration</div>
             
-            <a href="users.php" class="flex items-center px-3 py-2.5 rounded-lg mb-1 group <?php echo getActiveClass('users', $c); ?>">
-                <i class="fas fa-user-shield w-5 text-center"></i>
-                <span class="sidebar-text ml-3 whitespace-nowrap">Users</span>
+            <a href="users.php" class="flex items-center text-gray-400 hover:text-white px-3 py-2 rounded-lg transition-all <?php echo $c == 'users' ? 'active bg-blue-600/10 text-blue-400' : ''; ?>">
+                <i class="fas fa-users-cog w-5 mr-3"></i>
+                <span class="sidebar-text">Admin Users</span>
             </a>
             
-            <a href="settings.php" class="flex items-center px-3 py-2.5 rounded-lg mb-1 group <?php echo getActiveClass('settings', $c); ?>">
-                <i class="fas fa-cog w-5 text-center"></i>
-                <span class="sidebar-text ml-3 whitespace-nowrap">Settings</span>
+            <a href="settings.php" class="flex items-center text-gray-400 hover:text-white px-3 py-2 rounded-lg transition-all <?php echo $c == 'settings' ? 'active bg-blue-600/10 text-blue-400' : ''; ?>">
+                <i class="fas fa-cog w-5 mr-3"></i>
+                <span class="sidebar-text">Settings</span>
             </a>
-            
+        </div>
+        <?php endif; ?>
+        <div class="mb-6">
             <a href="activity.php" class="flex items-center px-3 py-2.5 rounded-lg mb-1 group <?php echo getActiveClass('activity', $c); ?>">
                 <i class="fas fa-history w-5 text-center"></i>
                 <span class="sidebar-text ml-3 whitespace-nowrap">Activity Log</span>

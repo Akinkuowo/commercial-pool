@@ -133,64 +133,11 @@ $admin_role = $_SESSION['admin_role'] ?? 'admin';
 
     <!-- Main Content -->
     <div id="mainContent" class="main-content min-h-screen">
-        <!-- Top Header -->
-        <header class="bg-white border-b border-gray-200 sticky top-0 z-40">
-            <div class="px-6 py-4">
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center">
-                        <button id="mobileSidebarToggle" class="lg:hidden mr-4 text-gray-600">
-                            <i class="fas fa-bars text-xl"></i>
-                        </button>
-                        <h1 class="text-2xl font-bold text-gray-800">Dashboard</h1>
-                    </div>
-                    
-                    <div class="flex items-center space-x-4">
-                        <!-- Search -->
-                        <div class="hidden md:block relative">
-                            <input type="text" placeholder="Search..." 
-                                   class="w-64 pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
-                        </div>
-                        
-                        <!-- Notifications -->
-                        <div class="relative">
-                            <button class="relative p-2 text-gray-600 hover:bg-gray-100 rounded-lg">
-                                <i class="fas fa-bell text-xl"></i>
-                                <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
-                            </button>
-                        </div>
-                        
-                        <!-- User Menu -->
-                        <div class="relative">
-                            <button id="userMenuBtn" class="flex items-center space-x-3 p-2 hover:bg-gray-100 rounded-lg">
-                                <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white font-semibold">
-                                    A
-                                </div>
-                                <div class="hidden md:block text-left">
-                                    <div class="text-sm font-semibold text-gray-700">Admin User</div>
-                                    <div class="text-xs text-gray-500">Administrator</div>
-                                </div>
-                                <i class="fas fa-chevron-down text-gray-400 text-sm"></i>
-                            </button>
-                            
-                            <!-- Dropdown -->
-                            <div id="userMenu" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2">
-                                <a href="#profile" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
-                                    <i class="fas fa-user mr-2"></i>Profile
-                                </a>
-                                <a href="#settings" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
-                                    <i class="fas fa-cog mr-2"></i>Settings
-                                </a>
-                                <hr class="my-2">
-                                <a href="api/admin/logout.php" class="block px-4 py-2 text-red-600 hover:bg-gray-100">
-                                    <i class="fas fa-sign-out-alt mr-2"></i>Logout
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </header>
+        <!-- Header -->
+        <?php 
+        $header_title = "Dashboard";
+        include('include/header.php'); 
+        ?>
 
         <!-- Dashboard Content -->
         <main class="p-6">
@@ -265,13 +212,17 @@ $admin_role = $_SESSION['admin_role'] ?? 'admin';
                 <!-- Revenue Chart -->
                 <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
                     <h3 class="text-lg font-bold text-gray-800 mb-4">Revenue Overview</h3>
-                    <canvas id="revenueChart" height="300"></canvas>
+                    <div class="h-[300px]">
+                        <canvas id="revenueChart"></canvas>
+                    </div>
                 </div>
 
                 <!-- Orders Chart -->
                 <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
                     <h3 class="text-lg font-bold text-gray-800 mb-4">Order Status</h3>
-                    <canvas id="ordersChart" height="300"></canvas>
+                    <div class="h-[300px]">
+                        <canvas id="ordersChart"></canvas>
+                    </div>
                 </div>
             </div>
 

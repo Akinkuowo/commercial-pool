@@ -322,7 +322,6 @@ function getCart($conn, $user_id) {
     $total_items = 0;
     $subtotal = 0;
     
-    while ($row = $result->fetch_assoc()) {
         $cart_items[] = [
             'product_id' => $row['product_id'],
             'name' => $row['product_name'],
@@ -332,7 +331,9 @@ function getCart($conn, $user_id) {
             'quantity' => $row['cart_quantity'],
             'max_quantity' => $row['stock_quantity'],
             'delivery_method' => $row['delivery_method'] ?? 'delivery',
-            'subtotal' => number_format($row['subtotal'], 2, '.', '')
+            'subtotal' => $row['subtotal'], // Raw GBP subtotal
+            'formatted_price' => formatPrice($row['price']),
+            'formatted_subtotal' => formatPrice($row['subtotal'])
         ];
         
         $total_items += $row['cart_quantity'];
@@ -341,13 +342,22 @@ function getCart($conn, $user_id) {
     
     $stmt->close();
     
+    // Get current currency details
+    $currency = $_SESSION['currency'] ?? 'GBP';
+    $symbol = getCurrencySymbol($currency);
+    $rate = getExchangeRate($currency);
+    $formatted_subtotal = formatPrice($subtotal);
+    
     echo json_encode([
         'success' => true,
         'cart' => $cart_items,
         'total_items' => $total_items,
         'cart_count' => $total_items,
-        'subtotal' => number_format($subtotal, 2, '.', ''),
-        'currency' => '£'
+        'subtotal' => $subtotal, // Raw GBP
+        'formatted_subtotal' => $formatted_subtotal,
+        'currency' => $symbol,
+        'currency_code' => $currency,
+        'rate' => $rate
     ]);
 }
 

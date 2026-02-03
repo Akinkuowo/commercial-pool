@@ -2,6 +2,7 @@
 // api/admin/update_order_status.php
 session_start();
 require_once '../../config.php';
+require_once '../admin/include/utils.php';
 
 header('Content-Type: application/json');
 
@@ -36,21 +37,8 @@ $stmt = $conn->prepare("UPDATE orders SET status = ? WHERE id = ?");
 $stmt->bind_param("si", $status, $order_id);
 
 if ($stmt->execute()) {
-    // Log activity if activity logging is implemented
-    if (function_exists('logActivity')) {
-        // logActivity($_SESSION['admin_id'], 'update_order', "Updated order #$order_id status to $status");
-    } else {
-        // Manual log insert 
-        $admin_id = $_SESSION['admin_id'];
-        $desc = "Updated order #$order_id status to $status";
-        $ip = $_SERVER['REMOTE_ADDR'];
-        $log_stmt = $conn->prepare("INSERT INTO admin_activity_log (admin_id, action, description, ip_address) VALUES (?, 'update_order', ?, ?)");
-        if ($log_stmt) {
-            $log_stmt->bind_param("iss", $admin_id, $desc, $ip);
-            $log_stmt->execute();
-            $log_stmt->close();
-        }
-    }
+    // Log activity
+    logActivity($conn, 'update_order', "Updated order #$order_id status to $status");
 
     echo json_encode(['success' => true, 'message' => 'Order status updated successfully']);
 } else {

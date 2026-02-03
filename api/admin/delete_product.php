@@ -2,6 +2,7 @@
 // api/admin/delete_product.php
 session_start();
 require_once '../../config.php';
+require_once '../admin/include/utils.php';
 
 header('Content-Type: application/json');
 
@@ -31,8 +32,8 @@ if ($product_id <= 0) {
     exit;
 }
 
-// Get product image to delete
-$check_sql = "SELECT image FROM products WHERE id = ?";
+// Get product details before deletion
+$check_sql = "SELECT product_name, sku_number, image FROM products WHERE id = ?";
 $check_stmt = $conn->prepare($check_sql);
 $check_stmt->bind_param('i', $product_id);
 $check_stmt->execute();
@@ -45,6 +46,9 @@ if (!$product) {
     exit;
 }
 
+$product_name = $product['product_name'];
+$sku_number = $product['sku_number'];
+
 // Delete product
 $sql = "DELETE FROM products WHERE id = ?";
 $stmt = $conn->prepare($sql);
@@ -55,6 +59,9 @@ if ($stmt->execute()) {
     if (!empty($product['image']) && file_exists('../../' . $product['image'])) {
         unlink('../../' . $product['image']);
     }
+    
+    // Log activity
+    logActivity($conn, 'delete_product', "Deleted product: $product_name (ID: $product_id, SKU: $sku_number)");
     
     echo json_encode([
         'success' => true,

@@ -46,37 +46,11 @@ if ($admin_role !== 'admin') {
     <!-- Main Content -->
     <div id="mainContent" class="main-content min-h-screen">
         <!-- Header -->
-        <header class="bg-white border-b border-gray-200 sticky top-0 z-40">
-            <div class="px-6 py-4">
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center">
-                        <button id="mobileSidebarToggle" class="lg:hidden mr-4 text-gray-600">
-                            <i class="fas fa-bars text-xl"></i>
-                        </button>
-                        <div>
-                            <h1 class="text-2xl font-bold text-gray-800">Settings</h1>
-                            <p class="text-gray-600 mt-1">Configure site preferences</p>
-                        </div>
-                    </div>
-                    <div class="relative">
-                        <button id="userMenuBtn" class="flex items-center space-x-3 p-2 hover:bg-gray-100 rounded-lg">
-                            <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white font-semibold">
-                                <?php echo strtoupper(substr($admin_name, 0, 1)); ?>
-                            </div>
-                            <div class="hidden md:block text-left">
-                                <div class="text-sm font-semibold text-gray-700"><?php echo htmlspecialchars($admin_name); ?></div>
-                                <div class="text-xs text-gray-500"><?php echo ucfirst($admin_role); ?></div>
-                            </div>
-                        </button>
-                        <div id="userMenu" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2">
-                            <a href="../api/admin/logout.php" class="block px-4 py-2 text-red-600 hover:bg-gray-100">
-                                <i class="fas fa-sign-out-alt mr-2"></i>Logout
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </header>
+        <?php 
+        $header_title = "Settings";
+        $header_description = "Configure site preferences";
+        include('include/header.php'); 
+        ?>
 
         <main class="p-6">
             <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
@@ -90,6 +64,9 @@ if ($admin_role !== 'admin') {
                     </button>
                     <button onclick="switchTab('seo')" class="tab-btn px-6 py-4 text-sm font-medium text-gray-600 border-b-2 border-transparent hover:text-gray-800 flex items-center whitespace-nowrap transition-colors">
                         <i class="fas fa-search mr-2"></i>SEO Defaults
+                    </button>
+                    <button onclick="switchTab('analytics')" class="tab-btn px-6 py-4 text-sm font-medium text-gray-600 border-b-2 border-transparent hover:text-gray-800 flex items-center whitespace-nowrap transition-colors">
+                        <i class="fas fa-chart-line mr-2"></i>Analytics
                     </button>
                 </div>
 
@@ -142,6 +119,17 @@ if ($admin_role !== 'admin') {
                             <label class="block text-sm font-medium text-gray-700 mb-1">Default Meta Description</label>
                             <textarea name="seo_description" id="seo_description" rows="3"
                                 class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Analytics Settings -->
+                    <div id="analytics" class="tab-content space-y-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Google Analytics Measurement ID</label>
+                            <input type="text" name="google_analytics_id" id="google_analytics_id"
+                                placeholder="e.g., G-XXXXXXXXXX or UA-XXXXXXXXX-X"
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <p class="text-xs text-gray-500 mt-1">Enter your Google Analytics 4 Measurement ID or Universal Analytics Tracking ID to enable tracking on all pages.</p>
                         </div>
                     </div>
 

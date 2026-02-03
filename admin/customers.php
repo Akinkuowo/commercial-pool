@@ -64,8 +64,14 @@ if (!empty($params)) {
 
 $total_pages = ceil($total_customers / $per_page);
 
-// Get customers
-$query = "SELECT * FROM users $where_clause ORDER BY created_at DESC LIMIT ? OFFSET ?";
+// Get customers with total spent
+$query = "SELECT u.*, COALESCE(SUM(o.total_amount), 0) as total_spent 
+          FROM users u 
+          LEFT JOIN orders o ON u.email = o.customer_email 
+          $where_clause 
+          GROUP BY u.id 
+          ORDER BY u.created_at DESC 
+          LIMIT ? OFFSET ?";
 $params[] = $per_page;
 $params[] = $offset;
 $param_types .= 'ii';
@@ -135,37 +141,11 @@ $current_page = 'customers';
     <!-- Main Content -->
     <div id="mainContent" class="main-content min-h-screen">
         <!-- Header -->
-        <header class="bg-white border-b border-gray-200 sticky top-0 z-40">
-            <div class="px-6 py-4">
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center">
-                        <button id="mobileSidebarToggle" class="lg:hidden mr-4 text-gray-600">
-                            <i class="fas fa-bars text-xl"></i>
-                        </button>
-                        <div>
-                            <h1 class="text-2xl font-bold text-gray-800">Customers</h1>
-                            <p class="text-gray-600 mt-1">Manage your registered customers</p>
-                        </div>
-                    </div>
-                    <div class="relative">
-                        <button id="userMenuBtn" class="flex items-center space-x-3 p-2 hover:bg-gray-100 rounded-lg">
-                            <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white font-semibold">
-                                <?php echo strtoupper(substr($admin_name, 0, 1)); ?>
-                            </div>
-                            <div class="hidden md:block text-left">
-                                <div class="text-sm font-semibold text-gray-700"><?php echo htmlspecialchars($admin_name); ?></div>
-                                <div class="text-xs text-gray-500"><?php echo ucfirst($admin_role); ?></div>
-                            </div>
-                        </button>
-                        <div id="userMenu" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2">
-                            <a href="../api/admin/logout.php" class="block px-4 py-2 text-red-600 hover:bg-gray-100">
-                                <i class="fas fa-sign-out-alt mr-2"></i>Logout
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </header>
+        <?php 
+        $header_title = "Customers";
+        $header_description = "Manage your registered customers";
+        include('include/header.php'); 
+        ?>
 
         <main class="p-6">
             <!-- Stats Cards -->
@@ -256,6 +236,7 @@ $current_page = 'customers';
                                 <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">Contact Info</th>
                                 <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">Business Info</th>
                                 <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">Status</th>
+                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">Total Spent</th>
                                 <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">Joined</th>
                                 <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">Actions</th>
                             </tr>
@@ -313,12 +294,15 @@ $current_page = 'customers';
                                             </span>
                                         <?php endif; ?>
                                     </td>
+                                    <td class="px-6 py-4">
+                                        <p class="text-sm font-semibold text-gray-900">£<?php echo number_format($customer['total_spent'], 2); ?></p>
+                                    </td>
                                     <td class="px-6 py-4 text-sm text-gray-600">
                                         <?php echo date('M d, Y', strtotime($customer['created_at'])); ?>
                                     </td>
                                     <td class="px-6 py-4">
                                         <div class="flex items-center space-x-2">
-                                            <a href="#" class="text-blue-600 hover:text-blue-800" title="View Details">
+                                            <a href="customer_details.php?id=<?php echo $customer['id']; ?>" class="text-blue-600 hover:text-blue-800" title="View Details">
                                                 <i class="fas fa-eye"></i>
                                             </a>
                                         </div>

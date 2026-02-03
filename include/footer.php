@@ -3,7 +3,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
                 
-                <!-- Column 1: About Jacksons -->
+                <!-- Column 1: About Commerial Pool Equipment -->
                 <div>
                     <h3 class="text-white text-xl font-bold mb-6 flex items-center">
                         <span class="bg-orange-500 w-2 h-6 mr-2 rounded-full"></span>
@@ -113,6 +113,12 @@
                             <a href="/wishlist" class="footer-link flex items-center text-white hover:text-orange-400">
                                 <i class="fas fa-heart w-5 mr-3 text-white"></i>
                                 Wishlist
+                            </a>
+                        </li>
+                        <li>
+                            <a href="admin/admin_login.php" class="footer-link flex items-center text-white hover:text-orange-400">
+                                <i class="fas fa-lock w-5 mr-3 text-white"></i>
+                                Admin Portal
                             </a>
                         </li>
                         <!-- <li>
@@ -296,3 +302,4 @@
         </div>
     </footer>
     <script src="assets/js/wishlist.js"></script>
+    <script src="assets/js/script.js"></script>

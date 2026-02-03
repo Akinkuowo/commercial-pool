@@ -10,6 +10,7 @@
     }
 
     require_once 'config.php';
+    require_once 'include/currency_init.php';
 
     // Get product ID from URL
     $product_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
@@ -400,10 +401,10 @@
                 <!-- Price Section -->
                 <div class="border-t border-gray-200 pt-6 mb-6">
                     <div class="flex items-baseline gap-3 mb-2">
-                        <span class="text-sm text-gray-500">RRP £<?php echo number_format($product['price'] * 1.17, 2); ?></span>
+                        <span class="text-sm text-gray-500">RRP <?php echo formatPrice($product['price'] * 1.17); ?></span>
                     </div>
                     <div class="text-4xl font-bold text-orange-500 mb-4">
-                        £<?php echo number_format($product['price'], 2); ?>
+                        <?php echo formatPrice($product['price']); ?>
                     </div>
                 </div>
                 
@@ -621,7 +622,7 @@
                     </div>
                     <div class="p-4">
                         <h3 class="font-semibold text-gray-900 mb-2 line-clamp-2"><?php echo htmlspecialchars($related['name']); ?></h3>
-                        <div class="text-lg font-bold text-gray-900 mb-2">£<?php echo number_format($related['price'], 2); ?></div>
+                        <div class="text-lg font-bold text-gray-900 mb-2"><?php echo formatPrice($related['price']); ?></div>
                         <a href="product_detail.php?id=<?php echo $related['id']; ?>" 
                            class="text-blue-600 hover:text-blue-700 text-sm font-medium">
                             View Details →

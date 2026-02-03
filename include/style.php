@@ -83,14 +83,14 @@
             flex-shrink: 0;
         }
         
-        /* Smooth transitions */
-        .language-dropdown {
-            transition: all 0.3s ease-in-out;
-        }
-        
         /* Custom font classes */
         .font-roboto {
             font-family: 'myriad-pro', 'Myriad Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        
+        /* Currency selector styling */
+        .currency-dropdown {
+            transition: all 0.3s ease-in-out;
         }
 
         /* Mobile menu animations */

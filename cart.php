@@ -299,7 +299,9 @@
             subtotal: 0,
             shipping: 0,
             tax: 0,
-            total: 0
+            total: 0,
+            currencySymbol: '£',
+            exchangeRate: 1.0
         };
 
         const FREE_SHIPPING_THRESHOLD = 600;
@@ -339,7 +341,9 @@
 
                 if (data.success && data.cart && data.cart.length > 0) {
                     cart.items = data.cart;
-                    cart.subtotal = parseFloat(data.subtotal || 0);
+                    cart.subtotal = parseFloat(data.subtotal || 0); // Keep base GBP subtotal for logic
+                    cart.currencySymbol = data.currency || '£';
+                    cart.exchangeRate = data.rate || 1.0;
                     
                     document.getElementById('emptyCart').classList.add('hidden');
                     document.getElementById('cartContent').classList.remove('hidden');
@@ -423,8 +427,10 @@
 
                                     <!-- Price -->
                                     <div class="text-right">
-                                        <p class="text-sm text-gray-500 line-through">£${(parseFloat(item.price) * 1.17).toFixed(2)}</p>
-                                        <p class="text-lg font-bold text-gray-900">£${item.subtotal}</p>
+                                        <p class="text-sm text-gray-500 line-through">
+                                            ${cart.currencySymbol}${((parseFloat(item.price) * 1.17) * cart.exchangeRate).toFixed(2)}
+                                        </p>
+                                        <p class="text-lg font-bold text-gray-900">${item.formatted_subtotal}</p>
                                     </div>
                                 </div>
                             </div>
@@ -742,17 +748,23 @@
             const tax = subtotal * TAX_RATE;
             const total = subtotal + shipping + tax;
 
-            document.getElementById('summarySubtotal').textContent = `£${subtotal.toFixed(2)}`;
-            document.getElementById('summaryShipping').textContent = shipping === 0 ? 'FREE' : `£${shipping.toFixed(2)}`;
-            document.getElementById('summaryTax').textContent = `£${tax.toFixed(2)}`;
-            document.getElementById('summaryTotal').textContent = `£${total.toFixed(2)}`;
+            // Convert and format for display
+            const rate = cart.exchangeRate;
+            const symbol = cart.currencySymbol;
 
-            // Update free shipping message
+            document.getElementById('summarySubtotal').textContent = `${symbol}${(subtotal * rate).toFixed(2)}`;
+            document.getElementById('summaryShipping').textContent = shipping === 0 ? 'FREE' : `${symbol}${(shipping * rate).toFixed(2)}`;
+            document.getElementById('summaryTax').textContent = `${symbol}${(tax * rate).toFixed(2)}`;
+            document.getElementById('summaryTotal').textContent = `${symbol}${(total * rate).toFixed(2)}`;
+
+            // Update free shipping message (threshold is in GBP)
             if (subtotal >= FREE_SHIPPING_THRESHOLD) {
                 document.getElementById('shippingMessage').innerHTML = '<span class="text-[#022658] font-medium">You qualify for free shipping!</span>';
             } else {
                 const remaining = FREE_SHIPPING_THRESHOLD - subtotal;
-                document.getElementById('freeShippingRemaining').textContent = remaining.toFixed(2);
+                const rate = cart.exchangeRate;
+                const symbol = cart.currencySymbol;
+                document.getElementById('freeShippingRemaining').textContent = `${symbol}${(remaining * rate).toFixed(2)}`;
             }
         }
 

@@ -1,4 +1,6 @@
 <?php
+// Include currency initialization globally
+require_once 'currency_init.php';
 
 $isLoggedIn = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true;
 $userName = $isLoggedIn ? ($_SESSION['user_name'] ?? 'User') : '';
@@ -43,7 +45,7 @@ if ($userId) {
             $favStmt->close();
         }
         
-        closeDbConnection($conn);
+        // Keep connection open for GA settings check below
     }
 } else {
     // Get favorites count from session for guests
@@ -51,7 +53,34 @@ if ($userId) {
         $favoriteCount = count($_SESSION['wishlist']);
     }
 }
+
+// Fetch Google Analytics ID from settings
+$google_analytics_id = '';
+if (!isset($conn) || !$conn || (isset($conn) && $conn instanceof mysqli && !$conn->ping())) {
+    require_once 'config.php';
+    $conn = getDbConnection();
+}
+if ($conn) {
+    $ga_sql = "SELECT setting_value FROM site_settings WHERE setting_key = 'google_analytics_id'";
+    $ga_result = $conn->query($ga_sql);
+    if ($ga_result && $ga_row = $ga_result->fetch_assoc()) {
+        $google_analytics_id = trim($ga_row['setting_value']);
+    }
+    // Connection will be closed by the footer or automatically by PHP
+}
 ?>
+
+<?php if (!empty($google_analytics_id)): ?>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=<?php echo htmlspecialchars($google_analytics_id); ?>"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', '<?php echo htmlspecialchars($google_analytics_id); ?>');
+</script>
+<!-- End Google Analytics -->
+<?php endif; ?>
 
 <header>
         <!-- announcement bar -->
@@ -223,18 +252,6 @@ if ($userId) {
                                                 </div>
                                             </div>
                                         </div>
-                                    <?php else: ?>
-                                        <!-- Not Logged In - Login Link with OUTLINED icon -->
-                                        <a href="login.php" class="p-2 no-underline hover:bg-gray-100 rounded-full text-sm font-normal text-gray-800 inline-flex items-center touch-target" title="Trade Login" target="_blank">
-                                            <span class="sr-only">Trade Login</span>
-                                            <span class="pointer-events-none">
-                                                <!-- OUTLINED ICON for non-logged in users -->
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                                                    <circle cx="12" cy="7" r="4"></circle>
-                                                </svg>
-                                            </span>
-                                        </a>
                                     <?php endif; ?>
                                 </li>
                                 
@@ -328,10 +345,10 @@ if ($userId) {
                             </a>
                         </li>
 
-                        <!-- Pump & Filters -->
+                        <!-- Pumps & Filters -->
                         <li class="mobile-menu-item group">
                             <button class="mobile-menu-toggle flex items-center justify-between w-full px-4 py-3 no-underline font-normal uppercase text-sm text-gray-900 tracking-wide border-b border-gray-100">
-                                <span>Pump & Filters</span>
+                                <span>Pumps & Filters</span>
                                 <svg class="w-4 h-4 transition-transform duration-200 group-[.active]:rotate-180" 
                                     xmlns="http://www.w3.org/2000/svg" 
                                     viewBox="0 0 24 24" 
@@ -346,14 +363,13 @@ if ($userId) {
                             <div class="mobile-submenu hidden">
                                 <div class="bg-gray-50">
                                     <div class="px-4 py-3 border-b border-gray-200">
-                                        <a href="product.php?category=bathroom" class="text-sm font-medium text-gray-900 hover:text-[#022658]">
-                                            All Pump & Filters
+                                        <a href="product.php?category=pumps-filters" class="text-sm font-medium text-gray-900 hover:text-[#022658]">
+                                            All Pumps & Filters
                                         </a>
                                     </div>
                                     <ul class="space-y-1">
-                                        <li><a href="product.php?category=bathroom" class="block px-8 py-2 text-sm text-gray-700 hover:bg-gray-100">See all Pump & Filters</a></li>
-                                        <li><a href="product.php?category=bathroom&subcategory=toilets" class="block px-8 py-2 text-sm text-gray-700 hover:bg-gray-100">Pumps</a></li>
-                                        <li><a href="product.php?category=bathroom&subcategory=shower-trays" class="block px-8 py-2 text-sm text-gray-700 hover:bg-gray-100">Filters</a></li>
+                                        <li><a href="product.php?category=pumps-filters&subcategory=pumps" class="block px-8 py-2 text-sm text-gray-700 hover:bg-gray-100">Pumps</a></li>
+                                        <li><a href="product.php?category=pumps-filters&subcategory=filters" class="block px-8 py-2 text-sm text-gray-700 hover:bg-gray-100">Filters</a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -391,16 +407,23 @@ if ($userId) {
                             <div class="mobile-submenu hidden">
                                 <div class="bg-gray-50">
                                     <div class="px-4 py-3 border-b border-gray-200">
-                                        <a href="product.php?category=gas-water" class="text-sm font-medium text-gray-900 hover:text-[#022658]">
+                                        <a href="product.php?category=covers" class="text-sm font-medium text-gray-900 hover:text-[#022658]">
                                             All Covers
                                         </a>
                                     </div>
                                     <ul class="space-y-1">
-                                        <li><a href="product.php?category=gas-water" class="block px-8 py-2 text-sm text-gray-700 hover:bg-gray-100">See all Covers</a></li>
-                                        <li><a href="product.php?category=gas-water&subcategory=gas" class="block px-8 py-2 text-sm text-gray-700 hover:bg-gray-100">Enclosures</a></li>
+                                        <li><a href="product.php?category=covers" class="block px-8 py-2 text-sm text-gray-700 hover:bg-gray-100">See all Covers</a></li>
+                                        <li><a href="product.php?category=covers&subcategory=enclosures" class="block px-8 py-2 text-sm text-gray-700 hover:bg-gray-100">Enclosures</a></li>
                                     </ul>
                                 </div>
                             </div>
+                        </li>
+
+                        <!-- Pool Liner -->
+                        <li class="mobile-menu-item group">
+                            <a href="pool-liner-calculator.php" class="mobile-menu-toggle flex items-center justify-between w-full px-4 py-3 no-underline font-normal uppercase text-sm text-gray-900 tracking-wide border-b border-gray-100">
+                                <span>Pool Liner</span>
+                            </a>
                         </li>
 
                         <!-- Heaters -->
@@ -410,40 +433,6 @@ if ($userId) {
                             </a>
                         </li>
 
-                        <!-- Competition -->
-                        <li class="mobile-menu-item group">
-                            <button class="mobile-menu-toggle flex items-center justify-between w-full px-4 py-3 no-underline font-normal uppercase text-sm text-gray-900 tracking-wide border-b border-gray-100">
-                                <span>Competition</span>
-                                <svg class="w-4 h-4 transition-transform duration-200 group-[.active]:rotate-180" 
-                                    xmlns="http://www.w3.org/2000/svg" 
-                                    viewBox="0 0 24 24" 
-                                    fill="none" 
-                                    stroke="currentColor" 
-                                    stroke-width="2" 
-                                    stroke-linecap="round" 
-                                    stroke-linejoin="round">
-                                    <polyline points="6 9 12 15 18 9"></polyline>
-                                </svg>
-                            </button>
-                            <div class="mobile-submenu hidden">
-                                <div class="bg-gray-50">
-                                    <div class="px-4 py-3 border-b border-gray-200">
-                                        <a href="product.php?category=all-competition" class="text-sm font-medium text-gray-900 hover:text-[#022658]">
-                                            All Competition
-                                        </a>
-                                    </div>
-                                    <ul class="space-y-1">
-                                        <li><a href="product.php?category=all-competition" class="block px-8 py-2 text-sm text-gray-700 hover:bg-gray-100">See all Competition</a></li>
-                                        <li><a href="product.php?category=all-competition&subcategory=line-ropes" class="block px-8 py-2 text-sm text-gray-700 hover:bg-gray-100">Line Ropes</a></li>
-                                        <li><a href="product.php?category=all-competition&subcategory=life-guide-equipments" class="block px-8 py-2 text-sm text-gray-700 hover:bg-gray-100">Life Guide Equipments</a></li>
-                                        <li><a href="product.php?category=all-competition&subcategory=starting-blocks" class="block px-8 py-2 text-sm text-gray-700 hover:bg-gray-100">Starting Blocks</a></li>
-                                        <li><a href="product.php?category=all-competition&subcategory=turn-indicators" class="block px-8 py-2 text-sm text-gray-700 hover:bg-gray-100">Turn Indicators</a></li>
-                                        <li><a href="product.php?category=all-competition&subcategory=water-polo" class="block px-8 py-2 text-sm text-gray-700 hover:bg-gray-100">Water Polo</a></li>
-                                        <li><a href="product.php?category=heater-air-cons&subcategory=accessories" class="block px-8 py-2 text-sm text-gray-700 hover:bg-gray-100">Pool Separation Walls</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </li>
 
                         <!-- Pool Side -->
                         <li class="mobile-menu-item group">
@@ -463,15 +452,15 @@ if ($userId) {
                             <div class="mobile-submenu hidden">
                                 <div class="bg-gray-50">
                                     <div class="px-4 py-3 border-b border-gray-200">
-                                        <a href="product.php?category=pool-size" class="text-sm font-medium text-gray-900 hover:text-[#022658]">
+                                        <a href="product.php?category=pool-side" class="text-sm font-medium text-gray-900 hover:text-[#022658]">
                                             All Pool Side
                                         </a>
                                     </div>
                                     <ul class="space-y-1">
-                                        <li><a href="product.php?category=pool-size" class="block px-8 py-2 text-sm text-gray-700 hover:bg-gray-100">See All Pool Side</a></li>
-                                        <li><a href="product.php?category=pool-size&subcategory=fountains" class="block px-8 py-2 text-sm text-gray-700 hover:bg-gray-100">Fountains</a></li>
-                                        <li><a href="product.php?category=pool-size&subcategory=ladders" class="block px-8 py-2 text-sm text-gray-700 hover:bg-gray-100">Ladders</a></li>
-                                        <li><a href="product.php?category=pool-size&subcategory=hoists" class="block px-8 py-2 text-sm text-gray-700 hover:bg-gray-100">Hoists</a></li>
+                                        <li><a href="product.php?category=pool-side" class="block px-8 py-2 text-sm text-gray-700 hover:bg-gray-100">See All Pool Side</a></li>
+                                        <li><a href="product.php?category=pool-side&subcategory=fountains" class="block px-8 py-2 text-sm text-gray-700 hover:bg-gray-100">Fountains</a></li>
+                                        <li><a href="product.php?category=pool-side&subcategory=ladders" class="block px-8 py-2 text-sm text-gray-700 hover:bg-gray-100">Ladders</a></li>
+                                        <li><a href="product.php?category=pool-side&subcategory=hoists" class="block px-8 py-2 text-sm text-gray-700 hover:bg-gray-100">Hoists</a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -479,7 +468,7 @@ if ($userId) {
 
                         <!-- Sauna, Spa & Therapy -->
                         <li class="mobile-menu-item group">
-                            <a href="product.php?category=sauna-spa-therapy" class="mobile-menu-toggle flex items-center justify-between w-full px-4 py-3 no-underline font-normal uppercase text-sm text-gray-900 tracking-wide border-b border-gray-100">
+                            <a href="product.php?category=sauna,-spa-and-therapy" class="mobile-menu-toggle flex items-center justify-between w-full px-4 py-3 no-underline font-normal uppercase text-sm text-gray-900 tracking-wide border-b border-gray-100">
                                 <span>Sauna, Spa & Therapy</span>
                             </a>
                         </li>
@@ -489,17 +478,6 @@ if ($userId) {
                     <?php if (!$isLoggedIn): ?>
                         <div class="mt-6 pt-6 border-t border-gray-200">
                             <ul class="space-y-2">
-                                <li>
-                                    <a href="login.php" class="flex items-center px-4 py-3 no-underline text-sm font-normal text-gray-800">
-                                        <span class="mr-3">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                                                <circle cx="12" cy="7" r="4"></circle>
-                                            </svg>
-                                        </span>
-                                        Trade Login
-                                    </a>
-                                </li>
                                 <li>
                                     <a href="/en-gb/favorites" class="flex items-center px-4 py-3 no-underline text-sm font-normal text-gray-800">
                                         <span class="mr-3">
@@ -545,25 +523,21 @@ if ($userId) {
                                         </a>
                                     </li>
 
-                                    <!-- Pump & Filters -->
+                                    <!-- Pumps & Filters -->
                                     <li class="group relative">
-                                        <a class="px-3 lg:px-4 py-3 no-underline hover:underline font-normal uppercase text-xs inline-flex items-center text-gray-900 tracking-wide touch-target" href="product.php?category=pump-and-filters">
-                                            <span class="whitespace-nowrap">Pump & Filters</span>
+                                        <a class="px-3 lg:px-4 py-3 no-underline hover:underline font-normal uppercase text-xs inline-flex items-center text-gray-900 tracking-wide touch-target" href="product.php?category=pumps-filters">
+                                            <span class="whitespace-nowrap">Pumps & Filters</span>
                                         </a>
                                         <!-- Mega Dropdown -->
                                         <div class="hidden group-hover:block fixed left-0 top-[var(--nav-height)] bg-white shadow-lg border-t border-gray-200 z-50 w-full">
                                             <div class="container mx-auto px-4 py-6 lg:py-8 max-w-7xl">
                                                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
                                                     <div>
-                                                        <h3 class="font-bold text-sm mb-4 text-left">All Pump & Filters</h3>
+                                                        <h3 class="font-bold text-sm mb-4 text-left">All Pumps & Filters</h3>
                                                         <ul class="space-y-2 text-left">
-                                                            <li><a href="product.php?category=pump-and-filters" class="text-sm hover:underline flex items-center gap-1"><span>›</span> See all Pump & Filters</a></li>
-                                                            <li class="submenu-parent">
-                                                                <a href="product.php?category=pump-and-filters&subcategory=pumps" class="text-sm hover:underline flex items-center justify-between group/submenu">
-                                                                    <span>Pumps</span>
-                                                                </a>
-                                                            </li>
-                                                            <li><a href="product.php?category=pump-and-filters&subcategory=filters" class="text-sm hover:underline">Filters </a></li>
+                                                            <li><a href="product.php?category=pumps-filters" class="text-sm hover:underline flex items-center gap-1"><span>›</span> See all Pumps & Filters</a></li>
+                                                            <li><a href="product.php?category=pumps-filters&subcategory=pumps" class="text-sm hover:underline">Pumps</a></li>
+                                                            <li><a href="product.php?category=pumps-filters&subcategory=filters" class="text-sm hover:underline">Filters</a></li>
                                                         </ul>
                                                     </div>
                                                 </div>
@@ -599,7 +573,7 @@ if ($userId) {
                                                         <ul class="space-y-2 text-left">
                                                             <li><a href="product.php?category=covers" class="text-sm hover:underline flex items-center gap-1"><span>›</span> See all Covers</a></li>
                                                             <li class="submenu-parent">
-                                                                <a href="product.php?category=covers&subcategory=enclosures" class="text-sm hover:underline flex items-center justify-between group/submenu">
+                                                                 <a href="product.php?category=covers&subcategory=enclosures" class="text-sm hover:underline flex items-center justify-between group/submenu">
                                                                     <span>Enclosures</span>
                                                                 </a>
                                                             </li>
@@ -610,6 +584,13 @@ if ($userId) {
                                         </div>
                                     </li>
 
+                                    <!-- Pool Liner -->
+                                    <li class="group relative">
+                                        <a class="px-3 lg:px-4 py-3 no-underline hover:underline font-normal uppercase text-xs inline-flex items-center text-gray-900 tracking-wide touch-target" href="pool-liner-calculator.php">
+                                            <span class="whitespace-nowrap">Pool Liner</span>
+                                        </a>
+                                    </li>
+
                                      <!-- Heaters -->
                                      <li class="group relative">
                                         <a class="px-3 lg:px-4 py-3 no-underline hover:underline font-normal uppercase text-xs inline-flex items-center text-gray-900 tracking-wide touch-target" href="product.php?category=heaters">
@@ -617,31 +598,6 @@ if ($userId) {
                                         </a>
                                     </li>
 
-                                    <!-- Competition -->
-                                    <li class="group relative">
-                                        <a class="px-3 lg:px-4 py-3 no-underline hover:underline font-normal uppercase text-xs inline-flex items-center text-gray-900 tracking-wide touch-target" href="product.php?category=competition">
-                                            <span class="whitespace-nowrap">Competition</span>
-                                        </a>
-                                        <!-- Mega Dropdown -->
-                                        <div class="hidden group-hover:block fixed left-0 top-[var(--nav-height)] bg-white shadow-lg border-t border-gray-200 z-50 w-full">
-                                            <div class="container mx-auto px-4 py-6 lg:py-8 max-w-7xl">
-                                                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
-                                                    <div>
-                                                        <h3 class="font-bold text-sm mb-4 text-left">All Competition</h3>
-                                                        <ul class="space-y-2 text-left">
-                                                            <li><a href="product.php?category=competition" class="text-sm hover:underline flex items-center gap-1"><span>›</span> See all Competition</a></li>
-                                                            <li><a href="product.php?category=competition&subcategory=line-ropes" class="text-sm hover:underline">Line Ropes</a></li>
-                                                            <li><a href="product.php?category=competition&subcategory=life-guide-equipments" class="text-sm hover:underline">Life Guide Equipments</a></li>
-                                                            <li><a href="product.php?category=competition&subcategory=starting-blocks" class="text-sm hover:underline">Starting Blocks</a></li>
-                                                            <li><a href="product.php?category=competition&subcategory=turn-indicators" class="text-sm hover:underline">Turn Indicators</a></li>
-                                                            <li><a href="product.php?category=competition&subcategory=water-polo" class="text-sm hover:underline">Water Polo</a></li>
-                                                            <li><a href="product.php?category=competition&subcategory=pool-separation-walls" class="text-sm hover:underline">Pool Separation Walls</a></li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </li>
 
                                     <!-- Pool Side -->
                                     <li class="group relative">
@@ -681,8 +637,9 @@ if ($userId) {
                                         </div>
                                     </li>
 
-                                     <li class="group relative">
-                                        <a class="px-3 lg:px-4 py-3 no-underline hover:underline font-normal uppercase text-xs inline-flex items-center text-gray-900 tracking-wide touch-target" href="product.php?category=sauna-spa-and-therapy">
+                                    <!-- Sauna, Spa & Therapy -->
+                                    <li class="group relative">
+                                        <a class="px-3 lg:px-4 py-3 no-underline hover:underline font-normal uppercase text-xs inline-flex items-center text-gray-900 tracking-wide touch-target" href="product.php?category=sauna-spa">
                                             <span class="whitespace-nowrap">Sauna, Spa & Therapy</span>
                                         </a>
                                     </li>

@@ -2,6 +2,7 @@
 // api/admin/update_category.php
 session_start();
 require_once '../../config.php';
+require_once '../admin/include/utils.php';
 
 header('Content-Type: application/json');
 
@@ -56,6 +57,9 @@ $stmt = $conn->prepare($sql);
 $stmt->bind_param("ssii", $name, $slug, $parent_id, $id);
 
 if ($stmt->execute()) {
+    // Log activity
+    logActivity($conn, 'update_category', "Updated category: $name (ID: $id)");
+    
     echo json_encode(['success' => true, 'message' => 'Category updated successfully']);
 } else {
     echo json_encode(['success' => false, 'message' => 'Failed to update category: ' . $stmt->error]);

@@ -35,13 +35,14 @@ if ($result) {
 
 // Default values if empty
 $defaults = [
-    'site_name' => 'Jacksons Leisure',
-    'support_email' => 'support@jacksonsleisure.com',
+    'site_name' => 'Commerial Pool Equipment Leisure',
+    'support_email' => 'support@Commerial Pool Equipmentleisure.com',
     'contact_phone' => '+44 151 334 0222',
     'address' => 'Unit 2, Woodway Ct, Thursby Rd, Croft Business Park, Bromborough, Wirral CH62 3PR',
     'currency_symbol' => '£',
-    'seo_title' => 'Caravan & Camping Supplies | Jacksons Leisure',
-    'seo_description' => 'Your one-stop shop for caravan, camping, and pool supplies.'
+    'seo_title' => 'Caravan & Camping Supplies | Commerial Pool Equipment Leisure',
+    'seo_description' => 'Your one-stop shop for caravan, camping, and pool supplies.',
+    'google_analytics_id' => ''
 ];
 
 $response = array_merge($defaults, $settings);

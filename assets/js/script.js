@@ -1,12 +1,12 @@
 // Mobile menu toggle functionality
-// document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const mobileMenuToggle = document.getElementById('mobileMenuToggle');
     const mobileMenu = document.getElementById('mobileMenu');
-    
+
     if (mobileMenuToggle && mobileMenu) {
-        mobileMenuToggle.addEventListener('click', function() {
+        mobileMenuToggle.addEventListener('click', function () {
             mobileMenu.classList.toggle('open');
-            
+
             // Change icon based on menu state
             const icon = mobileMenuToggle.querySelector('i');
             if (mobileMenu.classList.contains('open')) {
@@ -18,84 +18,66 @@
             }
         });
     }
-    
-    // Language selector functionality
-    const languageButton = document.getElementById('languageButton');
-    const languageDropdown = document.getElementById('languageDropdown');
-    const currentLanguage = document.getElementById('currentLanguage');
-    const currentFlag = document.getElementById('currentFlag');
-    const languageOptions = document.querySelectorAll('.language-option');
-    const chevron = languageButton ? languageButton.querySelector('svg') : null;
-    
-    if (languageButton && languageDropdown) {
+
+    // Currency selector functionality
+    const currencyButton = document.getElementById('currencyButton');
+    const currencyDropdown = document.getElementById('currencyDropdown');
+    const currentCurrency = document.getElementById('currentCurrency');
+    const currentCurrencySymbol = document.getElementById('currentCurrencySymbol');
+    const currencyOptions = document.querySelectorAll('.currency-option');
+    const chevron = currencyButton ? currencyButton.querySelector('svg') : null;
+
+    // Currency data
+    const currencyData = {
+        'GBP': { symbol: '£', name: 'Pounds' },
+        'USD': { symbol: '$', name: 'Dollars' },
+        'EUR': { symbol: '€', name: 'Euros' }
+    };
+
+    if (currencyButton && currencyDropdown) {
         // Toggle dropdown
-        languageButton.addEventListener('click', (e) => {
+        currencyButton.addEventListener('click', (e) => {
             e.stopPropagation();
-            const isActive = languageDropdown.classList.contains('opacity-100');
-            
+            const isActive = currencyDropdown.classList.contains('opacity-100');
+
             if (isActive) {
-                languageDropdown.classList.remove('opacity-100', 'visible', 'translate-y-0');
-                languageDropdown.classList.add('opacity-0', 'invisible', '-translate-y-2');
+                currencyDropdown.classList.remove('opacity-100', 'visible', 'translate-y-0');
+                currencyDropdown.classList.add('opacity-0', 'invisible', '-translate-y-2');
                 if (chevron) chevron.classList.remove('rotate-180');
             } else {
-                languageDropdown.classList.remove('opacity-0', 'invisible', '-translate-y-2');
-                languageDropdown.classList.add('opacity-100', 'visible', 'translate-y-0');
+                currencyDropdown.classList.remove('opacity-0', 'invisible', '-translate-y-2');
+                currencyDropdown.classList.add('opacity-100', 'visible', 'translate-y-0');
                 if (chevron) chevron.classList.add('rotate-180');
             }
         });
-        
+
         // Close dropdown when clicking outside
         document.addEventListener('click', (e) => {
-            if (!e.target.closest('.language-selector')) {
-                languageDropdown.classList.remove('opacity-100', 'visible', 'translate-y-0');
-                languageDropdown.classList.add('opacity-0', 'invisible', '-translate-y-2');
+            if (!e.target.closest('.currency-selector')) {
+                currencyDropdown.classList.remove('opacity-100', 'visible', 'translate-y-0');
+                currencyDropdown.classList.add('opacity-0', 'invisible', '-translate-y-2');
                 if (chevron) chevron.classList.remove('rotate-180');
             }
         });
-        
-        // Handle language option clicks
-        languageOptions.forEach(option => {
-            option.addEventListener('click', (e) => {
-                e.preventDefault();
-                
-                const lang = option.querySelector('span:not(.text-xs)').textContent;
-                const flagSvg = option.querySelector('.flag-icon').innerHTML;
-                
-                // Update current language display
-                if (currentLanguage) currentLanguage.textContent = lang;
-                if (currentFlag) currentFlag.innerHTML = flagSvg;
-                
-                // Close dropdown
-                languageDropdown.classList.remove('opacity-100', 'visible', 'translate-y-0');
-                languageDropdown.classList.add('opacity-0', 'invisible', '-translate-y-2');
-                if (chevron) chevron.classList.remove('rotate-180');
-                
-                // In production, you would navigate to the href
-                console.log('Would navigate to:', option.href);
-                
-                // Update cookie for language preference
-                updateCountryCookie(option.href.split('/')[1] || 'en-gb');
-            });
-        });
-        
+
         // Keyboard accessibility
-        languageButton.addEventListener('keydown', (e) => {
+        currencyButton.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' || e.key === ' ') {
                 e.preventDefault();
-                languageButton.click();
+                currencyButton.click();
             }
             if (e.key === 'Escape') {
-                languageDropdown.classList.remove('opacity-100', 'visible', 'translate-y-0');
-                languageDropdown.classList.add('opacity-0', 'invisible', '-translate-y-2');
+                currencyDropdown.classList.remove('opacity-100', 'visible', 'translate-y-0');
+                currencyDropdown.classList.add('opacity-0', 'invisible', '-translate-y-2');
                 if (chevron) chevron.classList.remove('rotate-180');
             }
         });
-        
+
         // Handle arrow key navigation in dropdown
         let currentFocusIndex = -1;
-        const optionElements = Array.from(languageOptions);
-        
-        languageDropdown.addEventListener('keydown', (e) => {
+        const optionElements = Array.from(currencyOptions);
+
+        currencyDropdown.addEventListener('keydown', (e) => {
             if (e.key === 'ArrowDown') {
                 e.preventDefault();
                 currentFocusIndex = (currentFocusIndex + 1) % optionElements.length;
@@ -105,35 +87,69 @@
                 currentFocusIndex = currentFocusIndex <= 0 ? optionElements.length - 1 : currentFocusIndex - 1;
                 optionElements[currentFocusIndex].focus();
             } else if (e.key === 'Escape') {
-                languageDropdown.classList.remove('opacity-100', 'visible', 'translate-y-0');
-                languageDropdown.classList.add('opacity-0', 'invisible', '-translate-y-2');
+                currencyDropdown.classList.remove('opacity-100', 'visible', 'translate-y-0');
+                currencyDropdown.classList.add('opacity-0', 'invisible', '-translate-y-2');
                 if (chevron) chevron.classList.remove('rotate-180');
-                languageButton.focus();
+                currencyButton.focus();
             }
         });
     }
-    
-    // Cookie functionality for language preference
-    function updateCountryCookie(value) {
-        const d = new Date();
-        d.setTime(d.getTime() + (365*24*60*60*1000));
-        let expires = "expires="+ d.toUTCString();
-        document.cookie = "CountryRedirect="+value+";" + expires + ";path=/";
+
+    // Currency change function
+    async function changeCurrency(currency) {
+        try {
+            // Update session via API
+            const response = await fetch('api/currency.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ currency: currency })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                // Update UI
+                if (currentCurrency) currentCurrency.textContent = currency;
+                if (currentCurrencySymbol) currentCurrencySymbol.textContent = data.symbol;
+
+                // Close dropdown
+                if (currencyDropdown) {
+                    currencyDropdown.classList.remove('opacity-100', 'visible', 'translate-y-0');
+                    currencyDropdown.classList.add('opacity-0', 'invisible', '-translate-y-2');
+                    if (chevron) chevron.classList.remove('rotate-180');
+                }
+
+                // Set cookie for persistence
+                const d = new Date();
+                d.setTime(d.getTime() + (365 * 24 * 60 * 60 * 1000));
+                document.cookie = `currency=${currency};expires=${d.toUTCString()};path=/`;
+
+                // Reload page to update all prices
+                window.location.reload();
+            } else {
+                console.error('Failed to update currency:', data.error);
+            }
+        } catch (error) {
+            console.error('Error changing currency:', error);
+        }
     }
-    
+
+    // Make changeCurrency available globally
+    window.changeCurrency = changeCurrency;
+
     // Pause animation on hover for better readability
     const announcementTrack = document.querySelector('.announcement-track');
     const announcementContainer = document.querySelector('.announcement-container');
-    
+
     if (announcementTrack && announcementContainer) {
         announcementContainer.addEventListener('mouseenter', () => {
             announcementTrack.classList.add('paused');
         });
-        
+
         announcementContainer.addEventListener('mouseleave', () => {
             announcementTrack.classList.remove('paused');
         });
-        
+
         // Add keyboard control for announcement slider
         announcementContainer.addEventListener('keydown', (e) => {
             if (e.key === ' ' || e.key === 'Enter') {
@@ -142,15 +158,15 @@
             }
         });
     }
-    
+
     // Add interactivity for search field
     const searchInput = document.querySelector('input[type="text"]');
     const clearButton = document.querySelector('button[aria-label="Clear search"]');
     const searchResults = document.querySelector('.absolute.mt-2');
-    
+
     // Show clear button when typing
     if (searchInput && clearButton && searchResults) {
-        searchInput.addEventListener('input', function() {
+        searchInput.addEventListener('input', function () {
             if (this.value.trim() !== '') {
                 clearButton.classList.remove('hidden');
                 searchResults.classList.remove('hidden');
@@ -159,30 +175,30 @@
                 searchResults.classList.add('hidden');
             }
         });
-        
+
         // Clear search input
-        clearButton.addEventListener('click', function() {
+        clearButton.addEventListener('click', function () {
             searchInput.value = '';
             searchInput.focus();
             this.classList.add('hidden');
             searchResults.classList.add('hidden');
         });
-        
+
         // Close search results when clicking outside
-        document.addEventListener('click', function(event) {
+        document.addEventListener('click', function (event) {
             if (!event.target.closest('.relative') && !event.target.closest('.absolute.mt-2')) {
                 searchResults.classList.add('hidden');
             }
         });
-        
+
         // Show search results on focus
-        searchInput.addEventListener('focus', function() {
+        searchInput.addEventListener('focus', function () {
             if (this.value.trim() !== '') {
                 searchResults.classList.remove('hidden');
             }
         });
     }
-    
+
     // Update cart quantity (example)
     function updateCartQuantity(quantity) {
         const cartBadge = document.querySelector('.mini-cart-quantity');
@@ -191,7 +207,7 @@
             cartBadge.style.display = quantity > 0 ? 'block' : 'none';
         }
     }
-    
+
     // Update favorites quantity (example)
     function updateFavoritesQuantity(quantity) {
         const favBadge = document.querySelector('.favorite-quantity');
@@ -200,13 +216,13 @@
             favBadge.style.display = quantity > 0 ? 'block' : 'none';
         }
     }
-    
+
     // Initialize with example data
     updateCartQuantity(3); // cart 
     updateFavoritesQuantity(2); // favorite
-    
+
     // Close mobile menu when clicking outside
-    document.addEventListener('click', function(e) {
+    document.addEventListener('click', function (e) {
         if (mobileMenu && mobileMenu.classList.contains('open')) {
             if (!mobileMenu.contains(e.target) && !mobileMenuToggle.contains(e.target)) {
                 mobileMenu.classList.remove('open');
@@ -218,7 +234,7 @@
             }
         }
     });
-    
+
     // Add CSS rotation class for chevron
     if (!document.querySelector('#rotation-style')) {
         const style = document.createElement('style');
@@ -231,4 +247,4 @@
         `;
         document.head.appendChild(style);
     }
-// }); // END OF DOMContentLoaded
+}); // END OF DOMContentLoaded

@@ -2,6 +2,7 @@
 // api/admin/create_category.php
 session_start();
 require_once '../../config.php';
+require_once '../admin/include/utils.php';
 
 header('Content-Type: application/json');
 
@@ -41,6 +42,11 @@ $stmt = $conn->prepare("INSERT INTO categories (name, slug, parent_id, created_a
 $stmt->bind_param("ssi", $name, $slug, $parent_id);
 
 if ($stmt->execute()) {
+    $category_id = $stmt->insert_id;
+    
+    // Log activity
+    logActivity($conn, 'create_category', "Created category: $name (ID: $category_id)");
+    
     echo json_encode(['success' => true, 'message' => 'Category created successfully']);
 } else {
     echo json_encode(['success' => false, 'message' => 'Error: ' . $stmt->error]);

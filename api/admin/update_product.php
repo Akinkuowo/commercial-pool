@@ -2,6 +2,7 @@
 // api/admin/update_product.php
 session_start();
 require_once '../../config.php';
+require_once '../admin/include/utils.php';
 
 header('Content-Type: application/json');
 
@@ -125,6 +126,9 @@ $stmt->bind_param(
 );
 
 if ($stmt->execute()) {
+    // Log activity
+    logActivity($conn, 'update_product', "Updated product: $product_name (ID: $product_id, SKU: $sku_number)");
+    
     echo json_encode([
         'success' => true,
         'message' => 'Product updated successfully'

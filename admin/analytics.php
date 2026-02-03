@@ -10,6 +10,18 @@ checkAdminAuth();
 $admin_name = $_SESSION['admin_name'] ?? 'Admin User';
 $admin_role = $_SESSION['admin_role'] ?? 'admin';
 $current_page = 'analytics';
+
+// Fetch Google Analytics ID
+$conn = getDbConnection();
+$google_analytics_id = '';
+if ($conn) {
+    $ga_sql = "SELECT setting_value FROM site_settings WHERE setting_key = 'google_analytics_id'";
+    $ga_result = $conn->query($ga_sql);
+    if ($ga_result && $ga_row = $ga_result->fetch_assoc()) {
+        $google_analytics_id = trim($ga_row['setting_value']);
+    }
+    // Don't close the connection here - sidebar.php needs it
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -39,39 +51,46 @@ $current_page = 'analytics';
     <!-- Main Content -->
     <div id="mainContent" class="main-content min-h-screen">
         <!-- Header -->
-        <header class="bg-white border-b border-gray-200 sticky top-0 z-40">
-            <div class="px-6 py-4">
+        <?php 
+        $header_title = "Analytics";
+        $header_description = "Inventory & Category Insights";
+        include('include/header.php'); 
+        ?>
+
+        <main class="p-6">
+            <!-- Google Analytics Status -->
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
                 <div class="flex items-center justify-between">
-                    <div class="flex items-center">
-                        <button id="mobileSidebarToggle" class="lg:hidden mr-4 text-gray-600">
-                            <i class="fas fa-bars text-xl"></i>
-                        </button>
-                        <div>
-                            <h1 class="text-2xl font-bold text-gray-800">Analytics</h1>
-                            <p class="text-gray-600 mt-1">Inventory & Category Insights</p>
-                        </div>
-                    </div>
-                    <div class="relative">
-                        <button id="userMenuBtn" class="flex items-center space-x-3 p-2 hover:bg-gray-100 rounded-lg">
-                            <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white font-semibold">
-                                <?php echo strtoupper(substr($admin_name, 0, 1)); ?>
-                            </div>
-                            <div class="hidden md:block text-left">
-                                <div class="text-sm font-semibold text-gray-700"><?php echo htmlspecialchars($admin_name); ?></div>
-                                <div class="text-xs text-gray-500"><?php echo ucfirst($admin_role); ?></div>
-                            </div>
-                        </button>
-                        <div id="userMenu" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2">
-                            <a href="../api/admin/logout.php" class="block px-4 py-2 text-red-600 hover:bg-gray-100">
-                                <i class="fas fa-sign-out-alt mr-2"></i>Logout
-                            </a>
-                        </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-gray-800 mb-2">
+                            <i class="fas fa-chart-line mr-2 text-[#022658]"></i>Google Analytics
+                        </h3>
+                        <?php if (!empty($google_analytics_id)): ?>
+                            <p class="text-sm text-gray-600">
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                    <i class="fas fa-check-circle mr-1"></i>Active
+                                </span>
+                                <span class="ml-2">Tracking ID: <code class="px-2 py-1 bg-gray-100 rounded text-xs"><?php echo htmlspecialchars($google_analytics_id); ?></code></span>
+                            </p>
+                            <p class="text-xs text-gray-500 mt-2">
+                                <i class="fas fa-info-circle mr-1"></i>Google Analytics is active on all public pages. View your analytics in the 
+                                <a href="https://analytics.google.com/" target="_blank" rel="noopener" class="text-[#022658] hover:underline">Google Analytics Dashboard</a>.
+                            </p>
+                        <?php else: ?>
+                            <p class="text-sm text-gray-600">
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-orange-800">
+                                    <i class="fas fa-exclamation-triangle mr-1"></i>Not Configured
+                                </span>
+                            </p>
+                            <p class="text-xs text-gray-500 mt-2">
+                                <i class="fas fa-info-circle mr-1"></i>Add your Google Analytics ID in 
+                                <a href="settings.php" class="text-[#022658] hover:underline">Settings > Analytics</a> to start tracking website traffic and ad performance.
+                            </p>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
-        </header>
 
-        <main class="p-6">
             <!-- Summary Row -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
                 <!-- Sales by Category -->

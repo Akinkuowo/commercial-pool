@@ -139,6 +139,16 @@ foreach ($product_stats as $key => $value) {
 $admin_name = $_SESSION['admin_name'] ?? 'Admin User';
 $admin_role = $_SESSION['admin_role'] ?? 'admin';
 $current_page = 'products';
+
+// Get unique categories for filter
+$categories_query = "SELECT DISTINCT category FROM products WHERE category IS NOT NULL AND category != '' ORDER BY category ASC";
+$categories_result = $conn->query($categories_query);
+$available_categories = [];
+if ($categories_result) {
+    while ($row = $categories_result->fetch_assoc()) {
+        $available_categories[] = $row['category'];
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -167,43 +177,10 @@ $current_page = 'products';
     <!-- Main Content -->
     <div id="mainContent" class="main-content min-h-screen">
         <!-- Header -->
-        <header class="bg-white border-b border-gray-200 sticky top-0 z-40">
-            <div class="px-6 py-4">
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center">
-                        <button id="mobileSidebarToggle" class="lg:hidden mr-4 text-gray-600">
-                            <i class="fas fa-bars text-xl"></i>
-                        </button>
-                        <div>
-                            <h1 class="text-2xl font-bold text-gray-800">Products</h1>
-                            <p class="text-gray-600 mt-1">Manage your product inventory</p>
-                        </div>
-                    </div>
-                    <div class="flex items-center space-x-4">
-                        <button onclick="openAddProductModal()" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition flex items-center">
-                            <i class="fas fa-plus mr-2"></i>
-                            Add New Product
-                        </button>
-                        <div class="relative">
-                            <button id="userMenuBtn" class="flex items-center space-x-3 p-2 hover:bg-gray-100 rounded-lg">
-                                <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white font-semibold">
-                                    <?php echo strtoupper(substr($admin_name, 0, 1)); ?>
-                                </div>
-                                <div class="hidden md:block text-left">
-                                    <div class="text-sm font-semibold text-gray-700"><?php echo htmlspecialchars($admin_name); ?></div>
-                                    <div class="text-xs text-gray-500"><?php echo ucfirst($admin_role); ?></div>
-                                </div>
-                            </button>
-                            <div id="userMenu" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2">
-                                <a href="../api/admin/logout.php" class="block px-4 py-2 text-red-600 hover:bg-gray-100">
-                                    <i class="fas fa-sign-out-alt mr-2"></i>Logout
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </header>
+        <?php 
+        $header_title = "Products";
+        include('include/header.php'); 
+        ?>
 
         <main class="p-6">
             <!-- Stats Cards -->
@@ -290,10 +267,11 @@ $current_page = 'products';
                         <div>
                             <select name="category" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                                 <option value="">All Categories</option>
-                                <option value="Awnings" <?php echo $category_filter === 'Awnings' ? 'selected' : ''; ?>>Awnings</option>
-                                <option value="Camping" <?php echo $category_filter === 'Camping' ? 'selected' : ''; ?>>Camping</option>
-                                <option value="Caravan" <?php echo $category_filter === 'Caravan' ? 'selected' : ''; ?>>Caravan</option>
-                                <option value="Motorhome" <?php echo $category_filter === 'Motorhome' ? 'selected' : ''; ?>>Motorhome</option>
+                                <?php foreach ($available_categories as $cat): ?>
+                                    <option value="<?php echo htmlspecialchars($cat); ?>" <?php echo $category_filter === $cat ? 'selected' : ''; ?>>
+                                        <?php echo htmlspecialchars($cat); ?>
+                                    </option>
+                                <?php endforeach; ?>
                             </select>
                         </div>
                         <div>
@@ -507,7 +485,9 @@ $current_page = 'products';
         }
 
         function exportProducts() {
-            window.location.href = '../api/admin/export_products.php';
+            const urlParams = new URLSearchParams(window.location.search);
+            const params = urlParams.toString();
+            window.location.href = `../api/admin/export_products.php${params ? '?' + params : ''}`;
         }
     </script>
 </body>
